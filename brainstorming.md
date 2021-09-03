@@ -31,4 +31,36 @@
 - Follow the OpenAPI standard: https://swagger.io/specification/
   - standard Schema and formatting
 - Work in TypeScript (loosely typed at first, then create stricter typing as we go)
-- 
+- how we want to install: `npm install @charged-particles/SDK`
+
+// example calls -- for one-off calls
+```
+ChargedParticles.init(
+  apiKey: xyz,
+  rpcUrl: abc,
+  wallet: wallet (signer, provider, chainId),
+)
+
+ChargedParticles.getMetadata(
+  contractAddresses: String[]
+  tokenIds: int[]
+)
+```
+
+// hooks examples -- for watching / listening to data
+```
+import { useChargedParticles } from '@charged-particles/sdk';
+
+//// IDEAS FOR POSSIBLE HOOKS ////
+
+// useCPQuery ??
+// other hooks
+```
+
+**Multicall vs the Subgraph**
+- Multicall needed for Current Charge (interest)
+- Subgraph can be used for metadata, Covalent Bonds, Principal amounts
+
+**Homework**
+- think about useful hooks
+- think about what can come from the subgraph
