@@ -28,6 +28,7 @@
 
 ## Design Decisions
 
+- Make a PR to ScaffoldETH when we can
 - Follow the OpenAPI standard: https://swagger.io/specification/
   - standard Schema and formatting
 - Work in TypeScript (loosely typed at first, then create stricter typing as we go)
