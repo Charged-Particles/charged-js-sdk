@@ -1,17 +1,3 @@
+import { chargedParticles } from 'core';
 
-
-
-export function blah() {
-
-}
-
-
-
-Helpers = {};
-
-Helpers.getThisAndThat = ( ) => {
-
-}
-
-
-export default Helpers;
+export { chargedParticles };

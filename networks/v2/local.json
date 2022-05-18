@@ -1,0 +1,63 @@
+{
+  "network": "mainnet",
+  "universe": {
+    "address": "",
+    "startBlock": ""
+  },
+  "chargedState": {
+    "address": "",
+    "startBlock": ""
+  },
+  "chargedSettings": {
+    "address": "",
+    "startBlock": ""
+  },
+  "chargedParticles": {
+    "address": "",
+    "startBlock": ""
+  },
+  "genericWalletManager": {
+    "address": "",
+    "startBlock": ""
+  },
+  "genericBasketManager": {
+    "address": "",
+    "startBlock": ""
+  },
+  "aaveWalletManager": {
+    "address": "",
+    "startBlock": ""
+  },
+  "wBoson": {
+    "address": "",
+    "startBlock": ""
+  },
+  "proton": {
+    "address": "",
+    "startBlock": ""
+  },
+  "lepton": {
+    "address": "",
+    "startBlock": ""
+  },
+  "ionx": {
+    "address": "",
+    "startBlock": ""
+  },
+  "communityVault": {
+    "address": "",
+    "startBlock": ""
+  },
+  "staking": {
+    "address": "",
+    "startBlock": ""
+  },
+  "ionxYieldFarm": {
+    "address": "",
+    "startBlock": ""
+  },
+  "lpYieldFarm": {
+    "address": "",
+    "startBlock": ""
+  }
+}
