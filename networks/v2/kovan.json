@@ -1,0 +1,177 @@
+{
+  "network": "kovan",
+  "universe": {
+    "address": "0x34CdF126f844f0a021B02d96620686A0b18D3861",
+    "startBlock": "31114518"
+  },
+  "chargedState": {
+    "address": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca",
+    "startBlock": "31114518"
+  },
+  "chargedSettings": {
+    "address": "0xFf062fd93C6Bdcf25bEBcC776e7fD658469f3197",
+    "startBlock": "31114518"
+  },
+  "chargedManagers": {
+    "address": "0x9E1d239752636AA75842E47A28f053De39208e4b",
+    "startBlock": "31114518"
+  },
+  "chargedParticles": {
+    "address": "0xa97A90157fa91183CB93dA0103d486C019dA1Bb3",
+    "startBlock": "31114518"
+  },
+  "genericWalletManager": {
+    "address": "0x266Fda5B5d243482A79B9A4C58e71950e04100e4",
+    "startBlock": "31114518"
+  },
+  "genericBasketManager": {
+    "address": "0x2acf797FDDffA7F6194b8E2daB81c79CEA06ba56",
+    "startBlock": "31114518"
+  },
+  "aaveWalletManager": {
+    "address": "0x02EbB570A6c6aD80cFbe70121291816f02C4deB0",
+    "startBlock": "31114518"
+  },
+  "genericWalletManagerB": {
+    "address": "0x49Aef807f84dA0428519c12805BD0de736260152",
+    "startBlock": "31114518"
+  },
+  "genericBasketManagerB": {
+    "address": "0x056F5c6168dD21C935ac8412F5B1462667D5fDD4",
+    "startBlock": "31114518"
+  },
+  "aaveWalletManagerB": {
+    "address": "0x435F36E3468dF256A28c5175E45EF25823751dD1",
+    "startBlock": "31114518"
+  },
+  "particleSplitter": {
+    "address": "0x971a3F743bE6d298436b01c47b268Ef4d33E46a0",
+    "startBlock": "31114518"
+  },
+  "proton": {
+    "address": "0xAEdEDf4A27d4Ea6f658b5F69F70a72d12BDeb937",
+    "startBlock": "31114518"
+  },
+  "protonB": {
+    "address": "0xd1bCe91a13089b1f3178487aB8d0d2Ae191C1963",
+    "startBlock": "31114518"
+  },
+  "lepton": {
+    "address": "0xb127A0CcD9533A8b3dD4Be613974952854411B85",
+    "startBlock": "30754837"
+  },
+  "lepton2": {
+    "address": "0x99A2759d65fE6ba3801D5C800E59577c82b5d5Ab",
+    "startBlock": "31114518"
+  },
+  "ionx": {
+    "address": "0x1000cB509dAEbcEe85037A470Fa2dC21a97d8611",
+    "startBlock": "31114518"
+  },
+
+  "wBoson": {
+    "address": "0x18f112F9Ec7b96D453B95Deab92BE628088Effc6",
+    "startBlock": "29462680"
+  },
+
+  "externalERC721": {
+    "address": "0x985b114bfF541a887e88FE5d76Fea71EBE5249E5",
+    "startBlock": "30752397"
+  },
+  "nonFungibleERC1155": {
+    "address": "0x86818fA5E9e100bf677D0FdFf7e24Ec13AD48222",
+    "startBlock": "30752397"
+  },
+  "fungibleERC1155": {
+    "address": "0x901B44e844B08aC4eb0d20EFf2D93D337e41C21b",
+    "startBlock": "30752397"
+  },
+
+  "communityVault": {
+    "address": "0x40116deD9407B7badf13bB3F90671F09A8537fec",
+    "startBlock": "25172767"
+  },
+  "uniEthIonxLpToken": {
+    "address": "0x27125750e4D487cF4FbE65b12B6665062820a816",
+    "startBlock": "25172767"
+  },
+
+  "staking": {
+    "address": "0xBF2D4aB31f353E7F0FD2Cea8E6643A07033aB5F2",
+    "startBlock": "25172767"
+  },
+  "ionxYieldFarm": {
+    "address": "0x9a61c30AFb18Baa32876887d1fA32504afe9222f",
+    "startBlock": "25172767"
+  },
+  "lpYieldFarm": {
+    "address": "0x54ad03D3771238BdA50b207214e342E58a8eED4d",
+    "startBlock": "25172767"
+  },
+
+  "staking2": {
+    "address": "0x06d74b1695A812b956D028b809EE524A7715CA0E",
+    "startBlock": "26759948"
+  },
+  "ionxYieldFarm2": {
+    "address": "0xCdAAD427E2d5723ba1EAed9dd3E2190741305771",
+    "startBlock": "26759948"
+  },
+  "lpYieldFarm2": {
+    "address": "0xb8eAc0C7E4E78f653B263d6A45C4B46f9c66864D",
+    "startBlock": "26759948"
+  },
+
+  "staking3": {
+    "address": "0x64f8A0Ee798CA6e1b1A0a04ABaD867CF2Bc03aA2",
+    "startBlock": "26759948"
+  },
+  "ionxYieldFarm3": {
+    "address": "0x3E98cCb412dB5f848efAc559228cCc6e4A7c130F",
+    "startBlock": "26759948"
+  },
+  "lpYieldFarm3": {
+    "address": "0x6ABB989de9ffF53162a02Ea17e17719A15A52975",
+    "startBlock": "26759948"
+  },
+  "merkleDistributor": {
+    "address": "0xcfB8807410A1c78C018fEd0e7D4E64eEA7359807",
+    "startBlock": "25172767"
+  },
+  "merkleDistributor2": {
+    "address": "0x90405f601089D3a2Ca1A7c2cABA12523511186e3",
+    "startBlock": "25172767"
+  },
+  "merkleDistributor3": {
+    "address": "0xC31A0c427427CA4f47bE142725a927BBFA9C7053",
+    "startBlock": "25172767"
+  },
+  "vestingClaim": {
+    "address": "0x8cF942F0A2c54ed0F991F960437757F7729BCE97",
+    "startBlock": "25172767"
+  },
+  "vestingClaim2": {
+    "address": "0xa040E0Cfa84C720ac4856bbeD6f35b76bcFfC7Ed",
+    "startBlock": "25172767"
+  },
+  "vestingClaim3": {
+    "address": "0x67B3a5e2e86fFCb5568935d8C1e80D665aff06Da",
+    "startBlock": "27005555"
+  },
+  "vestingClaim4": {
+    "address": "0x2A306E9A720295aCD0f63348eF5A63bAde7F5B7e",
+    "startBlock": "27005555"
+  },
+  "vestingClaim5": {
+    "address": "0xB3288a91d997661b6A70dfe0b439B77943b19F4f",
+    "startBlock": "27005555"
+  },
+  "vestingClaim6": {
+    "address": "0x9Ce273e7545B9c697D1419D7b32bc9335a5fc44E",
+    "startBlock": "27005555"
+  },
+  "vestingClaim7": {
+    "address": "0xd44CA3D3c3c5F0FA85974730126ac561c248abd8",
+    "startBlock": "27005555"
+  }
+}
