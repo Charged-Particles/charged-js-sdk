@@ -1,2 +1,1 @@
-# charged-js-sdk
-Charged Particles - JS SDK
+## Charged Particles - JS SDK v0.0.1
