@@ -1,15 +1,17 @@
-// import { getSigner } from "./ethers.service";
 import ChargedParticles from "./abis/v2/ChargedParticles.json";
+import mainnetAddresses from './networks/v2/mainnet.json';
 import { ethers } from 'ethers';
 
-export const getStateAddress = async () => {
-   const provider = ethers.providers.getDefaultProvider();
-   const contract = new ethers.Contract(
-      '0xaB1a1410EA40930755C1330Cc0fB3367897C8c41',
+// @dev returns the state adress from the ChargedParticles contract
+// @param provider - optional parameter. if not defined the code will use the ethers default provider.
+// @returns string of state address
+export const getStateAddress = async (provider?:ethers.providers.JsonRpcProvider) => {
+   const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
+   const contract:ethers.Contract = new ethers.Contract(
+      mainnetAddresses.chargedParticles.address,
       ChargedParticles,
-      provider
+      provider ?? defaultProvider
    );
-   const stateAddress = await contract.getStateAddress();
-   // console.log(stateAddress);
+   const stateAddress:String = await contract.getStateAddress();
    return stateAddress;
 }
