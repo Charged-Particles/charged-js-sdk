@@ -17,6 +17,6 @@ const getParamOrExit = (name: string) => {
 //   return param;
 // };
 
-export const PK = getParamOrExit('PK');
+export const MNEMONIC = getParamOrExit('MNEMONIC');
 
 export const RPC_URL = getParamOrExit('RPC_URL');
