@@ -2,8 +2,17 @@ import ChargedParticles from "./abis/v2/ChargedParticles.json";
 import mainnetAddresses from './networks/v2/mainnet.json';
 import { ethers } from 'ethers';
 
+type MultiProvider = ethers.providers.JsonRpcProvider | 
+   ethers.providers.BaseProvider |
+   ethers.providers.AlchemyProvider | 
+   ethers.providers.InfuraProvider | 
+   ethers.providers.EtherscanProvider |
+   ethers.providers.CloudflareProvider |
+   ethers.providers.PocketProvider | 
+   ethers.providers.AnkrProvider;
+
 // Boilerplate. Returns the CP contract with the correct provider
-const initContract = (provider?:ethers.providers.JsonRpcProvider) => {
+const initContract = (provider?:MultiProvider) => {
    const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
    return new ethers.Contract(
       mainnetAddresses.chargedParticles.address,
@@ -15,7 +24,7 @@ const initContract = (provider?:ethers.providers.JsonRpcProvider) => {
 /// @notice returns the state adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of state address
-export const getStateAddress = async (provider?:ethers.providers.JsonRpcProvider) => {
+export const getStateAddress = async (provider?:MultiProvider) => {
    const contract:ethers.Contract = initContract(provider);
    const stateAddress:String = await contract.getStateAddress();
    return stateAddress;
@@ -24,7 +33,7 @@ export const getStateAddress = async (provider?:ethers.providers.JsonRpcProvider
 /// @notice returns the settings adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of settings address
-export const getSettingsAddress = async (provider?:ethers.providers.JsonRpcProvider) => {
+export const getSettingsAddress = async (provider?:MultiProvider) => {
    const contract:ethers.Contract = initContract(provider);
    const settingsAddress:String = await contract.getSettingsAddress();
    return settingsAddress;
@@ -33,7 +42,7 @@ export const getSettingsAddress = async (provider?:ethers.providers.JsonRpcProvi
 /// @notice returns the managers adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of settings address
-export const getManagersAddress = async (provider?:ethers.providers.JsonRpcProvider) => {
+export const getManagersAddress = async (provider?:MultiProvider) => {
    const contract:ethers.Contract = initContract(provider);
    const managersAddress:String = await contract.getManagersAddress();
    return managersAddress;
@@ -43,7 +52,7 @@ export const getManagersAddress = async (provider?:ethers.providers.JsonRpcProvi
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @param assetAmount - a wei string of amount of assets to calculate fees on
 /// @returns the amount of protocol fees for the protocol as a decimal string
-export const getFeesForDeposit = async (assetAmount:String,  provider?:ethers.providers.JsonRpcProvider) => {
+export const getFeesForDeposit = async (assetAmount:String,  provider?:MultiProvider) => {
    const contract:ethers.Contract = initContract(provider);
    const protocolFee = await contract.getFeesForDeposit(assetAmount);
    return protocolFee.toString();
@@ -56,7 +65,7 @@ export const getFeesForDeposit = async (assetAmount:String,  provider?:ethers.pr
 /// @param walletManagerId  The Liquidity-Provider ID to check the Asset balance of
 /// @param assetToken           The Address of the Asset Token to check
 /// @return The Amount of underlying Assets held within the Token as a decimal string
-export const getBaseParticleMass = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String,  provider?:ethers.providers.JsonRpcProvider) => {
+export const getBaseParticleMass = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String,  provider?:MultiProvider) => {
    const contract:ethers.Contract = initContract(provider);
    const particleMass = await contract.baseParticleMass(contractAddress, tokenId, walletManagerId, assetToken);
    console.log(typeof particleMass);
@@ -70,7 +79,7 @@ export const getBaseParticleMass = async (contractAddress:String, tokenId:String
 /// @param walletManagerId  The Liquidity-Provider ID to check the Interest balance of
 /// @param assetToken           The Address of the Asset Token to check
 /// @return The amount of interest the Token has generated (in Asset Token) as a decimal string
-export const getCurrentParticleCharge = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String,  provider?:ethers.providers.JsonRpcProvider) => {
+export const getCurrentParticleCharge = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String,  provider?:MultiProvider) => {
    const contract:ethers.Contract = initContract(provider);
    const currentParticleCharge = await contract.currentParticleCharge(contractAddress, tokenId, walletManagerId, assetToken);
    return currentParticleCharge.toString();
@@ -83,7 +92,7 @@ export const getCurrentParticleCharge = async (contractAddress:String, tokenId:S
 /// @param walletManagerId  The Liquidity-Provider ID to check the Kinetics balance of
 /// @param assetToken           The Address of the Asset Token to check
 /// @return The amount of LP tokens that have been generated as a decimal string
-export const getParticleKinetics = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String,  provider?:ethers.providers.JsonRpcProvider) => {
+export const getParticleKinetics = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String,  provider?:MultiProvider) => {
    const contract:ethers.Contract = initContract(provider);
    const currentParticleKinetics = await contract.currentParticleKinetics(contractAddress, tokenId, walletManagerId, assetToken);
    return currentParticleKinetics.toString();
