@@ -2,10 +2,15 @@ import { getStateAddress } from '../../src/ChargedParticles';
 import { ethers } from 'ethers'
 import 'dotenv/config';
 
-const mainnetAddy = '0x48974C6ae5A0A25565b0096cE3c81395f604140f';
-const kovanAddy = '0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca';
-const polygonAddy = '0x9c00b8CF03f58c0420CDb6DE72E27Bf11964025b';
-const mumbaiAddy = '0x581c57b86fC8c2D639f88276478324cE1380979D';
+import mainnetAddresses from '../../src/networks/v2/mainnet.json';
+import kovanAddresses from '../../src/networks/v2/kovan.json';
+import polygonAddresses from '../../src/networks/v2/polygon.json';
+import mumbaiAddresses from '../../src/networks/v2/mumbai.json';
+
+const mainnetAddy = mainnetAddresses.chargedState.address;
+const kovanAddy = kovanAddresses.chargedState.address;
+const polygonAddy = polygonAddresses.chargedState.address;
+const mumbaiAddy = mumbaiAddresses.chargedState.address;
 
 // If we do not define these in our .env file the providers will fall back to default public api keys from ethers
 // Api keys are not required however the tests may sometimes fail when using default public api keys
