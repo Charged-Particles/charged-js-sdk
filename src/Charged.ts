@@ -7,17 +7,18 @@ export default class Charged  {
   RPC_URL: String;
   provider: providers.Provider;
   network: Networkish;
+  chargedParticlesMethods;
 
   constructor(
    _RPC_URL: String,
-   _provider: providers.Provider,
-   _network: Networkish
+   _network: Networkish,
+   _provider?: providers.Provider
    ) {
 
     this.RPC_URL = _RPC_URL;
-    this.provider = _provider;
     this.network = _network;
 
+    // If no provider is injected, instantate from PK.
     if (!_provider) {
       if (Boolean(process.env.PK)) {
         this.provider = ethers.getDefaultProvider(_network, process.env.PK);
@@ -31,10 +32,16 @@ export default class Charged  {
     } else {
       this.provider = _provider;
     }
+
+    //Exposing all contract methos
+    const chargedParticleContract = this.getChargeParticleContract();
+    this.chargedParticlesMethods = {...chargedParticleContract.functions}
   }
 
+  // Passing imported functions
   getStateAddress = getStateAddress;
   
+  // Return contract, let the user use it. 
   getChargeParticleContract() {
     const contract = new ethers.Contract(
       '0xaB1a1410EA40930755C1330Cc0fB3367897C8c41',
@@ -42,7 +49,7 @@ export default class Charged  {
       this.provider
     );    
 
-   return contract
+    return contract
   }
 }
 
