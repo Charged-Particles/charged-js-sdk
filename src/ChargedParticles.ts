@@ -49,7 +49,9 @@ const getAddressFromNetwork = (network?:Networkish) => {
          case 'homestead': return 'mainnet';
          case 'kovan': return 'kovan';
          case 'matic': return 'polygon';
+         case 'polygon': return 'polygon';
          case 'maticmum': return 'mumbai';
+         case 'mumbai': return 'mumbai';
          default: return 'unsupported chain';
       }
    } else if(typeof network === "number") {
