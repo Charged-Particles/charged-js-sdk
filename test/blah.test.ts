@@ -32,4 +32,9 @@ describe('Charged class', () => {
 
     expect(stateContractAddress).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
   })
+
+  it('Gets state adress from imported func', async() => {
+    const stateContractAddress = await charged.getStateAddress();
+    expect(stateContractAddress).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+  })
 })
