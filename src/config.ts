@@ -21,4 +21,5 @@ export const MNEMONIC = getParamOrExit('MNEMONIC');
 
 export const RPC_URL = getParamOrExit('RPC_URL');
 
-export const ALCHEMY_RPC_URL = getParamOrExit('ALCHEMY_API_KEY');
+export const ALCHEMY_API_KEY = getParamOrExit('ALCHEMY_API_KEY');
+export const INFURA_API_KEY = getParamOrExit('INFURA_API_KEY');
