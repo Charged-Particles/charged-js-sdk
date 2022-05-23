@@ -18,7 +18,7 @@ type MultiProvider = ethers.providers.JsonRpcProvider |
    ethers.providers.AnkrProvider;
 
 // Boilerplate. Returns the CP contract with the correct provider
-const initContract = (provider?:MultiProvider, network?:Networkish) => {
+export const initContract = (provider?:MultiProvider, network?:Networkish) => {
    const networkFormatted:String = getAddressFromNetwork(network);
    const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
    

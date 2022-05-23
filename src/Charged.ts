@@ -1,56 +1,52 @@
 import { ethers, providers } from "ethers";
 import { Networkish } from "@ethersproject/networks";
-import ChargedParticles from "./abis/v2/ChargedParticles.json";
-import { getStateAddress } from "./ChargedParticles";
+import { initContract } from "./ChargedParticles";
 
 export default class Charged  {
   rpcUrl: String;
   provider: providers.Provider;
   network: Networkish;
+  chargedParticlesContract;
   chargedParticlesMethods;
 
   constructor(
-   _rpcUrl: String,
-   _network: Networkish,
-   _provider?: providers.Provider
+   rpcUrl: String,
+   network: Networkish,
+   provider?: providers.Provider
    ) {
 
-    this.rpcUrl = _rpcUrl;
-    this.network = _network;
+    this.rpcUrl = rpcUrl;
+    this.network = network;
 
     // If no provider is injected, instantate from PK.
-    if (!_provider) {
+    if (!provider) {
       if (Boolean(process.env.PK)) {
-        this.provider = ethers.getDefaultProvider(_network, process.env.PK);
+        this.provider = ethers.getDefaultProvider(network, process.env.PK);
       } else {
-        this.provider = ethers.getDefaultProvider(_network);
+        this.provider = ethers.getDefaultProvider(network);
         console.log(
           `These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
           It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
         );
       }
     } else {
-      this.provider = _provider;
+      this.provider = provider;
     }
 
     //Exposing all contract methos
-    const chargedParticleContract = this.getChargeParticleContract();
-    this.chargedParticlesMethods = {...chargedParticleContract.functions}
+    this.chargedParticlesContract = initContract(this.provider, this.network);
+    this.chargedParticlesMethods = {...this.chargedParticlesContract.functions}
   }
 
-  // Passing imported functions
-  getStateAddress = getStateAddress;
-  
-  // Return contract, let the user use it. 
-  getChargeParticleContract() {
-    const contract = new ethers.Contract(
-      '0xaB1a1410EA40930755C1330Cc0fB3367897C8c41',
-      ChargedParticles,
-      this.provider
-    );    
-
-    return contract
+  /// @notice returns the state adress from the ChargedParticles contract
+  /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
+  /// @returns string of state address
+  public async getStateAddress() {
+    const stateAddress:String = await this.chargedParticlesContract.getStateAddress();
+    return stateAddress;
   }
+
+  // functions ... 
 }
 
 
