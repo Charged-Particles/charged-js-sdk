@@ -18,15 +18,15 @@ describe('getStateAddressTest', () => {
 
 describe('Charged class', () => {
   const provider = ethers.providers.getDefaultProvider();
-  const charged = new Charged('RPC_URL',provider,1);
+  const charged = new Charged('rpcUrl',provider,1);
 
   it('Should create the class', async () => {
-    expect(charged.RPC_URL).toEqual('RPC_URL');
+    expect(charged.rpcUrl).toEqual('rpcUrl');
     expect(await charged.provider.getNetwork()).toHaveProperty('chainId');
   })
 
   it('Get charged particle contract', async () => {
-    // const charged = new Charged('RPC_URL',provider);
+    // const charged = new Charged('rpcUrl',provider);
     const chargeParticleContract = charged.getChargeParticleContract();
     const stateContractAddress = await chargeParticleContract.getStateAddress();
 

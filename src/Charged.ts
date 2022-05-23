@@ -4,18 +4,18 @@ import ChargedParticles from "./abis/v2/ChargedParticles.json";
 import { getStateAddress } from "./ChargedParticles";
 
 export default class Charged  {
-  RPC_URL: String;
+  rpcUrl: String;
   provider: providers.Provider;
   network: Networkish;
   chargedParticlesMethods;
 
   constructor(
-   _RPC_URL: String,
+   _rpcUrl: String,
    _network: Networkish,
    _provider?: providers.Provider
    ) {
 
-    this.RPC_URL = _RPC_URL;
+    this.rpcUrl = _rpcUrl;
     this.network = _network;
 
     // If no provider is injected, instantate from PK.

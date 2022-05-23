@@ -1,4 +1,4 @@
-// import { RPC_URL, MNEMONIC } from './config';
+// import { rpcUrl, MNEMONIC } from './config';
 // import { getAddressFromSigner } from "./ethers.service";
 // import { getStateAddress } from "./ChargedParticles";
 
