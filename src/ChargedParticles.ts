@@ -169,3 +169,17 @@ export const energizeParticle = async (contractAddress:String, tokenId:String, w
    const contract:ethers.Contract = initContract(provider, network);
    return await contract.energizeParticle(contractAddress, tokenId, walletManagerId, assetToken, assetAmount);
 }
+
+/// @notice Allows the owner or operator of the Token to collect or transfer the interest generated
+///         from the token without removing the underlying Asset that is held within the token.
+/// @param receiver             The Address to Receive the Discharged Asset Tokens
+/// @param contractAddress      The Address to the Contract of the Token to Discharge
+/// @param tokenId              The ID of the Token to Discharge
+/// @param walletManagerId      The Wallet Manager of the Assets to Discharge from the Token
+/// @param assetToken           The Address of the Asset Token being discharged
+/// @return creatorAmount Amount of Asset Token discharged to the Creator
+/// @return receiverAmount Amount of Asset Token discharged to the Receiver
+export const dischargeParticle = async (receiver:String, contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:MultiProvider, network?:Networkish) => {
+   const contract:ethers.Contract = initContract(provider, network);
+   return await contract.dischargeParticle(receiver, contractAddress, tokenId, walletManagerId, assetToken);
+}
