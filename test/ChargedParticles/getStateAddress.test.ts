@@ -21,12 +21,6 @@ const alchemyApiKeyMumbai = process.env.ALCHEMY_APIKEY_MUMBAI;
 const infuraApiKeyMainnet = process.env.INFURA_APIKEY;
 const etherscanApiKey = process.env.ETHERSCAN_APIKEY;
 
-describe('getStateAddressTest', () => {
-  it('return correct address with empty params.', async () => {
-    expect(await getStateAddress()).toEqual(mainnetAddy);
-  })
-})
-
 //~~~~~~~~~~~~~~~~~~~
 // NETWORK TYPE TESTING
 //~~~~~~~~~~~~~~~~~~~
