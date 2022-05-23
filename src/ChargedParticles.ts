@@ -150,3 +150,22 @@ export const getParticleKinetics = async (contractAddress:String, tokenId:String
    const currentParticleKinetics = await contract.currentParticleKinetics(contractAddress, tokenId, walletManagerId, assetToken);
    return currentParticleKinetics.toString();
 }
+
+/// @notice Fund Particle with Asset Token
+///    Must be called by the account providing the Asset
+///    Account must Approve THIS contract as Operator of Asset
+///
+/// NOTE: DO NOT Energize an ERC20 Token, as anyone who holds any amount
+///       of the same ERC20 token could discharge or release the funds.
+///       All holders of the ERC20 token would essentially be owners of the Charged Particle.
+///
+/// @param contractAddress      The Address to the Contract of the Token to Energize
+/// @param tokenId              The ID of the Token to Energize
+/// @param walletManagerId  The Asset-Pair to Energize the Token with
+/// @param assetToken           The Address of the Asset Token being used
+/// @param assetAmount          The Amount of Asset Token to Energize the Token with
+/// @return yieldTokensAmount The amount of Yield-bearing Tokens added to the escrow for the Token
+export const energizeParticle = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, assetAmount:Number, provider?:MultiProvider, network?:Networkish) => {
+   const contract:ethers.Contract = initContract(provider, network);
+   return await contract.energizeParticle(contractAddress, tokenId, walletManagerId, assetToken, assetAmount);
+}
