@@ -18,8 +18,6 @@ const alchemyApiKeyMainnet = process.env.ALCHEMY_APIKEY;
 const alchemyApiKeyKovan = process.env.ALCHEMY_APIKEY_KOVAN;
 const alchemyApiKeyPolygon = process.env.ALCHEMY_APIKEY_POLYGON;
 const alchemyApiKeyMumbai = process.env.ALCHEMY_APIKEY_MUMBAI;
-const infuraApiKeyMainnet = process.env.INFURA_APIKEY;
-const etherscanApiKey = process.env.ETHERSCAN_APIKEY;
 
 //~~~~~~~~~~~~~~~~~~~
 // NETWORK TYPE TESTING
@@ -74,94 +72,5 @@ describe('alchemy mumbai', () => {
   const alcProvider = new ethers.providers.AlchemyProvider('maticmum', alchemyApiKeyMumbai);
   it('should return mumbai state address with alchemy provider given', async () => {
     expect(await getStateAddress(alcProvider, 'maticmum')).toEqual(mumbaiAddy);
-  })
-})
-
-//~~~~~~~~~~~~~~~~~~~
-// INFURA
-//~~~~~~~~~~~~~~~~~~~
-describe('infura mainnet', () => {
-  const infuraProvider = new ethers.providers.InfuraProvider('homestead', infuraApiKeyMainnet);
-  it('should return mainnet state address with infura provider given', async () => {
-    expect(await getStateAddress(infuraProvider)).toEqual(mainnetAddy);
-  })
-})
-
-// >> resolving mainnet
-describe('infura kovan', () => {
-  const infuraProvider = new ethers.providers.InfuraProvider('kovan');
-  it('should return kovan state address with infura provider given', async () => {
-    expect(await getStateAddress(infuraProvider, 'kovan')).toEqual(kovanAddy);
-  })
-})
-
-// resolving mainnent
-describe('infura polygon', () => {
-  const infuraProvider = new ethers.providers.InfuraProvider('matic');
-  it('should return polygon state address with infura provider given', async () => {
-    expect(await getStateAddress(infuraProvider, 'matic')).toEqual(polygonAddy);
-  })
-})
-
-// mainnet
-describe('infura mumbai', () => {
-  const infuraProvider = new ethers.providers.InfuraProvider('maticmum');
-  it('should return mumbai state address with infura provider given', async () => {
-    expect(await getStateAddress(infuraProvider, 'maticmum')).toEqual(mumbaiAddy);
-  })
-})
-
-//~~~~~~~~~~~~~~~~~~~
-// ETHERSCAN
-//~~~~~~~~~~~~~~~~~~~
-describe('etherscan mainnet', () => {
-  const etherscanProvider = new ethers.providers.EtherscanProvider('homestead', etherscanApiKey);
-  it('should return mainnet state address with etherscan provider given', async () => {
-    expect(await getStateAddress(etherscanProvider)).toEqual(mainnetAddy);
-  })
-})
-
-// mainnet 
-describe('etherscan kovan', () => {
-  const etherscanProvider = new ethers.providers.EtherscanProvider('kovan', etherscanApiKey);
-  it('should return kovan state address with etherscan provider given', async () => {
-    expect(await getStateAddress(etherscanProvider, 'kovan')).toEqual(kovanAddy);
-  })
-})
-
-//~~~~~~~~~~~~~~~~~~~
-// CLOUDFLARE
-//~~~~~~~~~~~~~~~~~~~
-describe('cloudflare mainnet', () => {
-  const cfProvider = new ethers.providers.CloudflareProvider();
-  it('should return mainnet state address with cloudflare provider given', async () => {
-    expect(await getStateAddress(cfProvider)).toEqual(mainnetAddy);
-  })
-})
-
-//~~~~~~~~~~~~~~~~~~~
-// POCKET
-//~~~~~~~~~~~~~~~~~~~
-describe('pocket mainnet', () => {
-  const pocketProvider = new ethers.providers.PocketProvider();
-  it('should return mainnet state address with pocket provider given', async () => {
-    expect(await getStateAddress(pocketProvider)).toEqual(mainnetAddy);
-  })
-})
-
-//~~~~~~~~~~~~~~~~~~~
-// ANKR
-//~~~~~~~~~~~~~~~~~~~
-describe('ankr mainnet', () => {
-  const ankrProvider = new ethers.providers.AnkrProvider();
-  it('should return mainnet state address with ankr provider given', async () => {
-    expect(await getStateAddress(ankrProvider)).toEqual(mainnetAddy);
-  })
-})
-
-describe('ankr polygon', () => {
-  const ankrProvider = new ethers.providers.AnkrProvider('matic');
-  it('should return polygon state address with ankr provider given', async () => {
-    expect(await getStateAddress(ankrProvider, 'matic')).toEqual(polygonAddy);
   })
 })
