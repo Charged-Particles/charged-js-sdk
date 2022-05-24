@@ -177,3 +177,15 @@ export const getParticleKinetics = async (contractAddress:String, tokenId:String
    const currentParticleKinetics = await contract.currentParticleKinetics(contractAddress, tokenId, walletManagerId, assetToken);
    return currentParticleKinetics.toString();
 }
+
+/// @notice Gets the total amount of ERC721 Tokens that the Particle holds
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param basketManagerId  The ID of the BasketManager to check the token balance of
+/// @return The total amount of ERC721 tokens that are held  within the Particle
+export const getParicleCovalentBonds = async (contractAddress:String, tokenId:String, walletManagerId:String, provider?:MultiProvider, network?:Networkish) => {
+   const contract:ethers.Contract = initContract(provider, network);
+   const currentParticleCovalentBonds = await contract.currentParticleCovalentBonds(contractAddress, tokenId, walletManagerId);
+   return currentParticleCovalentBonds.toString();
+}
+ 
