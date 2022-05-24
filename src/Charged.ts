@@ -1,27 +1,28 @@
 import { ethers, providers } from "ethers";
-import { Networkish } from "@ethersproject/networks";
 import { initContract } from "./ChargedParticles";
 
+// Types 
+import { Networkish } from "@ethersproject/networks";
+import { DefaultProviderKeys } from "./types";
+
 export default class Charged  {
-  rpcUrl: String;
   provider: providers.Provider;
   network: Networkish;
   chargedParticlesContract;
   chargedParticlesMethods;
 
   constructor(
-   rpcUrl: String,
    network: Networkish,
-   provider?: providers.Provider
+   defaultProviderKeys?: DefaultProviderKeys,
+   injectedProvider?: providers.Provider
    ) {
 
-    this.rpcUrl = rpcUrl;
     this.network = network;
 
     // If no provider is injected, instantate from PK.
-    if (!provider) {
-      if (Boolean(process.env.PK)) {
-        this.provider = ethers.getDefaultProvider(network, process.env.PK);
+    if (!injectedProvider) {
+      if (Boolean(defaultProviderKeys)) {
+        this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);
       } else {
         this.provider = ethers.getDefaultProvider(network);
         console.log(
@@ -30,7 +31,7 @@ export default class Charged  {
         );
       }
     } else {
-      this.provider = provider;
+      this.provider = injectedProvider;
     }
 
     //Exposing all contract methos
