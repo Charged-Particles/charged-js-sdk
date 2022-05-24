@@ -39,6 +39,30 @@ const initContract = (provider?:MultiProvider, network?:Networkish) => {
    );
 }
 
+// Create a contract with a signer attached. Signer is required as there is no default to use.
+const initSignerContract = (signer:ethers.Signer, network?:Networkish) => {
+   if(!signer) {
+      throw 'No signer passed. Cannot continue.';
+   }
+   const networkFormatted:String = getAddressFromNetwork(network);
+
+      // if a unsupported chain is given. default to mainnet
+   let address:string;
+   switch(networkFormatted) {
+      case 'mainnet': address = mainnetAddresses.chargedParticles.address; break;
+      case 'kovan': address = kovanAddresses.chargedParticles.address; break;
+      case 'polygon': address = polygonAddresses.chargedParticles.address; break;
+      case 'mumbai': address = mumbaiAddresses.chargedParticles.address; break;
+      default: address = mainnetAddresses.chargedParticles.address; break;
+   }
+
+   return new ethers.Contract(
+      address,
+      ChargedParticles,
+      signer
+   );
+}
+
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
 const getAddressFromNetwork = (network?:Networkish) => {
    // if network is not given. default to mainnet
@@ -104,7 +128,7 @@ export const getManagersAddress = async (provider?:MultiProvider, network?:Netwo
 /// @notice Calculates the amount of Fees to be paid for a specific deposit amount
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @param assetAmount - a wei string of amount of assets to calculate fees on
-/// @returns the amount of protocol fees for the protocol as a decimal string
+/// @returns the amount of protocol fees for the protocol as a decimal string. RETURNS IN WEI!!!
 export const getFeesForDeposit = async (assetAmount:String,  provider?:MultiProvider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const protocolFee = await contract.getFeesForDeposit(assetAmount);
@@ -117,12 +141,15 @@ export const getFeesForDeposit = async (assetAmount:String,  provider?:MultiProv
 /// @param tokenId              The ID of the Token
 /// @param walletManagerId  The Liquidity-Provider ID to check the Asset balance of
 /// @param assetToken           The Address of the Asset Token to check
-/// @return The Amount of underlying Assets held within the Token as a decimal string
-export const getBaseParticleMass = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:MultiProvider, network?:Networkish) => {
-   const contract:ethers.Contract = initContract(provider, network);
-   const particleMass = await contract.baseParticleMass(contractAddress, tokenId, walletManagerId, assetToken);
-   console.log(typeof particleMass);
-   return particleMass.toString();
+/// @return The Amount of underlying Assets held within the Token as a decimal string. RETURNS IN WEI!!
+
+// NOT SURE HOW TO GET THIS FUNCTION WORKING. REQUIRES GAS AND DOES NOT RETURN ANY DATA I CAN SEE.
+export const getBaseParticleMass = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, signer:ethers.Signer, network?:Networkish) => {
+   const contract:ethers.Contract = initSignerContract(signer, network);
+   const response = await contract.baseParticleMass(contractAddress, tokenId, walletManagerId, assetToken);
+   const particleMass = response.value;
+   console.log(particleMass);
+   return ethers.utils.formatUnits(particleMass);
 }
 
 /// @notice Gets the amount of Interest that the Particle has generated representing
@@ -131,9 +158,9 @@ export const getBaseParticleMass = async (contractAddress:String, tokenId:String
 /// @param tokenId              The ID of the Token
 /// @param walletManagerId  The Liquidity-Provider ID to check the Interest balance of
 /// @param assetToken           The Address of the Asset Token to check
-/// @return The amount of interest the Token has generated (in Asset Token) as a decimal string
-export const getCurrentParticleCharge = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:MultiProvider, network?:Networkish) => {
-   const contract:ethers.Contract = initContract(provider, network);
+/// @return The amount of interest the Token has generated (in Asset Token) as a decimal string. RETURNS IN WEI!!!
+export const getCurrentParticleCharge = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, signer:ethers.Signer, network?:Networkish) => {
+   const contract:ethers.Contract = initSignerContract(signer, network);
    const currentParticleCharge = await contract.currentParticleCharge(contractAddress, tokenId, walletManagerId, assetToken);
    return currentParticleCharge.toString();
 }
@@ -145,8 +172,8 @@ export const getCurrentParticleCharge = async (contractAddress:String, tokenId:S
 /// @param walletManagerId  The Liquidity-Provider ID to check the Kinetics balance of
 /// @param assetToken           The Address of the Asset Token to check
 /// @return The amount of LP tokens that have been generated as a decimal string
-export const getParticleKinetics = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:MultiProvider, network?:Networkish) => {
-   const contract:ethers.Contract = initContract(provider, network);
+export const getParticleKinetics = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, signer:ethers.Signer, network?:Networkish) => {
+   const contract:ethers.Contract = initSignerContract(signer, network);
    const currentParticleKinetics = await contract.currentParticleKinetics(contractAddress, tokenId, walletManagerId, assetToken);
    return currentParticleKinetics.toString();
 }
