@@ -13,9 +13,7 @@ export default class Charged  {
 
   constructor(
    network: Networkish,
-
    defaultProviderKeys?: DefaultProviderKeys,
-
    injectedProvider?: providers.ExternalProvider
    // signer |  etherjs > wallets OR signer
 
@@ -26,7 +24,6 @@ export default class Charged  {
 
     this.network = network;
 
-    // If no provider is injected
     if (!injectedProvider) {
       if (Boolean(defaultProviderKeys)) {
         this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);

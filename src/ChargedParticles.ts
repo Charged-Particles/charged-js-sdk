@@ -24,7 +24,6 @@ type MultiProvider = ethers.providers.JsonRpcProvider |
 
 export const initContract = (provider?:MultiProvider, network?:Networkish) => {
    const networkFormatted:String = getAddressFromNetwork(network);
-   const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
    
    // if a unsupported chain is given. default to mainnet
    let address:string;
@@ -36,11 +35,13 @@ export const initContract = (provider?:MultiProvider, network?:Networkish) => {
       default: address = mainnetAddresses.chargedParticles.address; break;
    }
 
-   return new ethers.Contract(
+   const chargedParticleCOntract = new ethers.Contract(
       address,
       ChargedParticles,
-      provider ?? defaultProvider
+      provider
    );
+
+   return chargedParticleCOntract;
 }
 
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
