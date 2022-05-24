@@ -6,36 +6,49 @@ import { Networkish } from "@ethersproject/networks";
 import { DefaultProviderKeys } from "./types";
 
 export default class Charged  {
-  provider: providers.Provider;
   network: Networkish;
+  provider: providers.Provider | string | undefined;
   chargedParticlesContract;
   chargedParticlesMethods;
 
   constructor(
    network: Networkish,
+
    defaultProviderKeys?: DefaultProviderKeys,
-   injectedProvider?: providers.Provider
+
+   injectedProvider?: providers.ExternalProvider
+   // signer |  etherjs > wallets OR signer
+
+   //provider
+   //signer
+   //defaultProvider {keys, network}
    ) {
 
     this.network = network;
 
-    // If no provider is injected, instantate from PK.
+    // If no provider is injected
     if (!injectedProvider) {
       if (Boolean(defaultProviderKeys)) {
         this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);
       } else {
         this.provider = ethers.getDefaultProvider(network);
         console.log(
-          `These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
+          `Charged particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
           It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
         );
       }
-    } else {
+    }  else if (typeof injectedProvider === 'string') {
+      this.provider = new providers.StaticJsonRpcProvider(injectedProvider, network);
+    } else if (injectedProvider instanceof providers.Provider) {
       this.provider = injectedProvider;
+    } else {
+      this.provider = new providers.Web3Provider(injectedProvider, network);
     }
 
     //Exposing all contract methos
     this.chargedParticlesContract = initContract(this.provider, this.network);
+
+    // Alternative, expose all methos
     this.chargedParticlesMethods = {...this.chargedParticlesContract.functions}
   }
 

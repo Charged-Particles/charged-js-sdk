@@ -9,6 +9,7 @@ import mumbaiAddresses from './networks/v2/mumbai.json';
 
 
 type MultiProvider = ethers.providers.JsonRpcProvider | 
+   ethers.providers.Provider |
    ethers.providers.BaseProvider |
    ethers.providers.AlchemyProvider | 
    ethers.providers.InfuraProvider | 
@@ -18,6 +19,9 @@ type MultiProvider = ethers.providers.JsonRpcProvider |
    ethers.providers.AnkrProvider;
 
 // Boilerplate. Returns the CP contract with the correct provider
+// TODO: should monitor address and chain ID change, throw error if not supported. 
+// TODO: donot pass network to methods, get it from provider.
+
 export const initContract = (provider?:MultiProvider, network?:Networkish) => {
    const networkFormatted:String = getAddressFromNetwork(network);
    const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
