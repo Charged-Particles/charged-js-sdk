@@ -1,5 +1,6 @@
 // import { getStateAddress } from '../src/ChargedParticles';
 import { getWallet } from '../src/ethers.service';
+import { getFormatedromNetwork, getAddressByNetwork } from '../src/ChargedParticles';
 import Charged from '../src/Charged';
 import { ethers } from 'ethers'
 
@@ -20,9 +21,13 @@ describe('Charged class', () => {
 
     const stateAddressFromContract = await charged.getStateAddress();
     const signerAddress = await charged?.signer?.getAddress();
-  
-    expect(stateAddressFromContract).toEqual('0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca') 
-    expect(signerAddress).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A') 
+    
+    const formatedExpectedNetwork = getFormatedromNetwork(network)
+    const contractAddress = getAddressByNetwork(formatedExpectedNetwork);
+
+    expect(stateAddressFromContract).toEqual(contractAddress);
+
+    expect(signerAddress).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
   });
 
   it('Evaluates correct network', async() => {

@@ -17,17 +17,8 @@ export const initContract = (
   network?:Networkish,
   signer?: Wallet | Signer,
   ) => {
-   const networkFormatted:String = getAddressFromNetwork(network);
-   
-   // if a unsupported chain is given. default to mainnet
-   let address:string;
-   switch(networkFormatted) {
-      case 'mainnet': address = mainnetAddresses.chargedParticles.address; break;
-      case 'kovan': address = kovanAddresses.chargedParticles.address; break;
-      case 'polygon': address = polygonAddresses.chargedParticles.address; break;
-      case 'mumbai': address = mumbaiAddresses.chargedParticles.address; break;
-      default: address = mainnetAddresses.chargedParticles.address; break;
-   }
+   const networkFormatted: string = getFormatedromNetwork(network);
+   const address: string = getAddressByNetwork(networkFormatted);
 
    let chargedParticleCOntract = new ethers.Contract(
       address,
@@ -43,8 +34,20 @@ export const initContract = (
    return chargedParticleCOntract;
 }
 
+export const getAddressByNetwork = (networkFormatted: string) => {
+   let address:string;
+   switch(networkFormatted) {
+      case 'mainnet': address = mainnetAddresses.chargedParticles.address; break;
+      case 'kovan': address = kovanAddresses.chargedParticles.address; break;
+      case 'polygon': address = polygonAddresses.chargedParticles.address; break;
+      case 'mumbai': address = mumbaiAddresses.chargedParticles.address; break;
+      default: address = mainnetAddresses.chargedParticles.address; break;
+   }
+
+   return address;
+}
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
-const getAddressFromNetwork = (network?:Networkish) => {
+export const getFormatedromNetwork = (network?:Networkish) => {
    // if network is not given. default to mainnet
    if(!network) { return 'mainnet' };
 
