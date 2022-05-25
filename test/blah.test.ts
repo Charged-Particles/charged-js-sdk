@@ -1,4 +1,5 @@
-import { getStateAddress } from '../src/ChargedParticles';
+// import { getStateAddress } from '../src/ChargedParticles';
+import { getWallet } from '../src/ethers.service';
 import { sum } from '../src';
 import Charged from '../src/Charged';
 import { ethers } from 'ethers'
@@ -10,36 +11,19 @@ describe('blah', () => {
   });
 });
 
-describe('getStateAddressTest', () => {
-  it('returns a string', async () => {
-    expect(await getStateAddress()).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
-  })
-})
+// describe('getStateAddressTest', () => {
+//   it('returns a string', async () => {
+//     expect(await getStateAddress()).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+//   })
+// })
 
 describe('Charged class', () => {
+  const myWallet = getWallet();
+  expect(myWallet.address).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
+
   const provider = ethers.providers.getDefaultProvider();
-  const charged = new Charged('rpcUrl',provider,1);
+  const charged = new Charged('1', provider, myWallet);
 
-  it('Should create the class', async () => {
-    expect(charged.rpcUrl).toEqual('rpcUrl');
-    expect(await charged.provider.getNetwork()).toHaveProperty('chainId');
-  })
-
-  it('Get charged particle contract', async () => {
-    // const charged = new Charged('rpcUrl',provider);
-    const chargeParticleContract = charged.getChargeParticleContract();
-    const stateContractAddress = await chargeParticleContract.getStateAddress();
-
-    expect(stateContractAddress).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
-  })
-
-  it('Gets state adress from imported func', async() => {
-    const stateContractAddress = await charged.getStateAddress();
-    expect(stateContractAddress).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
-  })
-
-  it('Call function from methods object property', async() =>{
-    const stateContractAddress = await charged.chargedParticlesMethods.getStateAddress();
-    expect(stateContractAddress[0]).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
-  })
+  const walletAddressFromCharged = charged?.wallet?.address
+  expect(walletAddressFromCharged).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
 })

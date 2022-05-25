@@ -8,6 +8,10 @@ export const getSigner = () => {
   return walletMnemonic.connect(ethersProvider)
 };
 
+export const getWallet = () => {
+  return ethers.Wallet.fromMnemonic(MNEMONIC)
+};
+
 export const getAddressFromSigner = () => {
   return getSigner().address;
 };

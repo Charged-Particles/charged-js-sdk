@@ -1,4 +1,4 @@
-import { ethers, providers } from "ethers";
+import { ethers, providers, Wallet } from "ethers";
 import { initContract } from "./ChargedParticles";
 
 // Types 
@@ -8,14 +8,15 @@ import { DefaultProviderKeys } from "./types";
 export default class Charged  {
   network: Networkish;
   provider: providers.Provider | string | undefined;
+  wallet: Wallet | undefined;
   chargedParticlesContract;
   chargedParticlesMethods;
 
   constructor(
    network: Networkish,
+   injectedProvider?: providers.Provider,
+   wallet?: Wallet,
    defaultProviderKeys?: DefaultProviderKeys,
-   injectedProvider?: providers.ExternalProvider
-   // signer |  etherjs > wallets OR signer
 
    //provider
    //signer
@@ -23,6 +24,7 @@ export default class Charged  {
    ) {
 
     this.network = network;
+    this.wallet = wallet;
 
     if (!injectedProvider) {
       if (Boolean(defaultProviderKeys)) {
@@ -43,7 +45,7 @@ export default class Charged  {
     }
 
     //Exposing all contract methos
-    this.chargedParticlesContract = initContract(this.provider, this.network);
+    this.chargedParticlesContract = initContract(this.provider, this.network, this.wallet);
 
     // Alternative, expose all methos
     this.chargedParticlesMethods = {...this.chargedParticlesContract.functions}

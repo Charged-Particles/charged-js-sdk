@@ -1,5 +1,5 @@
 import ChargedParticles from "./abis/v2/ChargedParticles.json";
-import { ethers } from 'ethers';
+import { ethers, Wallet } from 'ethers';
 import { Networkish } from "@ethersproject/networks";
 
 import mainnetAddresses from './networks/v2/mainnet.json';
@@ -22,7 +22,11 @@ type MultiProvider = ethers.providers.JsonRpcProvider |
 // TODO: should monitor address and chain ID change, throw error if not supported. 
 // TODO: donot pass network to methods, get it from provider.
 
-export const initContract = (provider?:MultiProvider, network?:Networkish) => {
+export const initContract = (
+  provider?:MultiProvider, 
+  network?:Networkish,
+  wallet?: Wallet,
+  ) => {
    const networkFormatted:String = getAddressFromNetwork(network);
    
    // if a unsupported chain is given. default to mainnet
@@ -40,6 +44,10 @@ export const initContract = (provider?:MultiProvider, network?:Networkish) => {
       ChargedParticles,
       provider
    );
+
+   if(wallet) {
+    return chargedParticleCOntract.connect(wallet);
+   }
 
    return chargedParticleCOntract;
 }
