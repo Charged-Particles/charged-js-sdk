@@ -14,7 +14,7 @@ export default class Charged  {
 
   constructor(
    network: Networkish,
-   injectedProvider?: providers.Provider,
+   provider?: providers.Provider,
    signer?: Wallet | Signer | undefined,
    defaultProviderKeys?: DefaultProviderKeys,
 
@@ -26,7 +26,7 @@ export default class Charged  {
     this.network = network;
     this.signer = signer;
 
-    if (!injectedProvider) {
+    if (!provider) {
       if (Boolean(defaultProviderKeys)) {
         this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);
       } else {
@@ -36,12 +36,12 @@ export default class Charged  {
           It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
         );
       }
-    }  else if (typeof injectedProvider === 'string') {
-      this.provider = new providers.StaticJsonRpcProvider(injectedProvider, network);
-    } else if (injectedProvider instanceof providers.Provider) {
-      this.provider = injectedProvider;
+    }  else if (typeof provider === 'string') {
+      this.provider = new providers.StaticJsonRpcProvider(provider, network);
+    } else if (provider instanceof providers.Provider) {
+      this.provider = provider;
     } else {
-      this.provider = new providers.Web3Provider(injectedProvider, network);
+      this.provider = new providers.Web3Provider(provider, network);
     }
 
     //Exposing all contract methos
