@@ -17,13 +17,12 @@ type MultiProvider = ethers.providers.JsonRpcProvider |
    ethers.providers.PocketProvider | 
    ethers.providers.AnkrProvider;
 
-// type MultiSigner = ethers.Signer |
-//    ethers.VoidSigner |
-//    ethers.Wallet |
-//    ethers.providers.JsonRpcSigner;
+type MultiSigner = ethers.VoidSigner |
+   ethers.Wallet |
+   ethers.providers.JsonRpcSigner;
 
-// Boilerplate. Returns the CP contract with the correct provider
-const initContract = (provider?:MultiProvider, network?:Networkish) => {
+// Boilerplate. Returns the CP contract with the correct provider. If a signer is given, the writeContract will be created as well.
+export const initContract = (provider?:MultiProvider, network?:Networkish) => {
    const networkFormatted:String = getAddressFromNetwork(network);
    const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
    
@@ -45,28 +44,28 @@ const initContract = (provider?:MultiProvider, network?:Networkish) => {
 }
 
 // Create a contract with a signer attached. Signer is required as there is no default to use.
-// const initSignerContract = (signer:ethers.Signer, network?:Networkish) => {
-//    if(!signer) {
-//       throw 'No signer passed. Cannot continue.';
-//    }
-//    const networkFormatted:String = getAddressFromNetwork(network);
+const initSignerContract = (signer:ethers.Signer, network?:Networkish) => {
+   if(!signer) {
+      throw 'No signer passed. Cannot continue.';
+   }
+   const networkFormatted:String = getAddressFromNetwork(network);
 
-//       // if a unsupported chain is given. default to mainnet
-//    let address:string;
-//    switch(networkFormatted) {
-//       case 'mainnet': address = mainnetAddresses.chargedState.address; break;
-//       case 'kovan': address = kovanAddresses.chargedState.address; break;
-//       case 'polygon': address = polygonAddresses.chargedState.address; break;
-//       case 'mumbai': address = mumbaiAddresses.chargedState.address; break;
-//       default: address = mainnetAddresses.chargedState.address; break;
-//    }
+      // if a unsupported chain is given. default to mainnet
+   let address:string;
+   switch(networkFormatted) {
+      case 'mainnet': address = mainnetAddresses.chargedState.address; break;
+      case 'kovan': address = kovanAddresses.chargedState.address; break;
+      case 'polygon': address = polygonAddresses.chargedState.address; break;
+      case 'mumbai': address = mumbaiAddresses.chargedState.address; break;
+      default: address = mainnetAddresses.chargedState.address; break;
+   }
 
-//    return new ethers.Contract(
-//       address,
-//       ChargedState,
-//       signer
-//    );
-// }
+   return new ethers.Contract(
+      address,
+      ChargedState,
+      signer
+   );
+}
 
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
 const getAddressFromNetwork = (network?:Networkish) => {
@@ -251,3 +250,127 @@ export const getBreakBondState = async (contractAddress:String, tokenId:BigNumbe
 /***********************************|
 |      Only NFT Owner/Operator      |
 |__________________________________*/
+
+/// @notice Sets an Operator as Approved to Discharge a specific Token
+/// This allows an operator to withdraw the interest-portion only
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param operator         The Address of the Operator to Approve
+export const setDischargeApproval = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setDischargeApproval(contractAddress, tokenId, operator);
+  return result;
+}
+
+/// @notice Sets an Operator as Approved to Release a specific Token
+/// This allows an operator to withdraw the principal + interest
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param operator         The Address of the Operator to Approve
+export const setReleaseApproval = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setReleaseApproval(contractAddress, tokenId, operator);
+  return result;
+}
+
+/// @notice Sets an Operator as Approved to Break Covalent Bonds on a specific Token
+/// This allows an operator to withdraw Basket NFTs
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param operator         The Address of the Operator to Approve
+export const setBreakBondApproval = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setBreakBondApproval(contractAddress, tokenId, operator);
+  return result;
+}
+
+/// @notice Sets an Operator as Approved to Timelock a specific Token
+/// This allows an operator to timelock the principal or interest
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param operator         The Address of the Operator to Appr
+export const setTimelockApproval = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setTimelockApproval(contractAddress, tokenId, operator);
+  return result;
+}
+
+/// @notice Sets an Operator as Approved to Discharge/Release/Timelock a specific Token
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param operator         The Address of the Operator to Approve
+export const setApprovalForAll = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setApprovalForAll(contractAddress, tokenId, operator);
+  return result;
+}
+
+/// @dev Updates Restrictions on Energizing an NFT
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param state            The state of the permission (true or false)
+export const setPermsForRestrictCharge = async (contractAddress:String, tokenId:BigNumberish, state:boolean, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setPermsForRestrictChange(contractAddress, tokenId, state);
+  return result;
+}
+
+/// @dev Updates Allowance on Discharging an NFT by Anyone
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param state            The state of the permission (true or false)
+export const setPermsForAllowDischarge = async (contractAddress:String, tokenId:BigNumberish, state:boolean, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setPermsForAllowDischarge(contractAddress, tokenId, state);
+  return result;
+}
+
+/// @dev Updates Restrictions on Covalent Bonds on an NFT
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param state            The state of the permission (true or false)
+export const setPermsForRestrictBond = async (contractAddress:String, tokenId:BigNumberish, state:boolean, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setPermsForRestrictBond(contractAddress, tokenId, state);
+  return result;
+}
+
+/// @dev Updates Allowance on Breaking Covalent Bonds on an NFT by Anyone
+/// @param contractAddress  The Address to the Contract of the Token
+/// @param tokenId          The ID of the Token
+/// @param state            The state of the permission (true or false)
+export const setPermsForAllowBreakBond = async (contractAddress:String, tokenId:BigNumberish, state:boolean, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setPermsForAllowBreakBond(contractAddress, tokenId, state);
+  return result;
+}
+
+/// @notice Sets a Timelock on the ability to Discharge the Interest of a Particle
+/// @param contractAddress  The Address to the NFT to Timelock
+/// @param tokenId          The token ID of the NFT to Timelock
+/// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+export const setDischargeTimelock = async (contractAddress:String, tokenId:BigNumberish, unlockBlock:BigNumberish, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setDischargeTimelock(contractAddress, tokenId, unlockBlock);
+  return result;
+}
+
+/// @notice Sets a Timelock on the ability to Release the Assets of a Particle
+/// @param contractAddress  The Address to the NFT to Timelock
+/// @param tokenId          The token ID of the NFT to Timelock
+/// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+export const setReleaseTimelock = async (contractAddress:String, tokenId:BigNumberish, unlockBlock:BigNumberish, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setReleaseTimelock(contractAddress, tokenId, unlockBlock);
+  return result;
+}
+
+/// @notice Sets a Timelock on the ability to Break the Covalent Bond of a Particle
+/// @param contractAddress  The Address to the NFT to Timelock
+/// @param tokenId          The token ID of the NFT to Timelock
+/// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+export const setBreakBondTimelock = async (contractAddress:String, tokenId:BigNumberish, unlockBlock:BigNumberish, signer:MultiSigner, network?:Networkish) => {
+  const contract:ethers.Contract = initSignerContract(signer, network);
+  const result = await contract.setBreakBondTimelock(contractAddress, tokenId, unlockBlock);
+  return result;
+}
