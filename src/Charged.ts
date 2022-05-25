@@ -14,8 +14,8 @@ export default class Charged  {
 
   constructor(
    network: Networkish,
-   injectedProvider?: providers.Provider,
-   signer?: Wallet | Signer | undefined,
+   injectedProvider?: providers.Provider | providers.ExternalProvider,
+   signer?: Wallet | Signer | undefined, // TODO: default valu
    defaultProviderKeys?: DefaultProviderKeys,
 
    //provider
@@ -39,12 +39,15 @@ export default class Charged  {
       this.provider = new providers.StaticJsonRpcProvider(injectedProvider, network);
     } else if (injectedProvider instanceof providers.Provider) {
       this.provider = injectedProvider;
-    } else {
+    } else if (injectedProvider instanceof providers.EtherscanProvider){
       this.provider = new providers.Web3Provider(injectedProvider, network);
+    } else {
+      //TODO: error msg
     }
 
-    //Exposing all contract methos
+    //Exposing all contract methds
     this.chargedParticlesContract = initContract(this.provider, this.network, this.signer);
+
 
     // Alternative, expose all methos
     this.chargedParticlesMethods = {...this.chargedParticlesContract.functions}
@@ -85,18 +88,6 @@ export default class Charged  {
 
     const response = await trx.wait();
     
-    return response;
+    return {response, trx};
  }
- 
 }
-
-
-/*
-  const charge = new Charge(...)
-
-  charge.getStateAddress
-
-  const chargedParticleContract = charged.getChargeParticleContract()
-  chargedParticleContract.getStateAddress;
-
-*/

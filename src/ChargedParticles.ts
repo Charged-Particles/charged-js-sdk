@@ -29,12 +29,12 @@ type MultiSigner = ethers.Signer |
 export const initContract = (
   provider?:providers.Provider, 
   network?:Networkish,
-  signer?: Wallet | Signer,
+  signer?: Wallet | Signer
   ) => {
    const networkFormatted: string = getFormatedromNetwork(network);
    const address: string = getAddressByNetwork(networkFormatted);
 
-   let chargedParticleCOntract = new ethers.Contract(
+   let chargedParticleContract = new ethers.Contract(
       address,
       ChargedParticles,
       provider
@@ -42,10 +42,10 @@ export const initContract = (
 
    if(signer && provider) {
     const connectedWallet = signer.connect(provider)
-    chargedParticleCOntract = chargedParticleCOntract.connect(connectedWallet);
+    chargedParticleContract = chargedParticleContract.connect(connectedWallet);
    }
 
-   return chargedParticleCOntract;
+   return chargedParticleContract;
 }
 
 export const getAddressByNetwork = (networkFormatted: string) => {

@@ -34,5 +34,4 @@ describe('Charged class', () => {
     expect(usedNetwork?.chainId).toEqual(network);
   });
 
-  it()
-});
+ });
