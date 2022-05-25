@@ -1,4 +1,4 @@
-import { ethers, providers, Wallet } from "ethers";
+import { ethers, providers, Signer, Wallet } from "ethers";
 import { initContract } from "./ChargedParticles";
 
 // Types 
@@ -8,14 +8,14 @@ import { DefaultProviderKeys } from "./types";
 export default class Charged  {
   network: Networkish;
   provider: providers.Provider | string | undefined;
-  wallet: Wallet | undefined;
+  signer: Wallet | Signer  | undefined;
   chargedParticlesContract;
   chargedParticlesMethods;
 
   constructor(
    network: Networkish,
    injectedProvider?: providers.Provider,
-   wallet?: Wallet,
+   signer?: Wallet | Signer | undefined,
    defaultProviderKeys?: DefaultProviderKeys,
 
    //provider
@@ -24,14 +24,12 @@ export default class Charged  {
    ) {
 
     this.network = network;
-    this.wallet = wallet;
+    this.signer = signer;
 
     if (!injectedProvider) {
       if (Boolean(defaultProviderKeys)) {
-        console.log('case 1')
         this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);
       } else {
-        console.log('case 2')
         this.provider = ethers.getDefaultProvider(network);
         console.log(
           `Charged particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
@@ -39,18 +37,15 @@ export default class Charged  {
         );
       }
     }  else if (typeof injectedProvider === 'string') {
-        console.log('case 3')
       this.provider = new providers.StaticJsonRpcProvider(injectedProvider, network);
     } else if (injectedProvider instanceof providers.Provider) {
-        console.log('case 4')
       this.provider = injectedProvider;
     } else {
-        console.log('case 5')
       this.provider = new providers.Web3Provider(injectedProvider, network);
     }
 
     //Exposing all contract methos
-    this.chargedParticlesContract = initContract(this.provider, this.network, this.wallet);
+    this.chargedParticlesContract = initContract(this.provider, this.network, this.signer);
 
     // Alternative, expose all methos
     this.chargedParticlesMethods = {...this.chargedParticlesContract.functions}

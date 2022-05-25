@@ -1,5 +1,5 @@
 import ChargedParticles from "./abis/v2/ChargedParticles.json";
-import { ethers, Wallet, providers } from 'ethers';
+import { ethers, Wallet, providers, Signer } from 'ethers';
 import { Networkish } from "@ethersproject/networks";
 
 import mainnetAddresses from './networks/v2/mainnet.json';
@@ -15,7 +15,7 @@ import mumbaiAddresses from './networks/v2/mumbai.json';
 export const initContract = (
   provider?:providers.Provider, 
   network?:Networkish,
-  wallet?: Wallet,
+  signer?: Wallet | Signer,
   ) => {
    const networkFormatted:String = getAddressFromNetwork(network);
    
@@ -35,8 +35,8 @@ export const initContract = (
       provider
    );
 
-   if(wallet && provider) {
-    const connectedWallet = wallet.connect(provider)
+   if(signer && provider) {
+    const connectedWallet = signer.connect(provider)
     chargedParticleCOntract = chargedParticleCOntract.connect(connectedWallet);
    }
 

@@ -21,14 +21,14 @@ describe('Charged class', () => {
   const myWallet = getWallet();
   const provider = ethers.providers.getDefaultProvider();
 
-  it ('Initializes charged', () => {
+  it ('Initializes charged', async() => {
     expect(myWallet.address).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
     const charged = new Charged('1', provider, myWallet);
-    const walletAddressFromCharged = charged?.wallet?.address;
+    const walletAddressFromCharged = await charged?.signer?.getAddress();
     expect(walletAddressFromCharged).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
   })
 
-  it ('Tries to query connected contract to signer', async() => {
+  it ('Create contract with signer', async() => {
     const charged = new Charged('1', provider, myWallet);
     const chargedParticlesContract = charged.chargedParticlesContract;
 
@@ -37,7 +37,12 @@ describe('Charged class', () => {
   
     expect(stateAddressFromContract).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f') 
     expect(signerAddress).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A') 
+  });
 
-    console.log(signerAddress);
+  it('Creates a signed transactions', async() => {
+    // const charged = new Charged('1', provider, myWallet);
+
+
   })
+
 })
