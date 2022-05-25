@@ -1,5 +1,5 @@
 import ChargedParticles from "./abis/v2/ChargedParticles.json";
-import { ethers, Wallet } from 'ethers';
+import { ethers, Wallet, providers } from 'ethers';
 import { Networkish } from "@ethersproject/networks";
 
 import mainnetAddresses from './networks/v2/mainnet.json';
@@ -8,22 +8,12 @@ import polygonAddresses from './networks/v2/polygon.json';
 import mumbaiAddresses from './networks/v2/mumbai.json';
 
 
-type MultiProvider = ethers.providers.JsonRpcProvider | 
-   ethers.providers.Provider |
-   ethers.providers.BaseProvider |
-   ethers.providers.AlchemyProvider | 
-   ethers.providers.InfuraProvider | 
-   ethers.providers.EtherscanProvider |
-   ethers.providers.CloudflareProvider |
-   ethers.providers.PocketProvider | 
-   ethers.providers.AnkrProvider;
-
 // Boilerplate. Returns the CP contract with the correct provider
 // TODO: should monitor address and chain ID change, throw error if not supported. 
 // TODO: donot pass network to methods, get it from provider.
 
 export const initContract = (
-  provider?:MultiProvider, 
+  provider?:providers.Provider, 
   network?:Networkish,
   wallet?: Wallet,
   ) => {
@@ -39,14 +29,15 @@ export const initContract = (
       default: address = mainnetAddresses.chargedParticles.address; break;
    }
 
-   const chargedParticleCOntract = new ethers.Contract(
+   let chargedParticleCOntract = new ethers.Contract(
       address,
       ChargedParticles,
       provider
    );
 
-   if(wallet) {
-    return chargedParticleCOntract.connect(wallet);
+   if(wallet && provider) {
+    const connectedWallet = wallet.connect(provider)
+    chargedParticleCOntract = chargedParticleCOntract.connect(connectedWallet);
    }
 
    return chargedParticleCOntract;
@@ -90,7 +81,7 @@ const getAddressFromNetwork = (network?:Networkish) => {
 /// @notice returns the state adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of state address
-export const getStateAddress = async (provider?:MultiProvider, network?:Networkish) => {
+export const getStateAddress = async (provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const stateAddress:String = await contract.getStateAddress();
    return stateAddress;
@@ -99,7 +90,7 @@ export const getStateAddress = async (provider?:MultiProvider, network?:Networki
 /// @notice returns the settings adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of settings address
-export const getSettingsAddress = async (provider?:MultiProvider, network?:Networkish) => {
+export const getSettingsAddress = async (provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const settingsAddress:String = await contract.getSettingsAddress();
    return settingsAddress;
@@ -108,7 +99,7 @@ export const getSettingsAddress = async (provider?:MultiProvider, network?:Netwo
 /// @notice returns the managers adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of settings address
-export const getManagersAddress = async (provider?:MultiProvider, network?:Networkish) => {
+export const getManagersAddress = async (provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const managersAddress:String = await contract.getManagersAddress();
    return managersAddress;
@@ -118,7 +109,7 @@ export const getManagersAddress = async (provider?:MultiProvider, network?:Netwo
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @param assetAmount - a wei string of amount of assets to calculate fees on
 /// @returns the amount of protocol fees for the protocol as a decimal string
-export const getFeesForDeposit = async (assetAmount:String,  provider?:MultiProvider, network?:Networkish) => {
+export const getFeesForDeposit = async (assetAmount:String,  provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const protocolFee = await contract.getFeesForDeposit(assetAmount);
    return protocolFee.toString();
@@ -131,7 +122,7 @@ export const getFeesForDeposit = async (assetAmount:String,  provider?:MultiProv
 /// @param walletManagerId  The Liquidity-Provider ID to check the Asset balance of
 /// @param assetToken           The Address of the Asset Token to check
 /// @return The Amount of underlying Assets held within the Token as a decimal string
-export const getBaseParticleMass = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:MultiProvider, network?:Networkish) => {
+export const getBaseParticleMass = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const particleMass = await contract.baseParticleMass(contractAddress, tokenId, walletManagerId, assetToken);
    console.log(typeof particleMass);
@@ -145,7 +136,7 @@ export const getBaseParticleMass = async (contractAddress:String, tokenId:String
 /// @param walletManagerId  The Liquidity-Provider ID to check the Interest balance of
 /// @param assetToken           The Address of the Asset Token to check
 /// @return The amount of interest the Token has generated (in Asset Token) as a decimal string
-export const getCurrentParticleCharge = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:MultiProvider, network?:Networkish) => {
+export const getCurrentParticleCharge = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const currentParticleCharge = await contract.currentParticleCharge(contractAddress, tokenId, walletManagerId, assetToken);
    return currentParticleCharge.toString();
@@ -158,7 +149,7 @@ export const getCurrentParticleCharge = async (contractAddress:String, tokenId:S
 /// @param walletManagerId  The Liquidity-Provider ID to check the Kinetics balance of
 /// @param assetToken           The Address of the Asset Token to check
 /// @return The amount of LP tokens that have been generated as a decimal string
-export const getParticleKinetics = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:MultiProvider, network?:Networkish) => {
+export const getParticleKinetics = async (contractAddress:String, tokenId:String, walletManagerId:String, assetToken:String, provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const currentParticleKinetics = await contract.currentParticleKinetics(contractAddress, tokenId, walletManagerId, assetToken);
    return currentParticleKinetics.toString();

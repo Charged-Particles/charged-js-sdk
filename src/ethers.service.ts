@@ -1,4 +1,4 @@
-import { ethers, utils } from 'ethers';
+import { ethers, providers, utils } from 'ethers';
 import { rpcUrl, MNEMONIC } from './config';
 
 export const ethersProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
@@ -10,6 +10,11 @@ export const getSigner = () => {
 
 export const getWallet = () => {
   return ethers.Wallet.fromMnemonic(MNEMONIC)
+};
+
+export const getConnectedWallet = (provider: providers.Provider) => {
+  const wallet = ethers.Wallet.fromMnemonic(MNEMONIC)
+  return wallet.connect(provider)
 };
 
 export const getAddressFromSigner = () => {

@@ -19,11 +19,25 @@ describe('blah', () => {
 
 describe('Charged class', () => {
   const myWallet = getWallet();
-  expect(myWallet.address).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
-
   const provider = ethers.providers.getDefaultProvider();
-  const charged = new Charged('1', provider, myWallet);
 
-  const walletAddressFromCharged = charged?.wallet?.address
-  expect(walletAddressFromCharged).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
+  it ('Initializes charged', () => {
+    expect(myWallet.address).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
+    const charged = new Charged('1', provider, myWallet);
+    const walletAddressFromCharged = charged?.wallet?.address;
+    expect(walletAddressFromCharged).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
+  })
+
+  it ('Tries to query connected contract to signer', async() => {
+    const charged = new Charged('1', provider, myWallet);
+    const chargedParticlesContract = charged.chargedParticlesContract;
+
+    const stateAddressFromContract = await chargedParticlesContract.getStateAddress();
+    const signerAddress = await chargedParticlesContract.signer.getAddress( );
+  
+    expect(stateAddressFromContract).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f') 
+    expect(signerAddress).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A') 
+
+    console.log(signerAddress);
+  })
 })
