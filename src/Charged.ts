@@ -22,7 +22,6 @@ export default class Charged  {
    //signer
    //defaultProvider {keys, network}
    ) {
-
     this.network = network;
     this.signer = signer;
 
