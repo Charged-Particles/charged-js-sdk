@@ -6,16 +6,16 @@ import { Networkish } from "@ethersproject/networks";
 import { DefaultProviderKeys } from "./types";
 
 export default class Charged  {
-  network: Networkish;
-  provider: providers.Provider | string | undefined;
+  network: Networkish | undefined;
+  provider: providers.Provider | undefined;
   signer: Wallet | Signer  | undefined;
   chargedParticlesContract;
   chargedParticlesMethods;
 
   constructor(
-   network: Networkish,
-   provider?: providers.Provider,
+   provider?: providers.Provider | string,
    signer?: Wallet | Signer | undefined,
+   network?: Networkish,
    defaultProviderKeys?: DefaultProviderKeys,
 
    //provider
