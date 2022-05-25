@@ -1,106 +1,13 @@
-import ChargedState from "./abis/v2/ChargedState.json";
+
+// External Frameworks
 import { ethers, BigNumberish } from 'ethers';
 import { Networkish } from "@ethersproject/networks";
 
-import mainnetAddresses from './networks/v2/mainnet.json';
-import kovanAddresses from './networks/v2/kovan.json';
-import polygonAddresses from './networks/v2/polygon.json';
-import mumbaiAddresses from './networks/v2/mumbai.json';
+// Helpers
+import { initContract } from './utils/initContract';
 
-
-type MultiProvider = ethers.providers.JsonRpcProvider | 
-   ethers.providers.BaseProvider |
-   ethers.providers.AlchemyProvider | 
-   ethers.providers.InfuraProvider | 
-   ethers.providers.EtherscanProvider |
-   ethers.providers.CloudflareProvider |
-   ethers.providers.PocketProvider | 
-   ethers.providers.AnkrProvider;
-
-type MultiSigner = ethers.VoidSigner |
-   ethers.Wallet |
-   ethers.providers.JsonRpcSigner;
-
-// Boilerplate. Returns the CP contract with the correct provider. If a signer is given, the writeContract will be created as well.
-export const initContract = (provider?:MultiProvider, network?:Networkish) => {
-   const networkFormatted:String = getAddressFromNetwork(network);
-   const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
-   
-   // if a unsupported chain is given. default to mainnet
-   let address:string;
-   switch(networkFormatted) {
-      case 'mainnet': address = mainnetAddresses.chargedState.address; break;
-      case 'kovan': address = kovanAddresses.chargedState.address; break;
-      case 'polygon': address = polygonAddresses.chargedState.address; break;
-      case 'mumbai': address = mumbaiAddresses.chargedState.address; break;
-      default: address = mainnetAddresses.chargedState.address; break;
-   }
-
-   return new ethers.Contract(
-      address,
-      ChargedState,
-      provider ?? defaultProvider
-   );
-}
-
-// Create a contract with a signer attached. Signer is required as there is no default to use.
-const initSignerContract = (signer:ethers.Signer, network?:Networkish) => {
-   if(!signer) {
-      throw 'No signer passed. Cannot continue.';
-   }
-   const networkFormatted:String = getAddressFromNetwork(network);
-
-      // if a unsupported chain is given. default to mainnet
-   let address:string;
-   switch(networkFormatted) {
-      case 'mainnet': address = mainnetAddresses.chargedState.address; break;
-      case 'kovan': address = kovanAddresses.chargedState.address; break;
-      case 'polygon': address = polygonAddresses.chargedState.address; break;
-      case 'mumbai': address = mumbaiAddresses.chargedState.address; break;
-      default: address = mainnetAddresses.chargedState.address; break;
-   }
-
-   return new ethers.Contract(
-      address,
-      ChargedState,
-      signer
-   );
-}
-
-// Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
-const getAddressFromNetwork = (network?:Networkish) => {
-   // if network is not given. default to mainnet
-   if(!network) { return 'mainnet' };
-
-   if(typeof network === "string") {
-      switch(network) {
-         case 'homestead': return 'mainnet';
-         case 'kovan': return 'kovan';
-         case 'matic': return 'polygon';
-         case 'polygon': return 'polygon';
-         case 'maticmum': return 'mumbai';
-         case 'mumbai': return 'mumbai';
-         default: return 'unsupported chain';
-      }
-   } else if(typeof network === "number") {
-      switch(network) {
-         case 1: return 'mainnet';
-         case 42: return 'kovan';
-         case 137: return 'polygon';
-         case 80001: return 'mumbai';
-         default: return 'unsupported chain';
-      }
-   } else {
-      // network is a Network type object here. See ethers doc for more info.
-      switch(network.chainId) {
-         case 1: return 'mainnet';
-         case 42: return 'kovan';
-         case 137: return 'polygon';
-         case 80001: return 'mumbai';
-         default: return 'unsupported chain';
-      }
-   }
-}
+// Types
+import { MultiProvider, MultiSigner } from "./types";
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // READ FUNCTIONS ** Signer not required / Gasless
@@ -111,7 +18,7 @@ const getAddressFromNetwork = (network?:Networkish) => {
 /// @param     tokenId - specify tokenId of said contract
 /// @returns   the discharge timelock expiry date as a big number
 export const getDischargeTimelockExpiry = async (contractAddress:String, tokenId:BigNumberish, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const timelockExpiry = await contract.getDischargeTimelockExpiry(contractAddress, tokenId);
   return timelockExpiry;
 }
@@ -121,7 +28,7 @@ export const getDischargeTimelockExpiry = async (contractAddress:String, tokenId
 /// @param     tokenId - specify tokenId of said contract
 /// @returns   the releasetimelock expiry date as a big number
 export const getReleaseTimelockExpiry = async (contractAddress:String, tokenId:BigNumberish, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const timelockExpiry = await contract.getReleaseTimelockExpiry(contractAddress, tokenId);
   return timelockExpiry;
 }
@@ -131,7 +38,7 @@ export const getReleaseTimelockExpiry = async (contractAddress:String, tokenId:B
 /// @param     tokenId - specify tokenId of said contract
 /// @returns   the break bond timelock expiry date as a big number
 export const getBreakBondTimelockExpiry = async (contractAddress:String, tokenId:BigNumberish, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const timelockExpiry = await contract.getBreakBondTimelockExpiry(contractAddress, tokenId);
   return timelockExpiry;
 }
@@ -142,7 +49,7 @@ export const getBreakBondTimelockExpiry = async (contractAddress:String, tokenId
 /// @param operator         The Address of the operator to check
 /// @return True if the operator is Approved
 export const isApprovedForDischarge = async (contractAddress:String, tokenId:BigNumberish, operator:String, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const isApproved = await contract.staticCall.isApprovedForDischarge(contractAddress, tokenId, operator);
   return isApproved;
 }
@@ -153,7 +60,7 @@ export const isApprovedForDischarge = async (contractAddress:String, tokenId:Big
 /// @param operator         The Address of the operator to check
 /// @return True if the operator is Approved
 export const isApprovedForRelease = async (contractAddress:String, tokenId:BigNumberish, operator:String, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const isApproved = await contract.staticCall.isApprovedForRelease(contractAddress, tokenId, operator);
   return isApproved;
 }
@@ -164,7 +71,7 @@ export const isApprovedForRelease = async (contractAddress:String, tokenId:BigNu
 /// @param operator         The Address of the operator to check
 /// @return True if the operator is Approved
 export const isApprovedForBreakBond = async (contractAddress:String, tokenId:BigNumberish, operator:String, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const isApproved = await contract.staticCall.isApprovedForBreakBond(contractAddress, tokenId, operator);
   return isApproved;
 }
@@ -175,7 +82,7 @@ export const isApprovedForBreakBond = async (contractAddress:String, tokenId:Big
 /// @param operator         The Address of the operator to check
 /// @return True if the operator is Approved
 export const isApprovedForTimeLock = async (contractAddress:String, tokenId:BigNumberish, operator:String, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const isApproved = await contract.staticCall.isApprovedForTimelock(contractAddress, tokenId, operator);
   return isApproved;
 }
@@ -185,7 +92,7 @@ export const isApprovedForTimeLock = async (contractAddress:String, tokenId:BigN
 /// @param tokenId          The ID of the Token
 /// @return True if energize is restricted
 export const isEnergizeRestricted = async (contractAddress:String, tokenId:BigNumberish, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const isRestricted = await contract.isEnergizeRestricted(contractAddress, tokenId);
   return isRestricted;
 }
@@ -195,7 +102,7 @@ export const isEnergizeRestricted = async (contractAddress:String, tokenId:BigNu
 /// @param tokenId          The ID of the Token
 /// @return True if bonding is restricted
 export const isCovalentBondRestricted = async (contractAddress:String, tokenId:BigNumberish, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const isRestricted = await contract.staticCall.isCovalentBondRestricted(contractAddress, tokenId);
   return isRestricted;
 }
@@ -209,7 +116,7 @@ export const isCovalentBondRestricted = async (contractAddress:String, tokenId:B
 /// @returns timelock - bignumber
 /// @returns tempLockExpiry - bignumber
 export const getDischargeState = async (contractAddress:String, tokenId:BigNumberish, sender:String, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const result = await contract.staticCall.getDischargeState(contractAddress, tokenId, sender);
   return result;
 }
@@ -223,7 +130,7 @@ export const getDischargeState = async (contractAddress:String, tokenId:BigNumbe
 /// @returns timelock - bignumber
 /// @returns tempLockExpiry - bignumber
 export const getReleaseState = async (contractAddress:String, tokenId:BigNumberish, sender:String, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const result = await contract.staticCall.getReleaseState(contractAddress, tokenId, sender);
   return result;
 }
@@ -237,7 +144,7 @@ export const getReleaseState = async (contractAddress:String, tokenId:BigNumberi
 /// @returns timelock - bignumber
 /// @returns tempLockExpiry - bignumber
 export const getBreakBondState = async (contractAddress:String, tokenId:BigNumberish, sender:String, provider?:MultiProvider, network?:Networkish) => {
-  const contract:ethers.Contract = initContract(provider, network);
+  const contract:ethers.Contract = initContract('chargedState', provider, network);
   const result = await contract.staticCall.getBreakBondState(contractAddress, tokenId, sender);
   return result;
 }
@@ -257,7 +164,7 @@ export const getBreakBondState = async (contractAddress:String, tokenId:BigNumbe
 /// @param tokenId          The ID of the Token
 /// @param operator         The Address of the Operator to Approve
 export const setDischargeApproval = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setDischargeApproval(contractAddress, tokenId, operator);
   return result;
 }
@@ -268,7 +175,7 @@ export const setDischargeApproval = async (contractAddress:String, tokenId:BigNu
 /// @param tokenId          The ID of the Token
 /// @param operator         The Address of the Operator to Approve
 export const setReleaseApproval = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setReleaseApproval(contractAddress, tokenId, operator);
   return result;
 }
@@ -279,7 +186,7 @@ export const setReleaseApproval = async (contractAddress:String, tokenId:BigNumb
 /// @param tokenId          The ID of the Token
 /// @param operator         The Address of the Operator to Approve
 export const setBreakBondApproval = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setBreakBondApproval(contractAddress, tokenId, operator);
   return result;
 }
@@ -290,7 +197,7 @@ export const setBreakBondApproval = async (contractAddress:String, tokenId:BigNu
 /// @param tokenId          The ID of the Token
 /// @param operator         The Address of the Operator to Appr
 export const setTimelockApproval = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setTimelockApproval(contractAddress, tokenId, operator);
   return result;
 }
@@ -300,7 +207,7 @@ export const setTimelockApproval = async (contractAddress:String, tokenId:BigNum
 /// @param tokenId          The ID of the Token
 /// @param operator         The Address of the Operator to Approve
 export const setApprovalForAll = async (contractAddress:String, tokenId:BigNumberish, operator:String, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setApprovalForAll(contractAddress, tokenId, operator);
   return result;
 }
@@ -310,7 +217,7 @@ export const setApprovalForAll = async (contractAddress:String, tokenId:BigNumbe
 /// @param tokenId          The ID of the Token
 /// @param state            The state of the permission (true or false)
 export const setPermsForRestrictCharge = async (contractAddress:String, tokenId:BigNumberish, state:boolean, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setPermsForRestrictChange(contractAddress, tokenId, state);
   return result;
 }
@@ -320,7 +227,7 @@ export const setPermsForRestrictCharge = async (contractAddress:String, tokenId:
 /// @param tokenId          The ID of the Token
 /// @param state            The state of the permission (true or false)
 export const setPermsForAllowDischarge = async (contractAddress:String, tokenId:BigNumberish, state:boolean, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setPermsForAllowDischarge(contractAddress, tokenId, state);
   return result;
 }
@@ -330,7 +237,7 @@ export const setPermsForAllowDischarge = async (contractAddress:String, tokenId:
 /// @param tokenId          The ID of the Token
 /// @param state            The state of the permission (true or false)
 export const setPermsForRestrictBond = async (contractAddress:String, tokenId:BigNumberish, state:boolean, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setPermsForRestrictBond(contractAddress, tokenId, state);
   return result;
 }
@@ -340,7 +247,7 @@ export const setPermsForRestrictBond = async (contractAddress:String, tokenId:Bi
 /// @param tokenId          The ID of the Token
 /// @param state            The state of the permission (true or false)
 export const setPermsForAllowBreakBond = async (contractAddress:String, tokenId:BigNumberish, state:boolean, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setPermsForAllowBreakBond(contractAddress, tokenId, state);
   return result;
 }
@@ -350,7 +257,7 @@ export const setPermsForAllowBreakBond = async (contractAddress:String, tokenId:
 /// @param tokenId          The token ID of the NFT to Timelock
 /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
 export const setDischargeTimelock = async (contractAddress:String, tokenId:BigNumberish, unlockBlock:BigNumberish, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setDischargeTimelock(contractAddress, tokenId, unlockBlock);
   return result;
 }
@@ -360,7 +267,7 @@ export const setDischargeTimelock = async (contractAddress:String, tokenId:BigNu
 /// @param tokenId          The token ID of the NFT to Timelock
 /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
 export const setReleaseTimelock = async (contractAddress:String, tokenId:BigNumberish, unlockBlock:BigNumberish, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setReleaseTimelock(contractAddress, tokenId, unlockBlock);
   return result;
 }
@@ -370,7 +277,7 @@ export const setReleaseTimelock = async (contractAddress:String, tokenId:BigNumb
 /// @param tokenId          The token ID of the NFT to Timelock
 /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
 export const setBreakBondTimelock = async (contractAddress:String, tokenId:BigNumberish, unlockBlock:BigNumberish, signer:MultiSigner, network?:Networkish) => {
-  const contract:ethers.Contract = initSignerContract(signer, network);
+  const contract:ethers.Contract = initContract('chargedState', signer, network);
   const result = await contract.setBreakBondTimelock(contractAddress, tokenId, unlockBlock);
   return result;
 }
