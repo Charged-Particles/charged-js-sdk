@@ -1,4 +1,4 @@
-import { ethers, providers, Signer, Wallet } from "ethers";
+import { ethers, providers, Signer, Wallet, BigNumberish } from "ethers";
 import { initContract } from "./ChargedParticles";
 
 // Types 
@@ -58,7 +58,36 @@ export default class Charged  {
     return stateAddress;
   }
 
-  // functions ... 
+  /// @notice Release NFT Assets from the Particle
+  /// @param receiver             The Address to Receive the Released Asset Tokens
+  /// @param contractAddress      The Address to the Contract of the Token to Energize
+  /// @param tokenId              The ID of the Token to Energize
+  /// @param basketManagerId      The Basket to Deposit the NFT into
+  /// @param nftTokenAddress      The Address of the NFT Token being deposited
+  /// @param nftTokenId           The ID of the NFT Token being deposited
+  /// @param nftTokenAmount       The amount of Tokens to Withdraw (ERC1155-specific)
+  public async breakCovalentBond (
+    contractAddress:String,
+    tokenId:BigNumberish,
+    basketManagerId:String, 
+    nftTokenAddress:String, 
+    nftTokenId:BigNumberish, 
+    nftTokenAmount:BigNumberish, 
+  ) {
+    const trx = await this.chargedParticlesContract.breakCovalentBond(
+      contractAddress, 
+      tokenId, 
+      basketManagerId,
+      nftTokenAddress, 
+      nftTokenId, 
+      nftTokenAmount
+    );
+
+    const response = await trx.wait();
+    
+    return response;
+ }
+ 
 }
 
 

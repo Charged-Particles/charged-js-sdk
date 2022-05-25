@@ -18,13 +18,13 @@ describe('Charged class', () => {
   it ('Create contract with signer', async() => {
     const charged = new Charged(network, provider, myWallet);
 
-    const stateAddressFromContract = await charged.getStateAddress();
+    const stateAddressFromContractMainnet = await charged.getStateAddress();
     const signerAddress = await charged?.signer?.getAddress();
     
     // const formatedExpectedNetwork = getFormatedromNetwork(network)
     // const contractAddress = getAddressByNetwork(formatedExpectedNetwork);
 
-    expect(stateAddressFromContract).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+    expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
     expect(signerAddress).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
   });
 
@@ -33,4 +33,6 @@ describe('Charged class', () => {
     const usedNetwork = await charged?.provider?.getNetwork();
     expect(usedNetwork?.chainId).toEqual(network);
   });
+
+  it()
 });
