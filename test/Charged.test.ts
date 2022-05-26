@@ -50,6 +50,12 @@ describe('Charged class', () => {
     expect(charged.signer).toBe(undefined);
   })
 
+  it ('Initializes Charged API keys', async() => {
+    const defaultProviderKeys = {'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE'};
+    const charged = new Charged({provider: defaultProvider, defaultProviderKeys});
+    await checkStateContractMainnetAddress(charged); 
+  })
+
   it ('Initializes Charged with web3 ', async() => {
 
   })
