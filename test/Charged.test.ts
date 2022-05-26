@@ -19,6 +19,7 @@ describe('Charged class', () => {
     const charged = new Charged(network, provider, myWallet);
 
     const stateAddressFromContractMainnet = await charged.chargedParticlesContract.getStateAddress();
+    
     const signerAddress = await charged?.signer?.getAddress();
     
     expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');

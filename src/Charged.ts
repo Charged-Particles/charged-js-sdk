@@ -12,14 +12,14 @@ export default class Charged  {
 
   signer: Wallet | Signer  | undefined;
 
-  chargedParticlesContract;
+  chargedParticlesContract; // set interfase as type
 
   readonly configuration: Configuration;
 
   constructor(
    network: Networkish,
    injectedProvider?: providers.Provider | providers.ExternalProvider | string,
-   signer?: Wallet | Signer | undefined, // TODO: default valu
+   signer?: Signer | undefined, // TODO: default valu
    defaultProviderKeys?: DefaultProviderKeys,
 
    //provider
