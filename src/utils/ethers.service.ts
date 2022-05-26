@@ -1,7 +1,7 @@
 import { ethers, providers, utils } from 'ethers';
-import { rpcUrl, MNEMONIC } from './config';
+import { MNEMONIC, rpcUrlKovan } from './config';
 
-export const ethersProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
+export const ethersProvider = new ethers.providers.JsonRpcProvider(rpcUrlKovan);
 
 export const getSigner = () => {
   const walletMnemonic = ethers.Wallet.fromMnemonic(MNEMONIC)

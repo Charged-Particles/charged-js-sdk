@@ -214,6 +214,7 @@ export const getParicleCovalentBonds = async (contractAddress:String, tokenId:Bi
 |        Energize Particles         |
 |__________________________________*/
 
+// TODO: ADD DOC FOR REFERRER
 /// @notice Fund Particle with Asset Token
 ///    Must be called by the account providing the Asset
 ///    Account must Approve THIS contract as Operator of Asset
@@ -227,10 +228,11 @@ export const getParicleCovalentBonds = async (contractAddress:String, tokenId:Bi
 /// @param walletManagerId  The Asset-Pair to Energize the Token with
 /// @param assetToken           The Address of the Asset Token being used
 /// @param assetAmount          The Amount of Asset Token to Energize the Token with
+/// @param referrer             Don't know
 /// @return yieldTokensAmount The amount of Yield-bearing Tokens added to the escrow for the Token
-export const energizeParticle = async (contractAddress:String, tokenId:BigNumberish, walletManagerId:String, assetToken:String, assetAmount:BigNumberish, signer:MultiSigner, network?:Networkish) => {
+export const energizeParticle = async (contractAddress:String, tokenId:BigNumberish, walletManagerId:String, assetToken:String, assetAmount:BigNumberish, referrer:String, signer:MultiSigner, network?:Networkish) => {
    const contract:ethers.Contract = initSignerContract(signer, network);
-   const yieldTokensAmount = await contract.energizeParticle(contractAddress, tokenId, walletManagerId, assetToken, assetAmount);
+   const yieldTokensAmount = await contract.energizeParticle(contractAddress, tokenId, walletManagerId, assetToken, assetAmount, referrer);
    return yieldTokensAmount;
 }
 
