@@ -4,7 +4,7 @@ import { getAddressFromNetwork } from "./utils/getAddressFromNetwork";
 
 // Types 
 import { Networkish } from "@ethersproject/networks";
-import { DefaultProviderKeys } from "./types";
+import { DefaultProviderKeys, Configuration } from "./types";
 
 // ABIs
 import mainnetAddresses from './networks/v2/mainnet.json';
@@ -18,6 +18,8 @@ export default class Charged  {
   signer: Wallet | Signer  | undefined;
   chargedParticlesContract;
   chargedParticlesMethods;
+
+  readonly configuration: Configuration;
 
   constructor(
    network: Networkish,
@@ -34,24 +36,25 @@ export default class Charged  {
 
     if (!injectedProvider) {
       if (Boolean(defaultProviderKeys)) {
-        this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);
+        provider = ethers.getDefaultProvider(network, defaultProviderKeys);
       } else {
-        this.provider = ethers.getDefaultProvider(network);
+        provider = ethers.getDefaultProvider(network);
         console.log(
           `Charged particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
           It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
         );
       }
     }  else if (typeof injectedProvider === 'string') {
-      this.provider = new providers.StaticJsonRpcProvider(injectedProvider, network);
+      provider = new providers.StaticJsonRpcProvider(injectedProvider, network);
     } else if (injectedProvider instanceof providers.Provider) {
-      this.provider = injectedProvider;
+      provider = injectedProvider;
     } else if (injectedProvider instanceof providers.EtherscanProvider){
-      this.provider = new providers.Web3Provider(injectedProvider, network);
+      provider = new providers.Web3Provider(injectedProvider, network);
     } else {
       //TODO: error msg
     }
 
+    this.configuration = {network, provider, signer}
     //Exposing all contract methds
     this.chargedParticlesContract = this.initContract('chargedParticles');
 
