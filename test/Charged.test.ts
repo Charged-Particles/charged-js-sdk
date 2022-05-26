@@ -30,5 +30,4 @@ describe('Charged class', () => {
     const usedNetwork = await charged?.provider?.getNetwork();
     expect(usedNetwork?.chainId).toEqual(network);
   });
-
- });
+});

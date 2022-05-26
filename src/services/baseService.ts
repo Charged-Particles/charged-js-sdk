@@ -23,10 +23,10 @@ export default class BaseService {
     const { network, provider, signer } = this.config;
 
     const networkFormatted:String = getAddressFromNetwork(network);
-    
+   
     // check if safe contract name was given
     checkContractName(contractName);
-  
+ 
     // if a unsupported chain is given. default to mainnet
     // ts ignores are used because the json files are not working nicely with typescript
     let address:string;
@@ -42,19 +42,23 @@ export default class BaseService {
       // @ts-ignore
        default: address = mainnetAddresses[contractName].address; break;
     }
-  
-    let requestedContract = new ethers.Contract(
-      address,
-      getAbi(contractName),
-      provider
-    );
-      
-    if(signer && provider) {
-      const connectedWallet = signer.connect(provider);
-      requestedContract = requestedContract.connect(connectedWallet);
-     }
+    
+   if (!this.contractInstances[address]) {
+     let requestedContract = new ethers.Contract(
+       address,
+       getAbi(contractName),
+       provider
+     );
+       
+     if(signer && provider) {
+       const connectedWallet = signer.connect(provider);
+       requestedContract = requestedContract.connect(connectedWallet);
+      }
+ 
+      this.contractInstances[address] = requestedContract;
+    }
 
-    return requestedContract;
+    return this.contractInstances[address];
   }
 
 }

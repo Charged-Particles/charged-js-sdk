@@ -7,8 +7,11 @@ import { DefaultProviderKeys, Configuration } from "./types";
 
 export default class Charged  {
   network: Networkish | undefined;
+
   provider: providers.Provider | undefined;
+
   signer: Wallet | Signer  | undefined;
+
   chargedParticlesContract;
 
   readonly configuration: Configuration;
@@ -40,7 +43,7 @@ export default class Charged  {
       this.provider = new providers.StaticJsonRpcProvider(injectedProvider, network);
     } else if (injectedProvider instanceof providers.Provider) {
       this.provider = injectedProvider;
-    } else if (injectedProvider instanceof providers.EtherscanProvider){
+    } else if (injectedProvider instanceof providers.Web3Provider){
       this.provider = new providers.Web3Provider(injectedProvider, network);
     } else {
       //TODO: error msg
@@ -49,5 +52,7 @@ export default class Charged  {
     this.configuration = {network: this.network, provider: this.provider, signer:this.signer}
 
     this.chargedParticlesContract = new ChargedParticlesService(this.configuration);
+
+    console.log(this.chargedParticlesContract.getStateAddress());
   }
 }
