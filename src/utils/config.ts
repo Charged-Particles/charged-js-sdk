@@ -12,5 +12,7 @@ const getParamOrExit = (name: string) => {
 };
 
 export const MNEMONIC = getParamOrExit('MNEMONIC');
-export const rpcUrlMain = getParamOrExit('RPC_URL_MAINNET');
+
+export const rpcUrlMainnet = getParamOrExit('RPC_URL_MAINNET');
+
 export const rpcUrlKovan = getParamOrExit('RPC_URL_KOVAN');

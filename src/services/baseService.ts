@@ -51,7 +51,6 @@ export default class BaseService {
      );
        
      if(signer && provider) {
-       console.log("SIGNER", signer)
        const connectedWallet = signer.connect(provider);
        requestedContract = requestedContract.connect(connectedWallet);
       }
