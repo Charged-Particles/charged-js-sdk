@@ -1,7 +1,7 @@
 import { getWallet } from '../src/ethers.service';
 // import { getFormatedromNetwork, getAddressByNetwork } from '../src/ChargedParticles';
 import { ethers } from 'ethers'
-import Charged from '../src/Charged';
+import Charged from '../src';
 
 describe('Charged class', () => {
   const network = 1;
@@ -19,7 +19,7 @@ describe('Charged class', () => {
     const charged = new Charged(network, provider, myWallet);
 
     const stateAddressFromContractMainnet = await charged.chargedParticlesContract.getStateAddress();
-    
+
     const signerAddress = await charged?.signer?.getAddress();
     
     expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');

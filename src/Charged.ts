@@ -47,9 +47,8 @@ export default class Charged  {
       //TODO: error msg
     }
 
-    this.configuration = {network, signer, provider: this.provider}
+    this.configuration = {network, signer, provider: this.provider};
 
     this.chargedParticlesContract = new ChargedParticlesService(this.configuration);
-
   }
 }
