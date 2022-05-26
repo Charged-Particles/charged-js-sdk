@@ -49,7 +49,6 @@ export default class Charged  {
     }
 
     this.configuration = {network, signer, provider: this.provider};
-
     this.chargedParticlesContract = new ChargedParticlesService(this.configuration);
   }
 }

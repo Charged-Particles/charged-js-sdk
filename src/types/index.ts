@@ -23,4 +23,11 @@ export type constructorParams = {
   provider?: providers.Provider | providers.ExternalProvider | string,
   signer?: Signer,
   defaultProviderKeys?: DefaultProviderKeys
+};
+
+export interface charged {
+  network?: Networkish,
+  provider?: providers.Provider | providers.ExternalProvider | string,
+  signer?: Signer,
+  defaultProviderKeys?: DefaultProviderKeys
 }

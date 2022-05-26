@@ -53,5 +53,4 @@ describe('Charged class', () => {
   it ('Initializes Charged with web3 ', async() => {
 
   })
-
 });
