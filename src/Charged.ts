@@ -8,28 +8,26 @@ import { DefaultProviderKeys, Configuration } from "./types";
 export default class Charged  {
   network: Networkish | undefined;
 
-  provider: providers.Provider | undefined;
+  provider?: providers.Provider;
 
-  signer: Wallet | Signer  | undefined;
+  signer?: Wallet | Signer;
 
-  chargedParticlesContract; // set interfase as type
+  chargedParticlesContract; // TODO: set interfase as type
 
   readonly configuration: Configuration;
 
   constructor(
    network: Networkish,
-   injectedProvider?: providers.Provider | providers.ExternalProvider | string,
-   signer?: Signer | undefined, // TODO: default valu
+   provider?: providers.Provider | providers.ExternalProvider | string,
+   signer?: Signer, // TODO: default valu
    defaultProviderKeys?: DefaultProviderKeys,
 
    //provider
    //signer
    //defaultProvider {keys, network}
    ) {
-    this.network = network;
-    this.signer = signer;
 
-    if (!injectedProvider) {
+    if (!provider) {
       if (Boolean(defaultProviderKeys)) {
         this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);
       } else {
@@ -39,20 +37,19 @@ export default class Charged  {
           It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
         );
       }
-    }  else if (typeof injectedProvider === 'string') {
-      this.provider = new providers.StaticJsonRpcProvider(injectedProvider, network);
-    } else if (injectedProvider instanceof providers.Provider) {
-      this.provider = injectedProvider;
-    } else if (injectedProvider instanceof providers.Web3Provider){
-      this.provider = new providers.Web3Provider(injectedProvider, network);
+    }  else if (typeof provider === 'string') {
+      this.provider = new providers.StaticJsonRpcProvider(provider, network);
+    } else if (provider instanceof providers.Provider) {
+      this.provider = provider;
+    } else if (provider instanceof providers.Web3Provider){
+      this.provider = new providers.Web3Provider(provider, network);
     } else {
       //TODO: error msg
     }
 
-    this.configuration = {network: this.network, provider: this.provider, signer:this.signer}
+    this.configuration = {network, signer, provider: this.provider}
 
     this.chargedParticlesContract = new ChargedParticlesService(this.configuration);
 
-    console.log(this.chargedParticlesContract.getStateAddress());
   }
 }
