@@ -51,7 +51,7 @@ export const initContract = (contractName:string, providerOrSigner?:MultiProvide
 }
 
 // Check for safe values
-const checkContractName = (contractName:string) => {
+export const checkContractName = (contractName:string) => {
   switch(contractName) {
     case 'chargedParticles': return;
     case 'chargedState': return;
@@ -62,7 +62,7 @@ const checkContractName = (contractName:string) => {
 }
 
 // Return correct ABI
-const getAbi = (contractName:string) => {
+export const getAbi = (contractName:string) => {
   switch(contractName) {
     case 'chargedParticles': return ChargedParticles;
     case 'chargedState': return ChargedState;

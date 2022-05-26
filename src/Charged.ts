@@ -1,9 +1,16 @@
 import { ethers, providers, Signer, Wallet, BigNumberish } from "ethers";
-import { initContract } from "./ChargedParticles";
+import { getAbi, checkContractName } from "./utils/initContract";
+import { getAddressFromNetwork } from "./utils/getAddressFromNetwork";
 
 // Types 
 import { Networkish } from "@ethersproject/networks";
 import { DefaultProviderKeys } from "./types";
+
+// ABIs
+import mainnetAddresses from './networks/v2/mainnet.json';
+import kovanAddresses from './networks/v2/kovan.json';
+import polygonAddresses from './networks/v2/polygon.json';
+import mumbaiAddresses from './networks/v2/mumbai.json';
 
 export default class Charged  {
   network: Networkish | undefined;
@@ -14,7 +21,7 @@ export default class Charged  {
 
   constructor(
    network: Networkish,
-   injectedProvider?: providers.Provider | providers.ExternalProvider,
+   injectedProvider?: providers.Provider | providers.ExternalProvider | string,
    signer?: Wallet | Signer | undefined, // TODO: default valu
    defaultProviderKeys?: DefaultProviderKeys,
 
@@ -46,11 +53,46 @@ export default class Charged  {
     }
 
     //Exposing all contract methds
-    this.chargedParticlesContract = initContract(this.provider, this.network, this.signer);
-
+    this.chargedParticlesContract = this.initContract('chargedParticles');
 
     // Alternative, expose all methos
     this.chargedParticlesMethods = {...this.chargedParticlesContract.functions}
+  }
+
+  private initContract (contractName:string){
+    const networkFormatted:String = getAddressFromNetwork(this.network);
+    
+    // check if safe contract name was given
+    checkContractName(contractName);
+  
+    // if a unsupported chain is given. default to mainnet
+    // ts ignores are used because the json files are not working nicely with typescript
+    let address:string;
+    switch(networkFormatted) {
+      // @ts-ignore
+       case 'mainnet': address = mainnetAddresses[contractName].address; break;
+      // @ts-ignore
+       case 'kovan': address = kovanAddresses[contractName].address; break;
+      // @ts-ignore
+       case 'polygon': address = polygonAddresses[contractName].address; break;
+      // @ts-ignore
+       case 'mumbai': address = mumbaiAddresses[contractName].address; break;
+      // @ts-ignore
+       default: address = mainnetAddresses[contractName].address; break;
+    }
+  
+    let requestedContract = new ethers.Contract(
+      address,
+      getAbi(contractName),
+      this.provider
+    );
+      
+    if(this.signer && this.provider) {
+      const connectedWallet = this.signer.connect(this.provider);
+      requestedContract = requestedContract.connect(connectedWallet);
+     }
+
+    return requestedContract;
   }
 
   /// @notice returns the state adress from the ChargedParticles contract
