@@ -17,3 +17,10 @@ export type Configuration = {
   provider: providers.Provider | undefined;
   signer?: Signer  | undefined;
 };
+
+export type constructorParams = {
+  network: Networkish,
+  provider?: providers.Provider | providers.ExternalProvider | string,
+  signer?: Signer,
+  defaultProviderKeys?: DefaultProviderKeys
+}

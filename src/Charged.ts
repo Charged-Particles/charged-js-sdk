@@ -3,7 +3,7 @@ import ChargedParticlesService from "./services/ChargedParticleService";
 
 // Types 
 import { Networkish } from "@ethersproject/networks";
-import { DefaultProviderKeys, Configuration } from "./types";
+import { constructorParams, Configuration } from "./types";
 
 export default class Charged  {
   network: Networkish | undefined;
@@ -16,17 +16,15 @@ export default class Charged  {
 
   readonly configuration: Configuration;
 
-  constructor(
-   network: Networkish,
-   provider?: providers.Provider | providers.ExternalProvider | string,
-   signer?: Signer, // TODO: default valu
-   defaultProviderKeys?: DefaultProviderKeys,
+  constructor(params: constructorParams) {
 
-   //provider
-   //signer
-   //defaultProvider {keys, network}
-   ) {
-
+    const {
+      network,
+      provider,
+      signer, // TODO: default valu
+      defaultProviderKeys
+    } = params;
+    
     this.signer = signer;
     this.network = network;
 
