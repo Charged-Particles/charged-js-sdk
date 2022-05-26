@@ -15,20 +15,21 @@ describe('Charged class', () => {
     expect(usedNetwork?.chainId).toEqual(network);
   });
 
-  it ('Initializes charged', async() => {
+  it ('Initializes charged with etherJS provider', async() => {
     expect(myWallet.address).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
-    const charged = new Charged({network, provider: defaultProvider, signer: myWallet});
+    const charged = new Charged({network, provider: defaultProvider});
 
+    const stateAddressFromContractMainnet = await charged.chargedParticlesContract.getStateAddress();
+    expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+ 
     const walletAddressFromCharged = await charged?.signer?.getAddress();
-
-    expect(walletAddressFromCharged).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
+    expect(walletAddressFromCharged).toEqual(undefined);
   });
 
-  it ('Create contract with signer', async() => {
+  it ('Create contract with with etherJs signer & provider', async() => {
     const charged = new Charged({network, provider: defaultProvider, signer: myWallet});
 
     const stateAddressFromContractMainnet = await charged.chargedParticlesContract.getStateAddress();
-
     const signerAddress = await charged?.signer?.getAddress();
     
     expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
@@ -48,4 +49,5 @@ describe('Charged class', () => {
     expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
     expect(charged.signer).toBe(undefined);
   })
+
 });
