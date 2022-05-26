@@ -16,12 +16,12 @@ export default class Charged  {
 
   readonly configuration: Configuration;
 
-  constructor(params: constructorParams) {
+  constructor(params: constructorParams = {}) {
 
     const {
-      network,
+      network = 1,
       provider,
-      signer, // TODO: default valu
+      signer, 
       defaultProviderKeys
     } = params;
     

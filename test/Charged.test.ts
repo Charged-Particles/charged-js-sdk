@@ -34,8 +34,9 @@ describe('Charged class', () => {
     expect(signerAddress).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
   });
 
-  it ('Initialize Charged with no provider', async() => {
-    // const charged = new Charged(network, myWallet);
- 
+  it ('Initialize Charged with no params', async() => {
+    const charged = new Charged();
+    const stateAddressFromContractMainnet = await charged.chargedParticlesContract.getStateAddress();
+    expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
   })
 });

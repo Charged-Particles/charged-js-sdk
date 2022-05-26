@@ -19,7 +19,7 @@ export type Configuration = {
 };
 
 export type constructorParams = {
-  network: Networkish,
+  network?: Networkish,
   provider?: providers.Provider | providers.ExternalProvider | string,
   signer?: Signer,
   defaultProviderKeys?: DefaultProviderKeys
