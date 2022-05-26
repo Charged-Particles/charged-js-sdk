@@ -38,7 +38,7 @@ export default class Charged  {
           It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
         );
       }
-    }  else if (typeof provider === 'string') {
+    } else if (typeof provider === 'string') {
       this.provider = new providers.StaticJsonRpcProvider(provider, network);
     } else if (provider instanceof providers.Provider) {
       this.provider = provider;

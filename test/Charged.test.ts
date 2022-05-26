@@ -1,6 +1,7 @@
-import { getWallet } from '../src/utils/ethers.service';
-// import { getFormatedromNetwork, getAddressByNetwork } from '../src/ChargedParticles';
 import { ethers } from 'ethers'
+
+import { getWallet } from '../src/utils/ethers.service';
+import { rpcUrlMainnet } from '../src/utils/config';
 import Charged from '../src/Charged';
 
 describe('Charged class', () => {
@@ -38,5 +39,13 @@ describe('Charged class', () => {
     const charged = new Charged();
     const stateAddressFromContractMainnet = await charged.chargedParticlesContract.getStateAddress();
     expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+  })
+
+  it ('Initializes Charged with url provider', async() => {
+    const charged = new Charged({provider: rpcUrlMainnet});
+
+    const stateAddressFromContractMainnet = await charged.chargedParticlesContract.getStateAddress();
+    expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+    expect(charged.signer).toBe(undefined);
   })
 });
