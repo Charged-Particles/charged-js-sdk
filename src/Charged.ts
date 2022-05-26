@@ -27,6 +27,9 @@ export default class Charged  {
    //defaultProvider {keys, network}
    ) {
 
+    this.signer = signer;
+    this.network = network;
+
     if (!provider) {
       if (Boolean(defaultProviderKeys)) {
         this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);

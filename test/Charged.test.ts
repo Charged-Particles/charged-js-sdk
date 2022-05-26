@@ -1,7 +1,7 @@
-import { getWallet } from '../src/ethers.service';
+import { getWallet } from '../src/utils/ethers.service';
 // import { getFormatedromNetwork, getAddressByNetwork } from '../src/ChargedParticles';
 import { ethers } from 'ethers'
-import Charged from '../src';
+import Charged from '../src/Charged';
 
 describe('Charged class', () => {
   const network = 1;
