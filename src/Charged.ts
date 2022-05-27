@@ -40,26 +40,6 @@ export default class Charged  {
       );
     }
 
-    // if (!provider) {
-    //   if (Boolean(defaultProviderKeys)) {
-    //     this.provider = ethers.getDefaultProvider(network, defaultProviderKeys);
-    //   } else {
-    //     this.provider = ethers.getDefaultProvider(network);
-    //     console.log(
-    //       `Charged particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
-    //       It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
-    //     );
-    //   }
-    // } else if (typeof provider === 'string') {
-    //   this.provider = new providers.StaticJsonRpcProvider(provider, network);
-    // } else if (provider instanceof providers.Provider) {
-    //   this.provider = provider;
-    // } else if (provider instanceof providers.Web3Provider){
-    //   this.provider = new providers.Web3Provider(provider, network);
-    // } else {
-    //   //TODO: error msg
-    // }
-
     this.configuration = { signer, providers: this.providers };
 
     this.utils = new UtilsService(this.configuration);

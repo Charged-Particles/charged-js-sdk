@@ -3,7 +3,6 @@ import { Configuration } from '../types';
 import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
 import { checkContractName, getAbi } from '../utils/initContract';
 
-import { SUPPORTED_NETWORKS } from '../utils/config';
 import { useQuery } from 'react-query';
 
 // ABIs
@@ -61,11 +60,14 @@ export default class BaseService {
 
   public async fetchAllNetworks(contractName: string, methodName: string) {
 
+    const { providers } = this.config;
+
     try {
-      const promises = SUPPORTED_NETWORKS.map(async () => {
-        return this.fetchQuery(contractName, methodName, 42);
-      });
-      
+      let promises = [];
+      for (const network in providers) {
+        promises.push(this.fetchQuery(contractName, methodName, Number(network)));
+      } 
+
       const responses = await Promise.all(promises)
 
       return responses;
