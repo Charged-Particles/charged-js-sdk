@@ -23,5 +23,4 @@ export default class UtilsService extends BaseService {
     return result;
   }
 
-
 }

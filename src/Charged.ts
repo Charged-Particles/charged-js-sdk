@@ -51,10 +51,10 @@ export default class Charged  {
     }
 
     this.configuration = {network, signer, provider: this.provider};
-    // this.chargedParticlesContract = new ChargedParticlesService(this.configuration);
-    this.utils = new UtilsService(this.configuration);
 
+    this.utils = new UtilsService(this.configuration);
     // this.NFT = new NftService(this.configuration);
+
   }
 }
 
