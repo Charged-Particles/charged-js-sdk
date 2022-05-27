@@ -59,4 +59,14 @@ describe('Charged class', () => {
   it ('Initializes Charged with web3 ', async() => {
 
   })
+
+  it.only ('Fetches all networks', async() => {
+    const defaultProviderKeys = {'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'};
+    const charged = new Charged({provider: defaultProvider, defaultProviderKeys});
+
+    console.log('l6Zef1007gyxMQIwPI8rEhaHM8N6a', ">>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+    const allStateAddresses = await charged.utils.getAllStateAddresses();
+    console.log(allStateAddresses);
+  })
 });

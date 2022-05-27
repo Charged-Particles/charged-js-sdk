@@ -3,8 +3,8 @@ import { Configuration } from '../types';
 import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
 import { checkContractName, getAbi } from '../utils/initContract';
 
-// import { SUPPORTED_NETWORKS } from '../utils/config';
-// import { useQueries } from 'react-query';
+import { SUPPORTED_NETWORKS } from '../utils/config';
+import { useQuery } from 'react-query';
 
 // ABIs
 import mainnetAddresses from '../networks/v2/mainnet.json';
@@ -50,6 +50,30 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
+  public async reactQuery(contractName: string, methodName: string, network: number) {
+    
+    const queryParams = {contractName, methodName, network};
+
+    useQuery([queryParams], await this.fetchQuery(contractName, methodName, network) );
+  }
+
+  public async fetchAllNetworks(contractName: string, methodName: string) {
+
+    try {
+      const promises = SUPPORTED_NETWORKS.map(async () => {
+        return this.fetchQuery(contractName, methodName, 42);
+      });
+      
+      const responses = await Promise.all(promises)
+
+      return responses;
+
+    } catch(e) {
+      console.log('fetchAllNetworks error >>>> ', e);
+      return {}
+    }
+  }
+
   public async fetchQuery(contractName: string, methodName: string, network: number) {
     checkContractName(contractName);
     
@@ -64,7 +88,7 @@ export default class BaseService {
       provider
     );
 
-    return await requestedContract[methodName]();
+    return requestedContract[methodName]();
   }
 
   public getAddressByNetwork(network:string, contractName:string):string {

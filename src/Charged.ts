@@ -60,4 +60,22 @@ export default class Charged  {
 
 /*
 
+[
+  {
+    network: 1,
+    service: 'alchmey' | 'infura',
+    apiKey: 'secret'
+  },
+  { 
+    network:42,
+    service: 'alchemy'
+    apikey: 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'
+  }
+]
+
+// RPC 
+[
+  chainId => url,
+  1 => https://eth-mainnet.alchemyapi.io/v2/qw02QqWNMg2kby3q3N39PxUT3KaRS5UE
+]
 */

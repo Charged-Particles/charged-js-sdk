@@ -15,9 +15,11 @@ export default class UtilsService extends BaseService {
     // const chargedParticlesContract = this.getContractInstance('chargedParticles');
     // const stateAddress:String = await chargedParticlesContract.getStateAddress();
     // return stateAddress;
-
     return await this.fetchQuery('chargedParticles', 'getStateAddress', 1);
+  }
 
+  public async getAllStateAddresses() {
+    return await this.fetchQuery('chargedParticles', 'getStateAddress', 42);
   }
 
   public async energizeParticle(contractAddress:String, tokenId:BigNumberish, walletManagerId:String, assetToken:String, assetAmount:BigNumberish) {
