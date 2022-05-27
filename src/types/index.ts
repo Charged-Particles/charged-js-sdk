@@ -7,22 +7,24 @@ export type DefaultProviderKeys = {
   infura?: string;
   alchemy?: string;
 };
-  
+
+export type networkProvider = {
+  network: number,
+  service: any
+}
+
 export type MultiProvider = providers.JsonRpcProvider | providers.Provider;
 
 export type MultiSigner = ethers.Signer |ethers.VoidSigner | ethers.Wallet | providers.JsonRpcSigner;
 
 export type Configuration = {
-  network: Networkish;
-  provider: providers.Provider | undefined;
+  providers?: any;
   signer?: Signer  | undefined;
 };
 
 export type constructorParams = {
-  network?: Networkish,
-  provider?: providers.Provider | providers.ExternalProvider | string,
+  providers?: networkProvider[],  
   signer?: Signer,
-  defaultProviderKeys?: DefaultProviderKeys
 };
 
 export interface charged {

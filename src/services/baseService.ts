@@ -22,8 +22,10 @@ export default class BaseService {
     this.contractInstances = {};
   }
 
-  public getContractInstance(contractName:string): Contract{
-    const { network, provider, signer } = this.config;
+  public getContractInstance(contractName:string, network: number): Contract{
+    const { providers, signer } = this.config;
+
+    const provider = providers[network];
 
     const networkFormatted:string = getAddressFromNetwork(network);
    
@@ -77,7 +79,9 @@ export default class BaseService {
   public async fetchQuery(contractName: string, methodName: string, network: number) {
     checkContractName(contractName);
     
-    const { provider } = this.config;
+    const { providers } = this.config;
+
+    const provider = providers[network];
 
     const networkFormatted:string = getAddressFromNetwork(network);
     const address = this.getAddressByNetwork(networkFormatted, contractName)
@@ -110,7 +114,4 @@ export default class BaseService {
 
     return address;
   }
-
-
-
 }
