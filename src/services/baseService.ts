@@ -3,8 +3,6 @@ import { Configuration } from '../types';
 import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
 import { checkContractName, getAbi } from '../utils/initContract';
 
-import { useQuery } from 'react-query';
-
 // ABIs
 import mainnetAddresses from '../networks/v2/mainnet.json';
 import kovanAddresses from '../networks/v2/kovan.json';
@@ -49,13 +47,6 @@ export default class BaseService {
     }
 
     return this.contractInstances[address];
-  }
-
-  public async reactQuery(contractName: string, methodName: string, network: number) {
-    
-    const queryParams = {contractName, methodName, network};
-
-    useQuery([queryParams], await this.fetchQuery(contractName, methodName, network) );
   }
 
   public async fetchAllNetworks(contractName: string, methodName: string) {
