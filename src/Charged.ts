@@ -1,5 +1,5 @@
 import { ethers, providers, Signer, Wallet } from "ethers";
-import ChargedParticlesService from "./services/ChargedParticleService";
+import UtilsService from "./services/UtilsService";
 
 // Types 
 import { Networkish } from "@ethersproject/networks";
@@ -12,9 +12,11 @@ export default class Charged  {
 
   signer?: Wallet | Signer;
 
-  chargedParticlesContract; // TODO: set interfase as type
-
   readonly configuration: Configuration;
+
+  // @ts-ignore
+  public utils;
+  // public NFT;
 
   constructor(params: constructorParams = {}) {
 
@@ -49,6 +51,13 @@ export default class Charged  {
     }
 
     this.configuration = {network, signer, provider: this.provider};
-    this.chargedParticlesContract = new ChargedParticlesService(this.configuration);
+    // this.chargedParticlesContract = new ChargedParticlesService(this.configuration);
+    this.utils = new UtilsService(this.configuration);
+
+    // this.NFT = new NftService(this.configuration);
   }
 }
+
+/*
+
+*/

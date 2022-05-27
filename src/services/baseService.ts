@@ -61,4 +61,5 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
+  
 }

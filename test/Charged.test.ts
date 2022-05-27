@@ -11,7 +11,7 @@ describe('Charged class', () => {
   const defaultProvider = ethers.providers.getDefaultProvider(network);
 
   const checkStateContractMainnetAddress = async (charged: Charged) => {
-    const stateAddressFromContractMainnet = await charged.chargedParticlesContract.getStateAddress();
+    const stateAddressFromContractMainnet = await charged.utils.getStateAddress();
     expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
   }
 
