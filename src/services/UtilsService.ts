@@ -12,9 +12,12 @@ export default class UtilsService extends BaseService {
   /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
   /// @returns string of state address
   public async getStateAddress() {
-    const chargedParticlesContract = this.getContractInstance('chargedParticles');
-    const stateAddress:String = await chargedParticlesContract.getStateAddress();
-    return stateAddress;
+    // const chargedParticlesContract = this.getContractInstance('chargedParticles');
+    // const stateAddress:String = await chargedParticlesContract.getStateAddress();
+    // return stateAddress;
+
+    return await this.fetchQuery('chargedParticles', 'getStateAddress', 1);
+
   }
 
   public async energizeParticle(contractAddress:String, tokenId:BigNumberish, walletManagerId:String, assetToken:String, assetAmount:BigNumberish) {

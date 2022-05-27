@@ -22,7 +22,7 @@ export default class BaseService {
     this.contractInstances = {};
   }
 
-  public getContractInstance (contractName:string): Contract{
+  public getContractInstance(contractName:string): Contract{
     const { network, provider, signer } = this.config;
 
     const networkFormatted:string = getAddressFromNetwork(network);
@@ -50,6 +50,23 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
+  public async fetchQuery(contractName: string, methodName: string, network: number) {
+    checkContractName(contractName);
+    
+    const { provider } = this.config;
+
+    const networkFormatted:string = getAddressFromNetwork(network);
+    const address = this.getAddressByNetwork(networkFormatted, contractName)
+
+    const requestedContract = new ethers.Contract(
+      address,
+      getAbi(contractName),
+      provider
+    );
+
+    return await requestedContract[methodName]();
+  }
+
   public getAddressByNetwork(network:string, contractName:string):string {
     // if a unsupported chain is given. default to mainnet
     // ts ignores are used because the json files are not working nicely with typescript
@@ -69,5 +86,7 @@ export default class BaseService {
 
     return address;
   }
+
+
 
 }
