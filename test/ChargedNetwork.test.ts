@@ -22,6 +22,21 @@ describe('Charged class', () => {
     const charged = new Charged(providers)
     const allStateAddresses = await charged.utils.getAllStateAddresses();
 
-    console.log(allStateAddresses);
-  })
+    expect(allStateAddresses).toHaveLength(2);
+  });
+
+  it ('Initializes NFT service', () => {
+    const charged = new Charged(providers);
+
+    const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
+    const tokenId = 12;
+    const network = 1;
+
+    const NFT = charged.NFT(particleBAddress, tokenId, network);
+
+    expect(NFT.particleAddress).toEqual(particleBAddress);
+    expect(NFT.tokenId).toEqual(tokenId);
+    expect(NFT.network).toEqual(network);
+
+  });
 })

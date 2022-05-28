@@ -1,6 +1,8 @@
 import { ethers, providers, Signer } from "ethers";
-import UtilsService from "./services/UtilsService";
 import { SUPPORTED_NETWORKS } from "./utils/config";
+
+import UtilsService from "./services/UtilsService";
+import NftService from "./services/NftService";
 
 // Types 
 import { networkProvider, Configuration } from "./types";
@@ -36,8 +38,17 @@ export default class Charged  {
     this.configuration = { signer, providers: this.providers };
 
     this.utils = new UtilsService(this.configuration);
-    // this.NFT = new NftService(this.configuration);
 
+  }
+  
+  public NFT(
+    particleAddress: string,
+    tokenId: number,
+    network: number // TODO: deduce network from passed particle address
+  ) {
+    const instanceOfNftService = new NftService(this.configuration, particleAddress, tokenId, network);
+
+    return instanceOfNftService;
   }
 }
 
