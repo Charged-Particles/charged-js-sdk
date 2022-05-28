@@ -73,9 +73,16 @@ export default class BaseService {
     network: number,
     params: any[] = []
   ) {
-    const requestedContract = this.getContractInstance(contractName, network);
-    
-    return requestedContract[methodName](...params);
+
+    try {
+      const requestedContract = this.getContractInstance(contractName, network);
+      return requestedContract[methodName](...params);
+
+    } catch(e) {
+
+      console.log('fetchQuery error:', e);
+      return {};
+    }
   }
 
   public getAddressByNetwork(network:string, contractName:string):string {

@@ -38,7 +38,6 @@ export default class Charged  {
     this.configuration = { signer, providers: this.providers };
 
     this.utils = new UtilsService(this.configuration);
-
   }
   
   public NFT(
