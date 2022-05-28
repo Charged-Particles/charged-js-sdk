@@ -3,12 +3,12 @@ import UtilsService from "./services/UtilsService";
 import { SUPPORTED_NETWORKS } from "./utils/config";
 
 // Types 
-import { constructorParams, Configuration } from "./types";
+import { networkProvider, Configuration } from "./types";
 
 export default class Charged  {
   providers: {[network: number ]: providers.Provider} = {};
 
-  signer?: Wallet | Signer;
+  signer: Signer | {};
 
   readonly configuration: Configuration;
 
@@ -16,13 +16,8 @@ export default class Charged  {
   public utils;
   // public NFT;
 
-  constructor(params: constructorParams = {}) {
+  constructor(providers: networkProvider[], signer: Signer | object = {}) {
 
-    const {
-      providers,
-      signer, 
-    } = params;
-    
     this.signer = signer;
 
     if (Boolean(providers)) {

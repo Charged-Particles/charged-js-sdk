@@ -19,7 +19,7 @@ describe('Charged class', () => {
   ]
 
   it ('Initializes charged SDK', async () => {
-    const charged = new Charged({providers})
+    const charged = new Charged(providers)
     const allStateAddresses = await charged.utils.getAllStateAddresses();
 
     console.log(allStateAddresses);

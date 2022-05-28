@@ -19,7 +19,7 @@ export type MultiSigner = ethers.Signer |ethers.VoidSigner | ethers.Wallet | pro
 
 export type Configuration = {
   providers?: any;
-  signer?: Signer  | undefined;
+  signer?: Signer | {};
 };
 
 export type constructorParams = {
