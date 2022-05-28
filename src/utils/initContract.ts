@@ -13,6 +13,7 @@ import ProtonB from '../abis/v2/ProtonB.json';
 import { MultiProvider, MultiSigner } from '../types';
 import { getAddressFromNetwork } from './getAddressFromNetwork';
 
+// Contract addresses
 import mainnetAddresses from '../networks/v2/mainnet.json';
 import kovanAddresses from '../networks/v2/kovan.json';
 import polygonAddresses from '../networks/v2/polygon.json';
@@ -73,4 +74,24 @@ export const getAbi = (contractName:string) => {
     case 'protonB': return ProtonB;
     default: throw 'unknown contract name while trying to get abi';
   }
+}
+
+export const getAddressByNetwork = (network:string, contractName:string):string =>{
+  // if a unsupported chain is given. default to mainnet
+  // ts ignores are used because the json files are not working nicely with typescript
+  let address:string;
+  switch(network) {
+    // @ts-ignore
+     case 'mainnet': address = mainnetAddresses[contractName].address; break;
+    // @ts-ignore
+     case 'kovan': address = kovanAddresses[contractName].address; break;
+    // @ts-ignore
+     case 'polygon': address = polygonAddresses[contractName].address; break;
+    // @ts-ignore
+     case 'mumbai': address = mumbaiAddresses[contractName].address; break;
+    // @ts-ignore
+     default: address = mainnetAddresses[contractName].address; break;
+  }
+
+  return address;
 }

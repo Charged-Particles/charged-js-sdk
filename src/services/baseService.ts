@@ -1,13 +1,7 @@
 import { Contract, ethers } from 'ethers';
 import { Configuration } from '../types';
 import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
-import { checkContractName, getAbi } from '../utils/initContract';
-
-// ABIs
-import mainnetAddresses from '../networks/v2/mainnet.json';
-import kovanAddresses from '../networks/v2/kovan.json';
-import polygonAddresses from '../networks/v2/polygon.json';
-import mumbaiAddresses from '../networks/v2/mumbai.json';
+import { checkContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
 
 export default class BaseService {
   readonly contractInstances: { [address: string]: Contract };
@@ -28,7 +22,7 @@ export default class BaseService {
     // check if safe contract name was given
     checkContractName(contractName);
     
-    const address = this.getAddressByNetwork(networkFormatted, contractName)
+    const address = getAddressByNetwork(networkFormatted, contractName)
 
     if (!this.contractInstances[address]) {
       let requestedContract = new ethers.Contract(
@@ -54,7 +48,7 @@ export default class BaseService {
     try {
       let promises = [];
       for (const network in providers) {
-        promises.push(this.fetchQuery(contractName, methodName, Number(network), params));
+        promises.push(this.callContract(contractName, methodName, Number(network), params));
       } 
 
       const responses = await Promise.all(promises)
@@ -67,7 +61,7 @@ export default class BaseService {
     }
   }
 
-  public async fetchQuery(
+  public async callContract(
     contractName: string, 
     methodName: string, 
     network: number,
@@ -83,25 +77,5 @@ export default class BaseService {
       console.log('fetchQuery error:', e);
       return {};
     }
-  }
-
-  public getAddressByNetwork(network:string, contractName:string):string {
-    // if a unsupported chain is given. default to mainnet
-    // ts ignores are used because the json files are not working nicely with typescript
-    let address:string;
-    switch(network) {
-      // @ts-ignore
-       case 'mainnet': address = mainnetAddresses[contractName].address; break;
-      // @ts-ignore
-       case 'kovan': address = kovanAddresses[contractName].address; break;
-      // @ts-ignore
-       case 'polygon': address = polygonAddresses[contractName].address; break;
-      // @ts-ignore
-       case 'mumbai': address = mumbaiAddresses[contractName].address; break;
-      // @ts-ignore
-       default: address = mainnetAddresses[contractName].address; break;
-    }
-
-    return address;
   }
 }

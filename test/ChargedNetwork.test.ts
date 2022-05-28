@@ -20,7 +20,7 @@ describe('Charged class', () => {
 
   it ('Initializes charged SDK', async () => {
     const charged = new Charged(providers)
-    const allStateAddresses = await charged.utils.getAllStateAddresses();
+    const allStateAddresses = await charged.utils.getStateAddresses();
 
     expect(allStateAddresses).toHaveLength(2);
 

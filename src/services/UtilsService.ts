@@ -11,14 +11,7 @@ export default class UtilsService extends BaseService {
   /// @notice returns the state adress from the ChargedParticles contract
   /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
   /// @returns string of state address
-  public async getStateAddress() {
-    // const chargedParticlesContract = this.getContractInstance('chargedParticles');
-    // const stateAddress:String = await chargedParticlesContract.getStateAddress();
-    // return stateAddress;
-    return await this.fetchQuery('chargedParticles', 'getStateAddress', 1);
-  }
-
-  public async getAllStateAddresses() {
+  public async getStateAddresses() {
     return await this.fetchAllNetworks('chargedParticles', 'getStateAddress');
   }
 
