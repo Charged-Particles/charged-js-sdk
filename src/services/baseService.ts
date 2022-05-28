@@ -47,14 +47,22 @@ export default class BaseService {
 
     try {
       let promises = [];
+      let networks:number[] = [];
+
       for (const network in providers) {
         promises.push(this.callContract(contractName, methodName, Number(network), params));
+        networks.push(Number(network));
       } 
 
       const responses = await Promise.all(promises)
 
-      return responses;
+      const formattedResponse: {[number: number]: any} = {};
 
+      responses.forEach((e,i) => {
+        formattedResponse[networks[i]] = e;
+      })
+
+      return formattedResponse; 
     } catch(e) {
       console.log('fetchAllNetworks error >>>> ', e);
       return [];

@@ -22,12 +22,13 @@ describe('Charged class', () => {
     const charged = new Charged(providers)
     const allStateAddresses = await charged.utils.getStateAddresses();
 
-    expect(allStateAddresses).toHaveLength(2);
+    expect(allStateAddresses).toHaveProperty('1');
+    expect(allStateAddresses).toHaveProperty('42');
 
-    console.log(allStateAddresses);
+    // console.log(allStateAddresses);
   });
 
-  it.only ('Initializes NFT service', async () => {
+  it ('Initializes NFT service', async () => {
     const charged = new Charged(providers);
 
     const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
