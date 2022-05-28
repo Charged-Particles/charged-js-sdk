@@ -8,7 +8,7 @@ import { networkProvider, Configuration } from "./types";
 export default class Charged  {
   providers: {[network: number ]: providers.Provider} = {};
 
-  signer: Signer | {};
+  signer?: Signer;
 
   readonly configuration: Configuration;
 
@@ -16,7 +16,7 @@ export default class Charged  {
   public utils;
   // public NFT;
 
-  constructor(providers: networkProvider[], signer: Signer | object = {}) {
+  constructor(providers: networkProvider[], signer?: Signer) {
 
     this.signer = signer;
 
