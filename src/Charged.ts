@@ -1,4 +1,4 @@
-import { ethers, providers, Signer, Wallet } from "ethers";
+import { ethers, providers, Signer } from "ethers";
 import UtilsService from "./services/UtilsService";
 import { SUPPORTED_NETWORKS } from "./utils/config";
 
@@ -12,9 +12,7 @@ export default class Charged  {
 
   readonly configuration: Configuration;
 
-  // @ts-ignore
   public utils;
-  // public NFT;
 
   constructor(providers: networkProvider[], signer?: Signer) {
 

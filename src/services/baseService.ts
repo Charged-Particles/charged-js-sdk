@@ -23,7 +23,6 @@ export default class BaseService {
     const { providers, signer } = this.config;
 
     const provider = providers[network];
-
     const networkFormatted:string = getAddressFromNetwork(network);
    
     // check if safe contract name was given
@@ -31,18 +30,18 @@ export default class BaseService {
     
     const address = this.getAddressByNetwork(networkFormatted, contractName)
 
-   if (!this.contractInstances[address]) {
-     let requestedContract = new ethers.Contract(
-       address,
-       getAbi(contractName),
-       provider
-     );
-       
-     if(signer && provider) {
-       const connectedWallet = signer.connect(provider);
-       requestedContract = requestedContract.connect(connectedWallet);
+    if (!this.contractInstances[address]) {
+      let requestedContract = new ethers.Contract(
+        address,
+        getAbi(contractName),
+        provider
+      );
+        
+      if(signer && provider) {
+        const connectedWallet = signer.connect(provider);
+        requestedContract = requestedContract.connect(connectedWallet);
       }
- 
+
       this.contractInstances[address] = requestedContract;
     }
 
@@ -50,7 +49,6 @@ export default class BaseService {
   }
 
   public async fetchAllNetworks(contractName: string, methodName: string) {
-
     const { providers } = this.config;
 
     try {
@@ -65,25 +63,12 @@ export default class BaseService {
 
     } catch(e) {
       console.log('fetchAllNetworks error >>>> ', e);
-      return {}
+      return [];
     }
   }
 
   public async fetchQuery(contractName: string, methodName: string, network: number) {
-    checkContractName(contractName);
-    
-    const { providers } = this.config;
-
-    const provider = providers[network];
-
-    const networkFormatted:string = getAddressFromNetwork(network);
-    const address = this.getAddressByNetwork(networkFormatted, contractName)
-
-    const requestedContract = new ethers.Contract(
-      address,
-      getAbi(contractName),
-      provider
-    );
+    const requestedContract = this.getContractInstance(contractName, network);
 
     return requestedContract[methodName]();
   }
