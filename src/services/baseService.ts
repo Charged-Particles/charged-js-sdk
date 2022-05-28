@@ -48,7 +48,7 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
-  public async fetchAllNetworks(contractName: string, methodName: string, params: string[] = []) {
+  public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = []) {
     const { providers } = this.config;
 
     try {
@@ -71,10 +71,10 @@ export default class BaseService {
     contractName: string, 
     methodName: string, 
     network: number,
-    params: string[] = []
+    params: any[] = []
   ) {
     const requestedContract = this.getContractInstance(contractName, network);
-
+    
     return requestedContract[methodName](...params);
   }
 

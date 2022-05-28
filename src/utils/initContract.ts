@@ -7,6 +7,7 @@ import ChargedParticles from '../abis/v2/ChargedParticles.json';
 import ChargedSettings from '../abis/v2/ChargedSettings.json';
 import ChargedManagers from '../abis/v2/ChargedManagers.json';
 import ChargedState from '../abis/v2/ChargedState.json';
+import ProtonB from '../abis/v2/ProtonB.json';
 
 // Components
 import { MultiProvider, MultiSigner } from '../types';
@@ -57,6 +58,7 @@ export const checkContractName = (contractName:string) => {
     case 'chargedState': return;
     case 'chargedSettings': return;
     case 'chargedManagers': return;
+    case 'protonB': return;
     default: throw 'bad contract name passed to initContract';
   }
 }
@@ -68,6 +70,7 @@ export const getAbi = (contractName:string) => {
     case 'chargedState': return ChargedState;
     case 'chargedSettings': return ChargedSettings;
     case 'chargedManagers': return ChargedManagers;
+    case 'protonB': return ProtonB;
     default: throw 'unknown contract name while trying to get abi';
   }
 }

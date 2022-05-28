@@ -27,11 +27,11 @@ describe('Charged class', () => {
     console.log(allStateAddresses);
   });
 
-  it ('Initializes NFT service', () => {
+  it.only ('Initializes NFT service', async () => {
     const charged = new Charged(providers);
 
     const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
-    const tokenId = 12;
+    const tokenId = 4;
     const network = 1;
 
     const NFT = charged.NFT(particleBAddress, tokenId, network);
@@ -39,5 +39,8 @@ describe('Charged class', () => {
     expect(NFT.particleAddress).toEqual(particleBAddress);
     expect(NFT.tokenId).toEqual(tokenId);
     expect(NFT.network).toEqual(network);
+
+    const tokenURI = await NFT.tokenURI()
+    expect(tokenURI).toEqual('https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85');
   });
 })

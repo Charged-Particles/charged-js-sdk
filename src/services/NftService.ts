@@ -33,8 +33,9 @@ export default class NftService extends BaseService {
   }
 
   public async tokenURI() {
-    // const tokenURI = await this.fetchQuery('chargedParticles', 'tokenURI', this.network);
-    // return tokenURI;
+    // const tokenIdString = String(this.tokenId)
+    const tokenURI = await this.fetchQuery('protonB', 'tokenURI', this.network, [this.tokenId]);
+    return tokenURI;
   }
 
 }

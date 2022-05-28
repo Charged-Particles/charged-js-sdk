@@ -47,7 +47,6 @@ export default class Charged  {
     network: number // TODO: deduce network from passed particle address
   ) {
     const instanceOfNftService = new NftService(this.configuration, particleAddress, tokenId, network);
-
     return instanceOfNftService;
   }
 }
