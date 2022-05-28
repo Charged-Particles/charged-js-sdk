@@ -23,6 +23,8 @@ describe('Charged class', () => {
     const allStateAddresses = await charged.utils.getAllStateAddresses();
 
     expect(allStateAddresses).toHaveLength(2);
+
+    console.log(allStateAddresses);
   });
 
   it ('Initializes NFT service', () => {
@@ -37,6 +39,5 @@ describe('Charged class', () => {
     expect(NFT.particleAddress).toEqual(particleBAddress);
     expect(NFT.tokenId).toEqual(tokenId);
     expect(NFT.network).toEqual(network);
-
   });
 })

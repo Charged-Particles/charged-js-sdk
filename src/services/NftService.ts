@@ -23,15 +23,18 @@ export default class NftService extends BaseService {
    }
     
   public async energizeParticle(
-    contractAddress:String,
-    tokenId:BigNumberish, 
     walletManagerId:String, 
     assetToken:String,
     assetAmount:BigNumberish
   ) {
     const contract = this.getContractInstance('chargedParticles', this.network);
-    const result = await contract.energizeParticle(contractAddress, tokenId, walletManagerId, assetToken, assetAmount, '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213');
+    const result = await contract.energizeParticle(this.particleAddress, this.tokenId, walletManagerId, assetToken, assetAmount, '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213');
     return result;
+  }
+
+  public async tokenURI() {
+    // const tokenURI = await this.fetchQuery('chargedParticles', 'tokenURI', this.network);
+    // return tokenURI;
   }
 
 }

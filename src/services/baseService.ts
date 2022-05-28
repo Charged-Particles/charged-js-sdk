@@ -48,13 +48,13 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
-  public async fetchAllNetworks(contractName: string, methodName: string) {
+  public async fetchAllNetworks(contractName: string, methodName: string, params: string[] = []) {
     const { providers } = this.config;
 
     try {
       let promises = [];
       for (const network in providers) {
-        promises.push(this.fetchQuery(contractName, methodName, Number(network)));
+        promises.push(this.fetchQuery(contractName, methodName, Number(network), params));
       } 
 
       const responses = await Promise.all(promises)
@@ -67,10 +67,15 @@ export default class BaseService {
     }
   }
 
-  public async fetchQuery(contractName: string, methodName: string, network: number) {
+  public async fetchQuery(
+    contractName: string, 
+    methodName: string, 
+    network: number,
+    params: string[] = []
+  ) {
     const requestedContract = this.getContractInstance(contractName, network);
 
-    return requestedContract[methodName]();
+    return requestedContract[methodName](...params);
   }
 
   public getAddressByNetwork(network:string, contractName:string):string {
