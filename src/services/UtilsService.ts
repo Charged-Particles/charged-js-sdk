@@ -1,4 +1,3 @@
-import { BigNumberish } from 'ethers';
 import { Configuration } from '../types';
 import BaseService from './baseService';
 
@@ -13,12 +12,6 @@ export default class UtilsService extends BaseService {
   /// @returns string of state address
   public async getStateAddress() {
     return await this.fetchAllNetworks('chargedParticles', 'getStateAddress');
-  }
-
-  public async energizeParticle(contractAddress:String, tokenId:BigNumberish, walletManagerId:String, assetToken:String, assetAmount:BigNumberish) {
-    const contract = this.getContractInstance('chargedParticles', 1);
-    const result = await contract.energizeParticle(contractAddress, tokenId, walletManagerId, assetToken, assetAmount, '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213');
-    return result;
   }
 
 }
