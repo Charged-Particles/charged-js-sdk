@@ -1,12 +1,13 @@
 // import { ethers } from 'ethers'
 
-// import { getWallet } from '../src/utils/ethers.service';
+import { getWallet } from '../src/utils/ethers.service';
 // import { rpcUrlMainnet } from '../src/utils/config';
+import { BigNumber } from 'ethers';
 import Charged from '../src/Charged';
 
 
 describe('Charged class', () => {
-  // const myWallet = getWallet();
+  const myWallet = getWallet();
   const providers =  [
     {
       network: 1,
@@ -58,4 +59,20 @@ describe('Charged class', () => {
     expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
     expect(stateAddresses).toHaveProperty('42', '0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca');
   });
+
+  it.only ('energize a test particle', async () => {
+    const charged = new Charged({providers, signer: myWallet});
+    
+    const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+    const tokenId = 18;
+    const network = 42;
+    
+    const nft = charged.NFT(particleBAddress, tokenId, network);
+    const result = await nft.energizeParticle('aave.B', '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD', BigNumber.from(10));
+    
+    const resp = await result.wait();
+    console.log({resp});
+
+  });
+
 })
