@@ -31,7 +31,7 @@ export const initContract = (
   network?:Networkish,
   signer?: Wallet | Signer
   ) => {
-   const networkFormatted: string = getFormatedromNetwork(network);
+   const networkFormatted: string = getFormattedNetwork(network);
    const address: string = getAddressByNetwork(networkFormatted);
 
    let chargedParticleContract = new ethers.Contract(
@@ -66,7 +66,7 @@ const initSignerContract = (signer:ethers.Signer, network?:Networkish) => {
    if(!signer) {
       throw 'No signer passed. Cannot continue.';
    }
-   const networkFormatted: string = getFormatedromNetwork(network);
+   const networkFormatted: string = getFormattedNetwork(network);
    const address: string = getAddressByNetwork(networkFormatted);
 
    return new ethers.Contract(
@@ -77,7 +77,7 @@ const initSignerContract = (signer:ethers.Signer, network?:Networkish) => {
 }
 
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
-export const getFormatedromNetwork = (network?:Networkish) => {
+export const getFormattedNetwork = (network?:Networkish) => {
    // if network is not given. default to mainnet
    if(!network) { return 'mainnet' };
 
