@@ -7,18 +7,21 @@ import NftService from "./services/NftService";
 // Types 
 import { networkProvider, Configuration } from "./types";
 
+type constructorCharged = {
+  providers?: networkProvider[],  
+  signer?: Signer,
+};
+
 export default class Charged  {
-  providers: {[network: number ]: providers.Provider} = {};
-
-  signer?: Signer;
-
-  readonly configuration: Configuration;
+  public providers: {[network: number ]: providers.Provider} = {};
 
   public utils;
 
-  constructor(providers?: networkProvider[], signer?: Signer) {
+  readonly configuration: Configuration;
 
-    this.signer = signer;
+  constructor(params: constructorCharged = {}) {
+
+    const { providers, signer } = params;
 
     if (Boolean(providers)) {
       providers?.forEach(({network, service }) => {
@@ -29,13 +32,13 @@ export default class Charged  {
       SUPPORTED_NETWORKS.forEach(({chainId}) => {
         const network = ethers.providers.getNetwork(chainId);
         
-        if(Boolean(network._defaultProvider)) {
+        if (Boolean(network._defaultProvider)) {
           this.providers[chainId] = ethers.getDefaultProvider(network);
         }
       })
 
       console.log(
-        `Charged particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
+        `Charged Particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
         It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
       );
     }
@@ -46,12 +49,13 @@ export default class Charged  {
   }
   
   public NFT(
-    particleAddress: string,
+    contractAddress: string,
     tokenId: number,
     network: number // TODO: deduce network from passed particle address
   ) {
-    return new NftService(this.configuration, particleAddress, tokenId, network);
+    return new NftService(this.configuration, contractAddress, tokenId, network);
   }
+
 }
 
 /*
