@@ -19,7 +19,7 @@ describe('Charged class', () => {
   ]
 
   it ('Initializes charged SDK', async () => {
-    const charged = new Charged(providers)
+    const charged = new Charged({providers})
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('1');
@@ -29,19 +29,19 @@ describe('Charged class', () => {
   });
 
   it ('Initializes NFT service', async () => {
-    const charged = new Charged(providers);
+    const charged = new Charged({providers});
 
     const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
     const tokenId = 4;
     const network = 1;
 
-    const NFT = charged.NFT(particleBAddress, tokenId, network);
+    const nft = charged.NFT(particleBAddress, tokenId, network);
 
-    expect(NFT.particleAddress).toEqual(particleBAddress);
-    expect(NFT.tokenId).toEqual(tokenId);
-    expect(NFT.network).toEqual(network);
+    expect(nft.contractAddress).toEqual(particleBAddress);
+    expect(nft.tokenId).toEqual(tokenId);
+    expect(nft.network).toEqual(network);
 
-    const tokenURI = await NFT.tokenURI()
+    const tokenURI = await nft.tokenURI()
     expect(tokenURI).toEqual('https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85');
   });
 
