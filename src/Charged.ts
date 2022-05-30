@@ -22,11 +22,16 @@ export default class Charged  {
 
     if (Boolean(providers)) {
       providers?.forEach(({network, service }) => {
+        ethers.providers.getNetwork(network);
         this.providers[network] = ethers.getDefaultProvider(network, service); 
       })
     } else {
       SUPPORTED_NETWORKS.forEach(({chainId}) => {
-        this.providers[chainId] = ethers.getDefaultProvider(chainId);
+        const network = ethers.providers.getNetwork(chainId);
+        
+        if(Boolean(network._defaultProvider)) {
+          this.providers[chainId] = ethers.getDefaultProvider(network);
+        }
       })
 
       console.log(

@@ -20,7 +20,7 @@ describe('Charged class', () => {
 
   it ('Initializes charged SDK', async () => {
     const charged = new Charged(providers)
-    const allStateAddresses = await charged.utils.getStateAddresses();
+    const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('1');
     expect(allStateAddresses).toHaveProperty('42');
@@ -43,5 +43,19 @@ describe('Charged class', () => {
 
     const tokenURI = await NFT.tokenURI()
     expect(tokenURI).toEqual('https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85');
+  });
+
+  it ('Initializes charged with default providers', async() => {
+    const charged = new Charged();
+
+    const providers = charged.providers;
+
+    expect(providers).toHaveProperty('1');
+    expect(providers).toHaveProperty('42');
+  
+    const stateAddresses = await charged.utils.getStateAddress();
+
+    expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+    expect(stateAddresses).toHaveProperty('42', '0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca');
   });
 })

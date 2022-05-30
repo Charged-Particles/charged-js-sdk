@@ -1,11 +1,13 @@
 {
     "configurations": [
+    
+
 
         {
             "type": "node-terminal",
-            "name": "Run Script: test",
+            "name": "Run Script: Chaged test",
             "request": "launch",
-            "command": "yarn run test ChargedNetwork.test.ts --no-cache",
+            "command": "yarn run test Charged.test.ts --no-cache",
             "cwd": "${workspaceFolder}"
         }
     ]
