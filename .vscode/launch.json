@@ -5,7 +5,7 @@
 
         {
             "type": "node-terminal",
-            "name": "Run Script: Chaged test",
+            "name": "Run Script: Charged test",
             "request": "launch",
             "command": "yarn run test Charged.test.ts --no-cache",
             "cwd": "${workspaceFolder}"
