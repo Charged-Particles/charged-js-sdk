@@ -3,7 +3,7 @@ import { Configuration } from '../types';
 import BaseService from './baseService';
 
 export default class NftService extends BaseService {
-  public particleAddress: string;
+  public contractAddress: string;
 
   public tokenId: number;
 
@@ -11,13 +11,13 @@ export default class NftService extends BaseService {
 
   constructor(
     config: Configuration,
-    particleAddress: string,
+    contractAddress: string,
     tokenId: number,
     network: number // TODO: deduce network from passed particle address
   ) {
       super(config);
       
-      this.particleAddress = particleAddress;
+      this.contractAddress = contractAddress;
       this.tokenId = tokenId;
       this.network = network;
    }
@@ -28,7 +28,7 @@ export default class NftService extends BaseService {
     assetAmount:BigNumberish
   ) {
     const contract = this.getContractInstance('chargedParticles', this.network);
-    const result = await contract.energizeParticle(this.particleAddress, this.tokenId, walletManagerId, assetToken, assetAmount, '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213');
+    const result = await contract.energizeParticle(this.contractAddress, this.tokenId, walletManagerId, assetToken, assetAmount, '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213');
     return result;
   }
 
