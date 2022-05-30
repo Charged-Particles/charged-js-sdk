@@ -1,72 +1,47 @@
-import { ethers } from 'ethers'
+// import { ethers } from 'ethers'
 
-import { getWallet } from '../src/utils/ethers.service';
-import { rpcUrlMainnet } from '../src/utils/config';
+// import { getWallet } from '../src/utils/ethers.service';
+// import { rpcUrlMainnet } from '../src/utils/config';
 import Charged from '../src/Charged';
 
 
 describe('Charged class', () => {
-  const network = 1;
-  const myWallet = getWallet();
-  const defaultProvider = ethers.providers.getDefaultProvider(network);
+  // const myWallet = getWallet();
+  const providers =  [
+    {
+      network: 1,
+      service: {'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE'}
+    },
+    {
+      network: 42,
+      service: {'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'}
+    }
+  ]
 
-  const checkStateContractMainnetAddress = async (charged: Charged) => {
-    const stateAddressFromContractMainnet = await charged.utils.getStateAddress();
-    expect(stateAddressFromContractMainnet).toEqual('0x48974C6ae5A0A25565b0096cE3c81395f604140f');
-  }
+  it ('Initializes charged SDK', async () => {
+    const charged = new Charged(providers)
+    const allStateAddresses = await charged.utils.getStateAddresses();
 
-  it('Evaluates correct network', async() => {
-    const charged = new Charged({network, provider: defaultProvider, signer: myWallet});
-    const usedNetwork = await charged?.provider?.getNetwork();
-    expect(usedNetwork?.chainId).toEqual(network);
-  });
+    expect(allStateAddresses).toHaveProperty('1');
+    expect(allStateAddresses).toHaveProperty('42');
 
-  it ('Initializes charged with etherJS provider', async() => {
-    expect(myWallet.address).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
-    const charged = new Charged({network, provider: defaultProvider});
-    
-    const walletAddressFromCharged = await charged?.signer?.getAddress();
-    expect(walletAddressFromCharged).toEqual(undefined);
-
-    await checkStateContractMainnetAddress(charged);
-  });
-
-  it ('Create contract with with etherJs signer & provider', async() => {
-    const charged = new Charged({network, provider: defaultProvider, signer: myWallet});
-
-    await checkStateContractMainnetAddress(charged);
-
-    const signerAddress = await charged?.signer?.getAddress();
-    expect(signerAddress).toEqual('0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
-  });
-
-  it ('Initialize Charged with no params', async() => {
-    const charged = new Charged();
-    await checkStateContractMainnetAddress(charged);  })
-
-  it ('Initializes Charged with url provider', async() => {
-    const charged = new Charged({provider: rpcUrlMainnet});
-    await checkStateContractMainnetAddress(charged); 
-    expect(charged.signer).toBe(undefined);
-  })
-
-  it ('Initializes Charged API keys', async() => {
-    const defaultProviderKeys = {'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE'};
-    const charged = new Charged({provider: defaultProvider, defaultProviderKeys});
-    await checkStateContractMainnetAddress(charged); 
-  })
-
-  it ('Initializes Charged with web3 ', async() => {
-
-  })
-
-  it.only ('Fetches all networks', async() => {
-    const defaultProviderKeys = {'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'};
-    const charged = new Charged({provider: defaultProvider, defaultProviderKeys});
-
-    console.log('l6Zef1007gyxMQIwPI8rEhaHM8N6a', ">>>>>>>>>>>>>>>>>>>>>>>>>>");
-
-    const allStateAddresses = await charged.utils.getAllStateAddresses();
     console.log(allStateAddresses);
-  })
-});
+  });
+
+  it ('Initializes NFT service', async () => {
+    const charged = new Charged(providers);
+
+    const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
+    const tokenId = 4;
+    const network = 1;
+
+    const NFT = charged.NFT(particleBAddress, tokenId, network);
+
+    expect(NFT.particleAddress).toEqual(particleBAddress);
+    expect(NFT.tokenId).toEqual(tokenId);
+    expect(NFT.network).toEqual(network);
+
+    const tokenURI = await NFT.tokenURI()
+    expect(tokenURI).toEqual('https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85');
+  });
+})

@@ -16,7 +16,7 @@ export default class Charged  {
 
   public utils;
 
-  constructor(providers: networkProvider[], signer?: Signer) {
+  constructor(providers?: networkProvider[], signer?: Signer) {
 
     this.signer = signer;
 
