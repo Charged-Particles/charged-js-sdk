@@ -57,20 +57,20 @@ describe('alchemy mainnet', () => {
 describe('alchemy kovan', () => {
   const alcProvider = new ethers.providers.AlchemyProvider('kovan', alchemyApiKeyKovan);
   it('should return kovan state address with alchemy provider given', async () => {
-    expect(await getStateAddress(alcProvider, 'kovan')).toEqual(kovanAddy);
+    expect(await getStateAddress(alcProvider)).toEqual(kovanAddy);
   })
 })
 
 describe('alchemy polygon', () => {
   const alcProvider = new ethers.providers.AlchemyProvider('matic', alchemyApiKeyPolygon);
   it('should return polygon state address with alchemy provider given', async () => {
-    expect(await getStateAddress(alcProvider, 'matic')).toEqual(polygonAddy);
+    expect(await getStateAddress(alcProvider)).toEqual(polygonAddy);
   })
 })
 
 describe('alchemy mumbai', () => {
   const alcProvider = new ethers.providers.AlchemyProvider('maticmum', alchemyApiKeyMumbai);
   it('should return mumbai state address with alchemy provider given', async () => {
-    expect(await getStateAddress(alcProvider, 'maticmum')).toEqual(mumbaiAddy);
+    expect(await getStateAddress(alcProvider)).toEqual(mumbaiAddy);
   })
 })

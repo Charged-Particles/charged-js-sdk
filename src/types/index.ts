@@ -1,14 +1,21 @@
-import { ethers } from 'ethers';
+import { ethers, providers, Signer } from 'ethers';
 
-export type MultiProvider = ethers.providers.JsonRpcProvider | 
-ethers.providers.BaseProvider |
-ethers.providers.AlchemyProvider | 
-ethers.providers.InfuraProvider | 
-ethers.providers.EtherscanProvider |
-ethers.providers.CloudflareProvider |
-ethers.providers.PocketProvider | 
-ethers.providers.AnkrProvider;
+export type MultiProvider = providers.JsonRpcProvider | providers.Provider;
 
-export type MultiSigner = ethers.VoidSigner |
-ethers.Wallet |
-ethers.providers.JsonRpcSigner;
+export type MultiSigner = ethers.Signer |ethers.VoidSigner | ethers.Wallet | providers.JsonRpcSigner;
+
+export type DefaultProviderKeys = {
+  etherscan?: string;
+  infura?: string;
+  alchemy?: string;
+};
+
+export type networkProvider = {
+  network: number,
+  service: any
+}
+
+export type Configuration = {
+  providers?: any;
+  signer?: Signer;
+};

@@ -1,5 +1,5 @@
 import ChargedParticles from "./abis/v2/ChargedParticles.json";
-import { ethers, BigNumberish } from 'ethers';
+import { ethers, Wallet, providers, Signer, BigNumberish } from 'ethers';
 import { Networkish } from "@ethersproject/networks";
 
 import mainnetAddresses from './networks/v2/mainnet.json';
@@ -23,11 +23,32 @@ type MultiSigner = ethers.Signer |
    ethers.providers.JsonRpcSigner;
 
 // Boilerplate. Returns the CP contract with the correct provider
-const initContract = (provider?:MultiProvider, network?:Networkish) => {
-   const networkFormatted:String = getAddressFromNetwork(network);
-   const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
-   
-   // if a unsupported chain is given. default to mainnet
+// TODO: should monitor address and chain ID change, throw error if not supported. 
+// TODO: donot pass network to methods, get it from provider.
+
+export const initContract = (
+  provider?:providers.Provider, 
+  network?:Networkish,
+  signer?: Wallet | Signer
+  ) => {
+   const networkFormatted: string = getFormattedNetwork(network);
+   const address: string = getAddressByNetwork(networkFormatted);
+
+   let chargedParticleContract = new ethers.Contract(
+      address,
+      ChargedParticles,
+      provider
+   );
+
+   if(signer && provider) {
+    const connectedWallet = signer.connect(provider)
+    chargedParticleContract = chargedParticleContract.connect(connectedWallet);
+   }
+
+   return chargedParticleContract;
+}
+
+export const getAddressByNetwork = (networkFormatted: string) => {
    let address:string;
    switch(networkFormatted) {
       case 'mainnet': address = mainnetAddresses.chargedParticles.address; break;
@@ -37,11 +58,7 @@ const initContract = (provider?:MultiProvider, network?:Networkish) => {
       default: address = mainnetAddresses.chargedParticles.address; break;
    }
 
-   return new ethers.Contract(
-      address,
-      ChargedParticles,
-      provider ?? defaultProvider
-   );
+   return address;
 }
 
 // Create a contract with a signer attached. Signer is required as there is no default to use.
@@ -49,17 +66,8 @@ const initSignerContract = (signer:ethers.Signer, network?:Networkish) => {
    if(!signer) {
       throw 'No signer passed. Cannot continue.';
    }
-   const networkFormatted:String = getAddressFromNetwork(network);
-
-      // if a unsupported chain is given. default to mainnet
-   let address:string;
-   switch(networkFormatted) {
-      case 'mainnet': address = mainnetAddresses.chargedParticles.address; break;
-      case 'kovan': address = kovanAddresses.chargedParticles.address; break;
-      case 'polygon': address = polygonAddresses.chargedParticles.address; break;
-      case 'mumbai': address = mumbaiAddresses.chargedParticles.address; break;
-      default: address = mainnetAddresses.chargedParticles.address; break;
-   }
+   const networkFormatted: string = getFormattedNetwork(network);
+   const address: string = getAddressByNetwork(networkFormatted);
 
    return new ethers.Contract(
       address,
@@ -69,7 +77,7 @@ const initSignerContract = (signer:ethers.Signer, network?:Networkish) => {
 }
 
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
-const getAddressFromNetwork = (network?:Networkish) => {
+export const getFormattedNetwork = (network?:Networkish) => {
    // if network is not given. default to mainnet
    if(!network) { return 'mainnet' };
 
@@ -114,7 +122,7 @@ const getAddressFromNetwork = (network?:Networkish) => {
 /// @notice returns the state adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of state address
-export const getStateAddress = async (provider?:MultiProvider, network?:Networkish) => {
+export const getStateAddress = async (provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const stateAddress:String = await contract.getStateAddress();
    return stateAddress;
@@ -123,7 +131,7 @@ export const getStateAddress = async (provider?:MultiProvider, network?:Networki
 /// @notice returns the settings adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of settings address
-export const getSettingsAddress = async (provider?:MultiProvider, network?:Networkish) => {
+export const getSettingsAddress = async (provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const settingsAddress:String = await contract.getSettingsAddress();
    return settingsAddress;
@@ -132,7 +140,7 @@ export const getSettingsAddress = async (provider?:MultiProvider, network?:Netwo
 /// @notice returns the managers adress from the ChargedParticles contract
 /// @param provider - optional parameter. if not defined the code will use the ethers default provider.
 /// @returns string of settings address
-export const getManagersAddress = async (provider?:MultiProvider, network?:Networkish) => {
+export const getManagersAddress = async (provider?:providers.Provider, network?:Networkish) => {
    const contract:ethers.Contract = initContract(provider, network);
    const managersAddress:String = await contract.getManagersAddress();
    return managersAddress;
@@ -206,6 +214,7 @@ export const getParicleCovalentBonds = async (contractAddress:String, tokenId:Bi
 |        Energize Particles         |
 |__________________________________*/
 
+// TODO: ADD DOC FOR REFERRER
 /// @notice Fund Particle with Asset Token
 ///    Must be called by the account providing the Asset
 ///    Account must Approve THIS contract as Operator of Asset
@@ -219,10 +228,11 @@ export const getParicleCovalentBonds = async (contractAddress:String, tokenId:Bi
 /// @param walletManagerId  The Asset-Pair to Energize the Token with
 /// @param assetToken           The Address of the Asset Token being used
 /// @param assetAmount          The Amount of Asset Token to Energize the Token with
+/// @param referrer             Don't know
 /// @return yieldTokensAmount The amount of Yield-bearing Tokens added to the escrow for the Token
-export const energizeParticle = async (contractAddress:String, tokenId:BigNumberish, walletManagerId:String, assetToken:String, assetAmount:BigNumberish, signer:MultiSigner, network?:Networkish) => {
+export const energizeParticle = async (contractAddress:String, tokenId:BigNumberish, walletManagerId:String, assetToken:String, assetAmount:BigNumberish, referrer:String, signer:MultiSigner, network?:Networkish) => {
    const contract:ethers.Contract = initSignerContract(signer, network);
-   const yieldTokensAmount = await contract.energizeParticle(contractAddress, tokenId, walletManagerId, assetToken, assetAmount);
+   const yieldTokensAmount = await contract.energizeParticle(contractAddress, tokenId, walletManagerId, assetToken, assetAmount, referrer);
    return yieldTokensAmount;
 }
 

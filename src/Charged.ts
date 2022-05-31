@@ -1,34 +1,83 @@
-import { ethers, providers } from "ethers";
-import ChargedParticles from "./abis/v2/ChargedParticles.json";
+import { ethers, providers, Signer } from "ethers";
+import { SUPPORTED_NETWORKS } from "./utils/config";
+
+import UtilsService from "./services/UtilsService";
+import NftService from "./services/NftService";
+
+// Types 
+import { networkProvider, Configuration } from "./types";
+
+type constructorCharged = {
+  providers?: networkProvider[],  
+  signer?: Signer,
+};
 
 export default class Charged  {
-  RPC_URL: String;
-  provider: providers.Provider;
+  public providers: {[network: number ]: providers.Provider} = {};
 
-  constructor(_RPC_URL: String, _provider: providers.Provider) {
-    this.RPC_URL = _RPC_URL;
-    this.provider = _provider;
+  public utils;
+
+  readonly configuration: Configuration;
+
+  constructor(params: constructorCharged = {}) {
+
+    const { providers, signer } = params;
+
+    if (Boolean(providers)) {
+      providers?.forEach(({network, service }) => {
+        ethers.providers.getNetwork(network);
+        this.providers[network] = ethers.getDefaultProvider(network, service); 
+      })
+    } else {
+      SUPPORTED_NETWORKS.forEach(({chainId}) => {
+        const network = ethers.providers.getNetwork(chainId);
+        
+        if (Boolean(network._defaultProvider)) {
+          this.providers[chainId] = ethers.getDefaultProvider(network);
+        }
+      })
+
+      console.log(
+        `Charged Particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
+        It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
+      );
+    }
+
+    this.configuration = { signer, providers: this.providers };
+
+    this.utils = new UtilsService(this.configuration);
   }
-
-  getChargeParticleContract() {
-    const contract = new ethers.Contract(
-      '0xaB1a1410EA40930755C1330Cc0fB3367897C8c41',
-      ChargedParticles,
-      this.provider
-    );    
-
-   return contract
+  
+  public NFT(
+    contractAddress: string,
+    tokenId: number,
+    network: number // TODO: deduce network from passed particle address
+  ) {
+    return new NftService(this.configuration, contractAddress, tokenId, network);
   }
 
 }
 
-
 /*
-  const charge = new Charge(...)
 
-  charge.getStateAddress
+Provider
+[
+  {
+    network: 1,
+    service: 'alchmey' | 'infura',
+    apiKey: 'secret'
+  },
+  { 
+    network:42,
+    service: 'alchemy'
+    apikey: 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'
+  }
+]
 
-  const chargedParticleContract = charged.getChargeParticleContract()
-  chargedParticleContract.getStateAddress;
+// RPC 
+[
+  chainId => url,
+  1 => https://eth-mainnet.alchemyapi.io/v2/qw02QqWNMg2kby3q3N39PxUT3KaRS5UE
+]
 
 */
