@@ -24,5 +24,16 @@ describe('baseService class', () => {
       expect(data[0]).toHaveProperty('chainId', 42);
       expect(data[0]).toHaveProperty('ownerOf', '0x6d46b37708dA7Ed4E5C4509495768Fecd3D17C01');
     });
+
+    it ('Throws when getting tokens across more than one network with wrong ABI', async () => {
+      const charged = new Charged({providers})
+      const wrongAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
+      const tokenId = 4;
+      
+      await expect(() => {
+        const data = charged.utils.storeTokenIdsAcrossChains(wrongAddress, tokenId);
+        return data;
+      }).rejects.toThrow();
+    });
   
 });
