@@ -51,7 +51,7 @@ export default class BaseService {
 
       const networks = await this.getNetworkFromProvider();
 
-      if(Object.keys(providers).length !== 0) {
+      if (Object.keys(providers).length !== 0) {
         for (const network in providers) {
           transactions.push(this.callContract(contractName, methodName, Number(network), params));
         } 
@@ -96,7 +96,7 @@ export default class BaseService {
 
     let networks:number[] = [];
 
-    if(Object.keys(providers).length !== 0) {
+    if (Object.keys(providers).length !== 0) {
       for (const network in providers) {
         networks.push(Number(network));
       } 

@@ -33,7 +33,7 @@ export default class Charged  {
       });
     } else if (injectedProvider) {
 
-      if(injectedProvider instanceof ethers.providers.Provider) {
+      if (injectedProvider instanceof ethers.providers.Provider) {
         this.injectedProvider = injectedProvider;
       } else {
         this.injectedProvider = new ethers.providers.Web3Provider(injectedProvider);

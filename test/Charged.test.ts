@@ -1,10 +1,7 @@
-// import { ethers } from 'ethers'
-
 import { getWallet } from '../src/utils/ethers.service';
-// import { rpcUrlMainnet } from '../src/utils/config';
 import { BigNumber, ethers } from 'ethers';
-import Charged from '../src/Charged';
 
+import Charged from '../src/Charged';
 
 describe('Charged class', () => {
   const myWallet = getWallet();
@@ -75,14 +72,13 @@ describe('Charged class', () => {
 
   });
 
-  it.only ('Initializes charged with an external provider', async() => {
+  it ('Initializes charged with an external provider', async() => {
     const externalProvider = ethers.getDefaultProvider(1, {'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE'});
     const charged = new Charged({injectedProvider: externalProvider});
 
     const stateAddresses = await charged.utils.getStateAddress();
 
     expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
- 
   })
 
 })
