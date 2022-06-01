@@ -1,5 +1,5 @@
 import { ethers, providers, Signer } from "ethers";
-import { SUPPORTED_NETWORKS } from "./utils/config";
+import { SUPPORTED_NETWORKS } from "./utils/getAddressFromNetwork";
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
@@ -15,7 +15,7 @@ type constructorCharged = {
 export default class Charged  {
   public providers: {[network: number ]: providers.Provider} = {};
 
-  public utils;
+  public utils: any;
 
   readonly configuration: Configuration;
 

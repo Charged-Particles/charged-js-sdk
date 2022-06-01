@@ -34,3 +34,10 @@ export const getAddressFromNetwork = (network?:Networkish) => {
      }
   }
 }
+
+export const SUPPORTED_NETWORKS = [
+  {chainId:     1, chainName: 'eth', name: 'Ethereum'},
+  {chainId:    42, chainName: 'kovan', name: 'Ethereum (Kovan)'},
+  {chainId:   137, chainName: 'polygon', name: 'Polygon'},
+  {chainId: 80001, chainName: 'mumbai',  name: 'Polygon (Mumbai)'},
+];
