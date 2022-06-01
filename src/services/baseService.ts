@@ -1,7 +1,7 @@
 import { Contract, ethers } from 'ethers';
 import { Configuration } from '../types';
 import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
-import { checkContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
+import { isValidContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
 
 export default class BaseService {
   readonly contractInstances: { [address: string]: Contract };
@@ -13,14 +13,31 @@ export default class BaseService {
     this.contractInstances = {};
   }
 
+  public async getNetworkIdFromContractAddress(contractAddress: string) {
+    const { providers } = this.config;
+
+    const foundNetworks: number[] = []
+    for await (const network of Object.keys(providers)) {
+      const code = await providers[network].getCode(contractAddress);
+      if (code !== '0x') {                                                // contract exists on each network
+        foundNetworks.push(Number(network));
+      }
+    }
+
+    if (foundNetworks.length !== 1) {
+      throw new Error('Identical contract address exists on 2 or more networks, please use a different contractAddress')
+    }
+  
+    return foundNetworks[0];
+  }
+
   public getContractInstance(contractName:string, network: number): Contract{
     const { providers, signer } = this.config;
 
     const provider = providers[network];
     const networkFormatted:string = getAddressFromNetwork(network);
-   
     // check if safe contract name was given
-    checkContractName(contractName);
+    isValidContractName(contractName);
     
     const address = getAddressByNetwork(networkFormatted, contractName)
 

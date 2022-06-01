@@ -27,7 +27,8 @@ export default class NftService extends BaseService {
     assetToken:String,
     assetAmount:BigNumberish
   ) {
-    const contract = this.getContractInstance('chargedParticles', this.network);
+    const network = await this.getNetworkIdFromContractAddress(this.contractAddress);
+    const contract = this.getContractInstance('chargedParticles', network);
     const result = await contract.energizeParticle(this.contractAddress, this.tokenId, walletManagerId, assetToken, assetAmount, '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213');
     return result;
   }

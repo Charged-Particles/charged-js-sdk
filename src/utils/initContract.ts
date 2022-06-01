@@ -26,7 +26,7 @@ export const initContract = (contractName:string, providerOrSigner?:MultiProvide
   const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
   
   // check if safe contract name was given
-  checkContractName(contractName);
+  isValidContractName(contractName);
 
   // if a unsupported chain is given. default to mainnet
   // ts ignores are used because the json files are not working nicely with typescript
@@ -53,7 +53,7 @@ export const initContract = (contractName:string, providerOrSigner?:MultiProvide
 }
 
 // Check for safe values
-export const checkContractName = (contractName:string) => {
+export const isValidContractName = (contractName:string) => {
   switch(contractName) {
     case 'chargedParticles': return;
     case 'chargedState': return;
