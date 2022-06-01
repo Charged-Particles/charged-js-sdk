@@ -37,5 +37,14 @@ export default class NftService extends BaseService {
     return tokenURI;
   }
 
+  // Get Covalent bonds of a specific particle using 
+  public async currentParticleCovalentBonds(
+
+  ) {
+    const contract = this.getContractInstance('chargedParticles', this.network);
+    const result = await contract.currentParticleCovalentBonds(this.contractAddress, this.tokenId);
+    return result;
+  }
+
 }
 
