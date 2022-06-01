@@ -9,11 +9,14 @@ import { networkProvider, Configuration } from "./types";
 
 type constructorCharged = {
   providers?: networkProvider[],  
+  injectedProvider?: providers.Provider,
   signer?: Signer,
 };
 
 export default class Charged  {
   public providers: {[network: number ]: providers.Provider} = {};
+
+  public injectedProvider?: providers.Provider;
 
   public utils: any;
 
@@ -21,13 +24,16 @@ export default class Charged  {
 
   constructor(params: constructorCharged = {}) {
 
-    const { providers, signer } = params;
+    const { providers, injectedProvider, signer } = params;
 
     if (Boolean(providers)) {
       providers?.forEach(({network, service }) => {
         ethers.providers.getNetwork(network);
         this.providers[network] = ethers.getDefaultProvider(network, service); 
-      })
+      });
+    } else if (Boolean(injectedProvider)) {
+      this.injectedProvider = injectedProvider;
+
     } else {
       SUPPORTED_NETWORKS.forEach(({chainId}) => {
         const network = ethers.providers.getNetwork(chainId);
@@ -43,7 +49,11 @@ export default class Charged  {
       );
     }
 
-    this.configuration = { signer, providers: this.providers };
+    this.configuration = { 
+      signer,
+      providers: this.providers, 
+      injectedProvider: this.injectedProvider 
+    };
 
     this.utils = new UtilsService(this.configuration);
   }
