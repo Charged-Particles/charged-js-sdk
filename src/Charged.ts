@@ -70,7 +70,6 @@ export default class Charged  {
   ) {
     return new NftService(this.configuration, contractAddress, tokenId, network);
   }
-
 }
 
 /*
