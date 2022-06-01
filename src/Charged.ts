@@ -9,7 +9,7 @@ import { networkProvider, Configuration } from "./types";
 
 type constructorCharged = {
   providers?: networkProvider[],  
-  injectedProvider?: providers.Provider,
+  injectedProvider?: providers.Provider | providers.ExternalProvider,
   signer?: Signer,
 };
 
@@ -26,14 +26,19 @@ export default class Charged  {
 
     const { providers, injectedProvider, signer } = params;
 
-    if (Boolean(providers)) {
+    if (providers) {
       providers?.forEach(({network, service }) => {
         ethers.providers.getNetwork(network);
         this.providers[network] = ethers.getDefaultProvider(network, service); 
       });
-    } else if (Boolean(injectedProvider)) {
-      this.injectedProvider = injectedProvider;
+    } else if (injectedProvider) {
 
+      if(injectedProvider instanceof ethers.providers.Provider) {
+        this.injectedProvider = injectedProvider;
+      } else {
+        this.injectedProvider = new ethers.providers.Web3Provider(injectedProvider);
+      }
+      
     } else {
       SUPPORTED_NETWORKS.forEach(({chainId}) => {
         const network = ethers.providers.getNetwork(chainId);
