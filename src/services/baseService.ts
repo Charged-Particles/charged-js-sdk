@@ -85,7 +85,7 @@ export default class BaseService {
     }
   }
 
-  public async storeTokenIdsAccrossChains(contractAddress: string, tokenId: number) {
+  public async storeTokenIdsAcrossChains(contractAddress: string, tokenId: number) {
     const { providers } = this.config;
 
     const data: object[] = [];
