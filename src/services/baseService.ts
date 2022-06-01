@@ -1,7 +1,7 @@
 import { Contract, ethers } from 'ethers';
 import { Configuration } from '../types';
 import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
-import { checkContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
+import { isValidContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
 
 export default class BaseService {
   readonly contractInstances: { [address: string]: Contract };
@@ -18,9 +18,8 @@ export default class BaseService {
 
     const provider = providers[network];
     const networkFormatted:string = getAddressFromNetwork(network);
-   
     // check if safe contract name was given
-    checkContractName(contractName);
+    isValidContractName(contractName);
     
     const address = getAddressByNetwork(networkFormatted, contractName)
 
@@ -84,5 +83,36 @@ export default class BaseService {
       console.log('fetchQuery error:', e);
       return {};
     }
+  }
+
+  public async storeTokenIdsAcrossChains(contractAddress: string, tokenId: number) {
+    const { providers } = this.config;
+
+    const data: object[] = [];
+
+    try {
+      for await (const network of Object.keys(providers)) {
+        const contractExist  = await providers[network].getCode(contractAddress);
+        
+        if (contractExist !== '0x') {                                                // contract exists on respective network
+
+          let contract = new ethers.Contract(
+            contractAddress,
+            getAbi('protonB'),
+            providers[network]
+          );
+
+          const owner = await contract.ownerOf(tokenId);
+          data.push({'tokenId': tokenId, 'chainId': Number(network), 'ownerOf': owner});
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+
+    // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
+    // when we go to write check if the owner matches the signer
+
+    return data;
   }
 }
