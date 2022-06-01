@@ -41,7 +41,7 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
-  public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = []) {
+  public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = [], isStaticCall:boolean = false) {
     const { providers } = this.config;
 
     try {
@@ -49,7 +49,7 @@ export default class BaseService {
       let networks:number[] = [];
 
       for (const network in providers) {
-        transactions.push(this.callContract(contractName, methodName, Number(network), params));
+        transactions.push(this.callContract(contractName, methodName, Number(network), params, isStaticCall));
         networks.push(Number(network));
       } 
 
@@ -71,12 +71,17 @@ export default class BaseService {
     contractName: string, 
     methodName: string, 
     network: number,
-    params: any[] = []
+    params: any[] = [],
+    isStaticCall:boolean = false
   ) {
 
     try {
       const requestedContract = this.getContractInstance(contractName, network);
-      return requestedContract[methodName](...params);
+      if(isStaticCall) {
+        return requestedContract.callStatic[methodName](...params);
+      } else {
+        return requestedContract[methodName](...params);
+      }
 
     } catch(e) {
 
