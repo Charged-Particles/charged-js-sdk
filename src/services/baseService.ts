@@ -13,34 +13,6 @@ export default class BaseService {
     this.contractInstances = {};
   }
 
-  public async storeTokenIdsAccrossChains(contractAddress: string, tokenId: number) {
-    const { providers } = this.config;
-
-    const data: object[] = [];
-
-    try {
-      for await (const network of Object.keys(providers)) {
-        const code = await providers[network].getCode(contractAddress);
-        if (code !== '0x') {                                                // contract exists on respective network
-          let contract = new ethers.Contract(
-            contractAddress,
-            getAbi('protonB'),
-            providers[network]
-          );
-          const owner = await contract.ownerOf(tokenId);
-          data.push({'tokenId': tokenId, 'chainId': Number(network), 'ownerOf': owner});
-        }
-      }
-    } catch (error) {
-      throw error;
-    }
-
-    // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
-    // when we go to write check if the owner matches the signer
-
-    return data;
-  }
-
   public getContractInstance(contractName:string, network: number): Contract{
     const { providers, signer } = this.config;
 
@@ -111,5 +83,36 @@ export default class BaseService {
       console.log('fetchQuery error:', e);
       return {};
     }
+  }
+
+  public async storeTokenIdsAccrossChains(contractAddress: string, tokenId: number) {
+    const { providers } = this.config;
+
+    const data: object[] = [];
+
+    try {
+      for await (const network of Object.keys(providers)) {
+        const contractExist  = await providers[network].getCode(contractAddress);
+        
+        if (contractExist !== '0x') {                                                // contract exists on respective network
+
+          let contract = new ethers.Contract(
+            contractAddress,
+            getAbi('protonB'),
+            providers[network]
+          );
+
+          const owner = await contract.ownerOf(tokenId);
+          data.push({'tokenId': tokenId, 'chainId': Number(network), 'ownerOf': owner});
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+
+    // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
+    // when we go to write check if the owner matches the signer
+
+    return data;
   }
 }

@@ -16,22 +16,13 @@ describe('baseService class', () => {
       const charged = new Charged({providers})
       const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
       const tokenId = 4;
-    
 
       const data = await charged.utils.storeTokenIdsAccrossChains(particleBAddress, tokenId);
   
       // check the that keys exist for one network only
-      expect(data[0]).toHaveProperty('tokenId');
-      expect(data[0]).toHaveProperty('chainId');
-      expect(data[0]).toHaveProperty('ownerOf');
-
-      // check that the values are correct aswell
-      expect(data[0].tokenId).toEqual(4);
-      expect(data[0].chainId).toEqual(42);
-      expect(data[0].ownerOf).toEqual('0x6d46b37708dA7Ed4E5C4509495768Fecd3D17C01');
-  
-  
-      console.log({data});
+      expect(data[0]).toHaveProperty('tokenId', 4);
+      expect(data[0]).toHaveProperty('chainId', 42);
+      expect(data[0]).toHaveProperty('ownerOf', '0x6d46b37708dA7Ed4E5C4509495768Fecd3D17C01');
     });
   
 });
