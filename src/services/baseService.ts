@@ -13,22 +13,32 @@ export default class BaseService {
     this.contractInstances = {};
   }
 
-  public async getNetworkIdFromContractAddress(contractAddress: string) {
+  public async storeTokenIdsAccrossChains(contractAddress: string, tokenId: number) {
     const { providers } = this.config;
 
-    const foundNetworks: number[] = []
-    for await (const network of Object.keys(providers)) {
-      const code = await providers[network].getCode(contractAddress);
-      if (code !== '0x') {                                                // contract exists on each network
-        foundNetworks.push(Number(network));
+    const data: object[] = [];
+
+    try {
+      for await (const network of Object.keys(providers)) {
+        const code = await providers[network].getCode(contractAddress);
+        if (code !== '0x') {                                                // contract exists on respective network
+          let contract = new ethers.Contract(
+            contractAddress,
+            getAbi('protonB'),
+            providers[network]
+          );
+          const owner = await contract.ownerOf(tokenId);
+          data.push({'tokenId': tokenId, 'chainId': Number(network), 'ownerOf': owner});
+        }
       }
+    } catch (error) {
+      throw error;
     }
 
-    if (foundNetworks.length !== 1) {
-      throw new Error('Identical contract address exists on 2 or more networks, please use a different contractAddress')
-    }
-  
-    return foundNetworks[0];
+    // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
+    // when we go to write check if the owner matches the signer
+
+    return data;
   }
 
   public getContractInstance(contractName:string, network: number): Contract{
