@@ -74,7 +74,7 @@ describe('Charged class', () => {
 
   it ('Initializes charged with an external provider', async() => {
     const externalProvider = ethers.getDefaultProvider(1, {'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE'});
-    const charged = new Charged({injectedProvider: externalProvider});
+    const charged = new Charged({externalProvider: externalProvider});
 
     const stateAddresses = await charged.utils.getStateAddress();
 

@@ -17,6 +17,6 @@ export type networkProvider = {
 
 export type Configuration = {
   providers?: any;
-  injectedProvider?: providers.Provider;
+  externalProvider?: providers.Provider;
   signer?: Signer;
 };

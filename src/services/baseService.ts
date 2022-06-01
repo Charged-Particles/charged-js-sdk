@@ -14,9 +14,9 @@ export default class BaseService {
   }
 
   public getContractInstance(contractName:string, network: number): Contract{
-    const { providers, injectedProvider, signer } = this.config;
+    const { providers, externalProvider, signer } = this.config;
 
-    const provider = providers[network] ?? injectedProvider;
+    const provider = providers[network] ?? externalProvider;
 
     const networkFormatted:string = getAddressFromNetwork(network);
    
@@ -44,7 +44,7 @@ export default class BaseService {
   }
 
   public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = []) {
-    const { providers, injectedProvider } = this.config;
+    const { providers, externalProvider } = this.config;
 
     try {
       let transactions = [];
@@ -55,7 +55,7 @@ export default class BaseService {
         for (const network in providers) {
           transactions.push(this.callContract(contractName, methodName, Number(network), params));
         } 
-      } else if(Boolean(injectedProvider)) {
+      } else if(Boolean(externalProvider)) {
         transactions.push(this.callContract(contractName, methodName, Number(networks[0]), params));
       }
 
@@ -92,7 +92,7 @@ export default class BaseService {
   }
 
   public async getNetworkFromProvider(): Promise<number[]> {
-    const { providers, injectedProvider } = this.config;
+    const { providers, externalProvider } = this.config;
 
     let networks:number[] = [];
 
@@ -100,8 +100,8 @@ export default class BaseService {
       for (const network in providers) {
         networks.push(Number(network));
       } 
-    } else if (Boolean(injectedProvider)) {
-      const currentNetwork = await injectedProvider?.getNetwork();
+    } else if (Boolean(externalProvider)) {
+      const currentNetwork = await externalProvider?.getNetwork();
 
       // TODO: throw if no network found
       networks.push(Number(currentNetwork?.chainId));
