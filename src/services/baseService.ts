@@ -14,9 +14,10 @@ export default class BaseService {
   }
 
   public getContractInstance(contractName:string, network: number): Contract{
-    const { providers, signer } = this.config;
+    const { providers, externalProvider, signer } = this.config;
 
-    const provider = providers[network];
+    const provider = providers[network] ?? externalProvider;
+
     const networkFormatted:string = getAddressFromNetwork(network);
     // check if safe contract name was given
     isValidContractName(contractName);
@@ -42,16 +43,20 @@ export default class BaseService {
   }
 
   public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = [], isStaticCall:boolean = false) {
-    const { providers } = this.config;
+    const { providers, externalProvider } = this.config;
 
     try {
       let transactions = [];
-      let networks:number[] = [];
 
-      for (const network in providers) {
-        transactions.push(this.callContract(contractName, methodName, Number(network), params, isStaticCall));
-        networks.push(Number(network));
-      } 
+      const networks = await this.getNetworkFromProvider();
+
+      if (Object.keys(providers).length !== 0) {
+        for (const network in providers) {
+          transactions.push(this.callContract(contractName, methodName, Number(network), params, isStaticCall));
+        } 
+      } else if(Boolean(externalProvider)) {
+        transactions.push(this.callContract(contractName, methodName, Number(networks[0]), params, isStaticCall));
+      }
 
       const responses = await Promise.all(transactions);
       const formattedResponse: {[number: number]: any} = {};
@@ -90,6 +95,25 @@ export default class BaseService {
     }
   }
 
+  public async getNetworkFromProvider(): Promise<number[]> {
+    const { providers, externalProvider } = this.config;
+
+    let networks:number[] = [];
+
+    if (Object.keys(providers).length !== 0) {
+      for (const network in providers) {
+        networks.push(Number(network));
+      } 
+    } else if (Boolean(externalProvider)) {
+      const currentNetwork = await externalProvider?.getNetwork();
+
+      // TODO: throw if no network found
+      networks.push(Number(currentNetwork?.chainId));
+    }
+  
+    return networks;
+  }
+  
   public async storeTokenIdsAcrossChains(contractAddress: string, tokenId: number) {
     const { providers } = this.config;
 

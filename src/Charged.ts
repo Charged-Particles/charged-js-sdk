@@ -9,11 +9,14 @@ import { networkProvider, Configuration } from "./types";
 
 type constructorCharged = {
   providers?: networkProvider[],  
+  externalProvider?: providers.Provider | providers.ExternalProvider,
   signer?: Signer,
 };
 
 export default class Charged  {
   public providers: {[network: number ]: providers.Provider} = {};
+
+  public externalProvider?: providers.Provider;
 
   public utils: any;
 
@@ -21,13 +24,21 @@ export default class Charged  {
 
   constructor(params: constructorCharged = {}) {
 
-    const { providers, signer } = params;
+    const { providers, externalProvider, signer } = params;
 
-    if (Boolean(providers)) {
+    if (providers) {
       providers?.forEach(({network, service }) => {
         ethers.providers.getNetwork(network);
         this.providers[network] = ethers.getDefaultProvider(network, service); 
-      })
+      });
+    } else if (externalProvider) {
+
+      if (externalProvider instanceof ethers.providers.Provider) {
+        this.externalProvider = externalProvider;
+      } else {
+        this.externalProvider = new ethers.providers.Web3Provider(externalProvider);
+      }
+      
     } else {
       SUPPORTED_NETWORKS.forEach(({chainId}) => {
         const network = ethers.providers.getNetwork(chainId);
@@ -43,7 +54,11 @@ export default class Charged  {
       );
     }
 
-    this.configuration = { signer, providers: this.providers };
+    this.configuration = { 
+      signer,
+      providers: this.providers, 
+      externalProvider: this.externalProvider 
+    };
 
     this.utils = new UtilsService(this.configuration);
   }
@@ -55,7 +70,6 @@ export default class Charged  {
   ) {
     return new NftService(this.configuration, contractAddress, tokenId, network);
   }
-
 }
 
 /*
