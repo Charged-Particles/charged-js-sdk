@@ -2,7 +2,7 @@ import { Contract, ethers } from 'ethers';
 import { Configuration } from '../types';
 import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
 import { isValidContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
-
+import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
 export default class BaseService {
   readonly contractInstances: { [address: string]: Contract };
 
@@ -115,15 +115,17 @@ export default class BaseService {
     const data: object[] = [];
 
     try {
-      for await (const network of Object.keys(providers)) {
-        const contractExist  = await providers[network].getCode(contractAddress);
+      for await (const network of SUPPORTED_NETWORKS) {
+
+        const chainId = network.chainId;
+        const contractExist  = await providers[chainId].getCode(contractAddress);
         
-        if (contractExist !== '0x') {                                                // contract exists on respective network
+        if (contractExist !== '0x' && providers?.chainId) {                                                // contract exists on respective network
 
           let contract = new ethers.Contract(
             contractAddress,
             getAbi('protonB'),
-            providers[network]
+            providers[network.chainId]
           );
 
           const owner = await contract.ownerOf(tokenId);
