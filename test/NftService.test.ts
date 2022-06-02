@@ -1,7 +1,7 @@
 import Charged from '../src/Charged';
 import { getWallet } from '../src/utils/ethers.service';
 
-describe('baseService class', () => {
+describe('NFT service class', () => {
     const signer = getWallet();
     const providers =  [
       {
@@ -46,7 +46,7 @@ describe('baseService class', () => {
       const network = 42;
       
       const nft = charged.NFT(particleBAddress, tokenId, network);
-      const NftBridgedChains = await nft.getChainIdsForBridgedNFTs(particleBAddress, tokenId);
+      const NftBridgedChains = await nft.getChainIdsForBridgedNFTs();
       // console.log(NftBridgedChains);
 
       expect(NftBridgedChains).toEqual([{'chainId': network}]);

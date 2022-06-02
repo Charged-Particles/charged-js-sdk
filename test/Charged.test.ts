@@ -69,8 +69,8 @@ describe('Charged class', () => {
     const nft = charged.NFT(particleBAddress, tokenId, network);
     const result = await nft.energizeParticle('aave.B', '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD', BigNumber.from(10));
     
-    const resp = await result.wait();
-    console.log({resp}); // TODO: expect !
+    // const resp = await result.wait();
+    // console.log({resp}); // TODO: expect !
   });
 
   it ('Initializes with ether.js external provider', async() => {
@@ -81,12 +81,11 @@ describe('Charged class', () => {
     expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
   });
 
-  it.only ('Initializes with Web3 external provider', async() => {
+  it ('Initializes with Web3 external provider', async() => {
     const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
     const charged = new Charged({externalProvider: externalWeb3Provider});
     const stateAddresses = await charged.utils.getStateAddress();
 
     expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
   });
-
 })
