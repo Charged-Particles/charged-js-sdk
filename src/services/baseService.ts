@@ -110,14 +110,10 @@ export default class BaseService {
   }
   
   public async getChainIdsForBridgedNFTs(contractAddress: string, tokenId: number) {
-    const { providers, externalProvider } = this.config;
+    const { providers } = this.config;
 
     const rawData: object[] = [];
     // const bridgedData: object[] = [];
-
-    console.log({externalProvider, tokenId})
-
-    // new ethers.providers.Web3Provider(externalProvider)
 
     try {
       for await (const network of SUPPORTED_NETWORKS) {
@@ -125,19 +121,29 @@ export default class BaseService {
         const provider = providers[chainId] ?? ethers.getDefaultProvider(chainId);
 
         // console.log('checking for ', {chainId, 'providers': providers[chainId]});
+
         let contractExists = await provider.getCode(contractAddress);
         // console.log({contractExists});
         if (contractExists !== '0x') {                                                // contract exists on respective network
-          // let contract = new ethers.Contract(
-          //   contractAddress,
-          //   getAbi('protonB'),
-          //   provider
-          //   );
-          // let owner = await contract.ownerOf(tokenId);
-            rawData.push({'chainId': Number(chainId)});
+          let contract = new ethers.Contract(
+            contractAddress,
+            getAbi('protonB'),
+            provider
+            );
+
+            const singer = this.getSigner();
+            const signerAddress = await singer?.getAddress();
+
+            const owner = await contract.ownerOf(tokenId);
+
+            console.log({owner, signerAddress})
+            if (signerAddress == owner) {
+              rawData.push({'chainId': Number(chainId)});
+            }
           }
         }
     } catch (error) {
+      console.log(error);
       // throw error;
     }
 
@@ -150,15 +156,10 @@ export default class BaseService {
   }
 
   public getSigner() {
+    const { signer } = this.config;
 
-    const { signer, externalProvider } = this.config;
-
-    if (signer) {
-      return signer;
-    } else if (externalProvider) {
-      return externalProvider;
-    }
-    
+    return signer;
+    // if (signer) { } 
   }
 
 
