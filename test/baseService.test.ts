@@ -42,14 +42,13 @@ describe('baseService class', () => {
 
       const charged = new Charged({providers, signer});
       const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-      const tokenId = 18;
+      const tokenId = 43;
       const network = 42;
       
       const nft = charged.NFT(particleBAddress, tokenId, network);
-   
       const NftBridgedChains = await nft.getChainIdsForBridgedNFTs(particleBAddress, tokenId);
+      // console.log(NftBridgedChains);
 
-      expect(NftBridgedChains).toBe([]);
-
+      expect(NftBridgedChains).toEqual([{'chainId': network}]);
     })
 });

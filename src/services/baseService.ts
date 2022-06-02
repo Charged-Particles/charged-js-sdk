@@ -118,7 +118,18 @@ export default class BaseService {
     try {
       for await (const network of SUPPORTED_NETWORKS) {
         let chainId = String(network.chainId);
-        const provider = providers[chainId] ?? ethers.getDefaultProvider(chainId);
+
+        // const provider = providers[chainId] ?? ethers.getDefaultProvider(chainId);
+        let provider = providers[chainId];
+
+        if(provider == undefined) {
+          const network = ethers.providers.getNetwork(chainId);
+          if (Boolean(network?._defaultProvider)) {
+            provider = ethers.getDefaultProvider(network);
+          } else {
+            continue;
+          }
+        }
 
         // console.log('checking for ', {chainId, 'providers': providers[chainId]});
 
