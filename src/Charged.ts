@@ -31,10 +31,15 @@ export default class Charged  {
         this.providers[network] = ethers.getDefaultProvider(network, service); 
       });
     } else if (externalProvider) {
-
+      
       if (externalProvider instanceof ethers.providers.Provider) {
         this.externalProvider = externalProvider;
       } else {
+
+        const userAddress = externalProvider.request({ method: 'eth_accounts' });
+
+        console.log(userAddress);
+
         this.externalProvider = new ethers.providers.Web3Provider(externalProvider);
       }
       
@@ -45,7 +50,7 @@ export default class Charged  {
         if (Boolean(network._defaultProvider)) {
           this.providers[chainId] = ethers.getDefaultProvider(network);
         }
-      })
+      });
 
       console.log(
         `Charged Particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.

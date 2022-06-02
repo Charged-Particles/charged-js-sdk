@@ -25,16 +25,18 @@ export default class NftService extends BaseService {
   }
   
   public async getChainIdsForBridgedNFTs() {
-    const { providers } = this.config;
+    const { providers, externalProvider } = this.config;
 
     const rawData: object[] = [];
-    // const bridgedData: object[] = [];
 
     try {
       for await (const network of SUPPORTED_NETWORKS) {
         let chainId = String(network.chainId);
 
         let provider = providers[chainId];
+
+        // const userAddress = externalProvider.request({ method: 'eth_accounts' });
+        // console.log(userAddress);
 
         if(provider == undefined) {
           const network = ethers.providers.getNetwork(chainId);
@@ -46,26 +48,31 @@ export default class NftService extends BaseService {
         }
 
         let contractExists = await provider.getCode(this.contractAddress);
-        // console.log({contractExists});
+
         if (contractExists !== '0x') {                                                // contract exists on respective network
+
           let contract = new ethers.Contract(
             this.contractAddress,
             getAbi('protonB'),
             provider
-            );
+          );
 
             const singer = this.getSigner();
+
             const signerAddress = await singer?.getAddress();
 
             const owner = await contract.ownerOf(this.tokenId);
 
-            console.log({owner, signerAddress})
+            // console.log({owner, signerAddress})
+
             if (signerAddress == owner) {
               rawData.push({'chainId': Number(chainId)});
             }
+
           }
         }
     } catch (error) {
+
       console.log(error);
       // throw error;
     }
@@ -89,6 +96,5 @@ export default class NftService extends BaseService {
     const tokenURI = await this.callContract('protonB', 'tokenURI', this.network, [this.tokenId]);
     return tokenURI;
   }
-
 }
 
