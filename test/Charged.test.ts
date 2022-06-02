@@ -1,10 +1,9 @@
-// import { ethers } from 'ethers'
-
+import { rpcUrlMainnet } from '../src/utils/config';
 import { getWallet } from '../src/utils/ethers.service';
-// import { rpcUrlMainnet } from '../src/utils/config';
-import { BigNumber } from 'ethers';
-import Charged from '../src/Charged';
+import { BigNumber, ethers } from 'ethers';
+const Web3HttpProvider = require('web3-providers-http');
 
+import Charged from '../src/Charged';
 
 describe('Charged class', () => {
   const myWallet = getWallet();
@@ -60,7 +59,7 @@ describe('Charged class', () => {
     expect(stateAddresses).toHaveProperty('42', '0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca');
   });
 
-  it.only ('energize a test particle', async () => {
+  it ('energize a test particle', async () => {
     const charged = new Charged({providers, signer: myWallet});
     
     const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
@@ -71,8 +70,23 @@ describe('Charged class', () => {
     const result = await nft.energizeParticle('aave.B', '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD', BigNumber.from(10));
     
     const resp = await result.wait();
-    console.log({resp});
+    console.log({resp}); // TODO: expect !
+  });
 
+  it ('Initializes with ether.js external provider', async() => {
+    const externalProvider = ethers.getDefaultProvider(1, {'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE'});
+    const charged = new Charged({externalProvider: externalProvider});
+    const stateAddresses = await charged.utils.getStateAddress();
+
+    expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+  });
+
+  it.only ('Initializes with Web3 external provider', async() => {
+    const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
+    const charged = new Charged({externalProvider: externalWeb3Provider});
+    const stateAddresses = await charged.utils.getStateAddress();
+
+    expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
   });
 
 })
