@@ -17,7 +17,7 @@ describe('baseService class', () => {
       const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
       const tokenId = 4;
 
-      const data = await charged.utils.storeTokenIdsAcrossChains(particleBAddress, tokenId);
+      const data = await charged.utils.getBridgedNFTs(particleBAddress, tokenId);
   
       // check the that keys exist for one network only
       expect(data[0]).toHaveProperty('tokenId', 4);
@@ -31,7 +31,7 @@ describe('baseService class', () => {
       const tokenId = 4;
       
       await expect(() => {
-        const data = charged.utils.storeTokenIdsAcrossChains(wrongAddress, tokenId);
+        const data = charged.utils.getBridgedNFTs(wrongAddress, tokenId);
         return data;
       }).rejects.toThrow();
     });

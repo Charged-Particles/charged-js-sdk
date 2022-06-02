@@ -109,7 +109,7 @@ export default class BaseService {
     return networks;
   }
   
-  public async storeTokenIdsAcrossChains(contractAddress: string, tokenId: number) {
+  public async getBridgedNFTs(contractAddress: string, tokenId: number) {
     const { providers } = this.config;
 
     const data: object[] = [];
