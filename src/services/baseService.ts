@@ -109,36 +109,57 @@ export default class BaseService {
     return networks;
   }
   
-  public async getBridgedNFTs(contractAddress: string, tokenId: number) {
-    const { providers } = this.config;
+  public async getChainIdsForBridgedNFTs(contractAddress: string, tokenId: number) {
+    const { providers, externalProvider } = this.config;
 
-    const data: object[] = [];
+    const rawData: object[] = [];
+    // const bridgedData: object[] = [];
+
+    console.log({externalProvider, tokenId})
+
+    // new ethers.providers.Web3Provider(externalProvider)
 
     try {
       for await (const network of SUPPORTED_NETWORKS) {
+        let chainId = String(network.chainId);
+        const provider = providers[chainId] ?? ethers.getDefaultProvider(chainId);
 
-        const chainId = network.chainId;
-        const contractExist  = await providers[chainId].getCode(contractAddress);
-        
-        if (contractExist !== '0x' && providers?.chainId) {                                                // contract exists on respective network
-
-          let contract = new ethers.Contract(
-            contractAddress,
-            getAbi('protonB'),
-            providers[network.chainId]
-          );
-
-          const owner = await contract.ownerOf(tokenId);
-          data.push({'tokenId': tokenId, 'chainId': Number(network), 'ownerOf': owner});
+        // console.log('checking for ', {chainId, 'providers': providers[chainId]});
+        let contractExists = await provider.getCode(contractAddress);
+        // console.log({contractExists});
+        if (contractExists !== '0x') {                                                // contract exists on respective network
+          // let contract = new ethers.Contract(
+          //   contractAddress,
+          //   getAbi('protonB'),
+          //   provider
+          //   );
+          // let owner = await contract.ownerOf(tokenId);
+            rawData.push({'chainId': Number(chainId)});
+          }
         }
-      }
     } catch (error) {
-      throw error;
+      // throw error;
     }
 
     // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
     // when we go to write check if the owner matches the signer
+    
+    console.log({rawData});
 
-    return data;
+    return rawData;
   }
+
+  public getSigner() {
+
+    const { signer, externalProvider } = this.config;
+
+    if (signer) {
+      return signer;
+    } else if (externalProvider) {
+      return externalProvider;
+    }
+    
+  }
+
+
 }
