@@ -28,7 +28,6 @@ export default class Charged  {
 
     if (providers) {
       providers?.forEach(({network, service }) => {
-        ethers.providers.getNetwork(network);
         this.providers[network] = ethers.getDefaultProvider(network, service); 
       });
     } else if (externalProvider) {
