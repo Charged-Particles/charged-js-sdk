@@ -37,38 +37,53 @@ export default class NftService extends BaseService {
   /// representing the Mass of the Particle.
   /// @param walletManagerId      The Liquidity-Provider ID to check the Asset balance of
   /// @param assetToken           The Address of the Asset Token to check
-  /// @return The Amount of underlying Assets held within the Token
+  /// @return The Amount of underlying Assets held within the Token as a BigNumber
   public async getMass( walletManagerId: string, assetToken:string ) {
-    const fullParameters = [this.contractAddress, this.tokenId, walletManagerId, assetToken];
-    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', fullParameters, true);
+    const parameters = [
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken
+    ];
+    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters, true);
   }
 
   /// @notice Gets the amount of Interest that the Particle has generated representing
   /// the Charge of the Particle
   /// @param walletManagerId  The Liquidity-Provider ID to check the Interest balance of
   /// @param assetToken           The Address of the Asset Token to check
-  /// @return The amount of interest the Token has generated (in Asset Token)
-  public async getCharge( walletManagerId:string, assetToken:string ) {
-    const fullParameters = [this.contractAddress, this.tokenId, walletManagerId, assetToken];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', fullParameters, true);
+  /// @return The amount of interest the Token has generated (in Asset Token) as a BigNumber
+  public async getCharge( walletManagerId:managerId, assetToken:string ) {
+    const parameters = [
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken
+    ];
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters, true);
   }
   
   /// @notice Gets the amount of LP Tokens that the Particle has generated representing
   /// the Kinetics of the Particle
   /// @param walletManagerId  The Liquidity-Provider ID to check the Kinetics balance of
   /// @param assetToken           The Address of the Asset Token to check
-  /// @return The amount of LP tokens that have been generated
-  public async getKinectics( walletManagerId:string, assetToken:string ) {
-    const fullParameters = [this.contractAddress, this.tokenId, walletManagerId, assetToken];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', fullParameters, true);
+  /// @return The amount of LP tokens that have been generated as a BigNumber
+  public async getKinectics( walletManagerId:managerId, assetToken:string ) {
+    const parameters = [
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken
+    ];
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters, true);
   }
 
   /// @notice Gets the total amount of ERC721 Tokens that the Particle holds
   /// @param basketManagerId  The ID of the BasketManager to check the token balance of
-  /// @return The total amount of ERC721 tokens that are held  within the Particle
+  /// @return The total amount of ERC721 tokens that are held  within the Particle as a BigNumber
   public async getBonds(basketManagerId: string) {
-    const fullParameters = [this.contractAddress, this.tokenId, basketManagerId];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', fullParameters, true);
+    const parameters = [this.contractAddress, this.tokenId, basketManagerId];
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters, true);
   }
 
    /***********************************|
@@ -87,10 +102,17 @@ export default class NftService extends BaseService {
   /// @param assetToken       The Address of the Asset Token being used
   /// @param assetAmount      The Amount of Asset Token to Energize the Token with
   /// @param referrer         TODO: WHAT IS THIS?
-  /// @return yieldTokensAmount The amount of Yield-bearing Tokens added to the escrow for the Token
-  public async energize( walletManagerId:string, assetToken:string, assetAmount:BigNumberish, referrer:string ) {
-    const fullParameters = [this.contractAddress, this.tokenId, walletManagerId, assetToken, assetAmount, referrer];
-    return await this.callContract('chargedParticles', 'energizeParticle', this.network, fullParameters);
+  /// @return yieldTokensAmount The amount of Yield-bearing Tokens added to the escrow for the Token as a BigNumber
+  public async energize( walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, referrer:string ) {
+    const parameters = [
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken, 
+      assetAmount, 
+      referrer
+    ];
+    return await this.callContract('chargedParticles', 'energizeParticle', this.network, parameters);
   }
 
   /// @notice Allows the owner or operator of the Token to collect or transfer the interest generated
@@ -98,11 +120,17 @@ export default class NftService extends BaseService {
   /// @param receiver             The Address to Receive the Discharged Asset Tokens
   /// @param walletManagerId      The Wallet Manager of the Assets to Discharge from the Token
   /// @param assetToken           The Address of the Asset Token being discharged
-  /// @return creatorAmount       Amount of Asset Token discharged to the Creator
-  /// @return receiverAmount      Amount of Asset Token discharged to the Receiver
-  public async discharge( receiver:string, walletManagerId:string, assetToken:string ) {
-    const fullParameters = [receiver, this.contractAddress, this.tokenId, walletManagerId, assetToken];
-    return await this.callContract('chargedParticles', 'dischargeParticle', this.network, fullParameters);
+  /// @return creatorAmount       Amount of Asset Token discharged to the Creator as a BigNumber
+  /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
+  public async discharge( receiver:string, walletManagerId:managerId, assetToken:string ) {
+    const parameters = [
+      receiver, 
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken
+    ];
+    return await this.callContract('chargedParticles', 'dischargeParticle', this.network, parameters);
   }
 
   /// @notice Allows the owner or operator of the Token to collect or transfer a specific amount of the interest
@@ -111,11 +139,18 @@ export default class NftService extends BaseService {
   /// @param walletManagerId      The Wallet Manager of the Assets to Discharge from the Token
   /// @param assetToken           The Address of the Asset Token being discharged
   /// @param assetAmount          The specific amount of Asset Token to Discharge from the Token
-  /// @return creatorAmount       Amount of Asset Token discharged to the Creator
-  /// @return receiverAmount      Amount of Asset Token discharged to the Receiver
-  public async dischargeAmount( receiver:string, walletManagerId:string, assetToken:string, assetAmount:BigNumberish ) {
-    const fullParameters = [receiver, this.contractAddress, this.tokenId, walletManagerId, assetToken, assetAmount];
-    return await this.callContract('chargedParticles', 'dischargeParticleAmount', this.network, fullParameters);
+  /// @return creatorAmount       Amount of Asset Token discharged to the Creator as a BigNumber
+  /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
+  public async dischargeAmount( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish ) {
+    const parameters = [
+      receiver, 
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken, 
+      assetAmount
+    ];
+    return await this.callContract('chargedParticles', 'dischargeParticleAmount', this.network, parameters);
   }
 
   /// @notice Allows the Creator of the Token to collect or transfer a their portion of the interest (if any)
@@ -124,10 +159,17 @@ export default class NftService extends BaseService {
   /// @param walletManagerId      The Wallet Manager of the Assets to Discharge from the Token
   /// @param assetToken           The Address of the Asset Token being discharged
   /// @param assetAmount          The specific amount of Asset Token to Discharge from the Particle
-  /// @return receiverAmount      Amount of Asset Token discharged to the Receiver
-  public async dischargeForCreator( receiver:string, walletManagerId:string, assetToken:string, assetAmount:BigNumberish ) {
-    const fullParameters = [receiver, this.contractAddress, this.tokenId, walletManagerId, assetToken, assetAmount];
-    return await this.callContract('chargedParticles', 'dischargeParticleForCreator', this.network, fullParameters);
+  /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
+  public async dischargeForCreator( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish ) {
+    const parameters = [
+      receiver, 
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken, 
+      assetAmount
+    ];
+    return await this.callContract('chargedParticles', 'dischargeParticleForCreator', this.network, parameters);
   }
 
 
@@ -135,11 +177,17 @@ export default class NftService extends BaseService {
   /// @param receiver             The Address to Receive the Released Asset Tokens
   /// @param walletManagerId      The Wallet Manager of the Assets to Release from the Token
   /// @param assetToken           The Address of the Asset Token being released
-  /// @return creatorAmount       Amount of Asset Token released to the Creator
-  /// @return receiverAmount      Amount of Asset Token released to the Receiver (includes principalAmount)
-  public async release( receiver:string, walletManagerId:string, assetToken:string ) {
-    const fullParameters = [receiver, this.contractAddress, this.tokenId, walletManagerId, assetToken];
-    return await this.callContract('chargedParticles', 'releaseParticle', this.network, fullParameters);
+  /// @return creatorAmount       Amount of Asset Token released to the Creator as a BigNumber
+  /// @return receiverAmount      Amount of Asset Token released to the Receiver (includes principalAmount) as a BigNumber
+  public async release( receiver:string, walletManagerId:managerId, assetToken:string ) {
+    const parameters = [
+      receiver, 
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken
+    ];
+    return await this.callContract('chargedParticles', 'releaseParticle', this.network, parameters);
   }
 
 
@@ -148,11 +196,18 @@ export default class NftService extends BaseService {
   /// @param walletManagerId      The Wallet Manager of the Assets to Release from the Token
   /// @param assetToken           The Address of the Asset Token being released
   /// @param assetAmount          The specific amount of Asset Token to Release from the Particle
-  /// @return creatorAmount Amount of Asset Token released to the Creator
-  /// @return receiverAmount Amount of Asset Token released to the Receiver (includes principalAmount)
-  public async releaseAmount( receiver:string, walletManagerId:string, assetToken:string, assetAmount:BigNumberish ) {
-    const fullParameters = [receiver, this.contractAddress, this.tokenId, walletManagerId, assetToken, assetAmount];
-    return await this.callContract('chargedParticles', 'releaseParticleAmount', this.network, fullParameters);
+  /// @return creatorAmount Amount of Asset Token released to the Creator as a BigNumber
+  /// @return receiverAmount Amount of Asset Token released to the Receiver (includes principalAmount) as a BigNumber
+  public async releaseAmount( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish ) {
+    const parameters = [
+      receiver, 
+      this.contractAddress, 
+      this.tokenId, 
+      walletManagerId, 
+      assetToken, 
+      assetAmount
+    ];
+    return await this.callContract('chargedParticles', 'releaseParticleAmount', this.network, parameters);
   }
 
   /// @notice Deposit other NFT Assets into the Particle
@@ -167,8 +222,15 @@ export default class NftService extends BaseService {
   /// @param nftTokenAmount       The amount of Tokens to Deposit (ERC1155-specific)
   /// @returns success            boolean
   public async bond( basketManagerId:string, nftTokenAddress:string, nftTokenId:string, nftTokenAmount:string ) {
-    const fullParameters = [this.contractAddress, this.tokenId, basketManagerId, nftTokenAddress, nftTokenId, nftTokenAmount];
-    return await this.callContract('chargedParticles', 'covalentBond', this.network, fullParameters);
+    const parameters = [
+      this.contractAddress, 
+      this.tokenId, 
+      basketManagerId, 
+      nftTokenAddress, 
+      nftTokenId, 
+      nftTokenAmount
+    ];
+    return await this.callContract('chargedParticles', 'covalentBond', this.network, parameters);
   }
 
   /// @notice Release NFT Assets from the Particle
@@ -181,8 +243,16 @@ export default class NftService extends BaseService {
   /// @param  nftTokenAmount       The amount of Tokens to Withdraw (ERC1155-specific)
   /// @returns success             boolean
   public async breakBond( receiver:string, basketManagerId:string, nftTokenAddress:string, nftTokenId:string, nftTokenAmount:string ) {
-    const fullParameters = [receiver, this.contractAddress, this.tokenId, basketManagerId, nftTokenAddress, nftTokenId, nftTokenAmount];
-    return await this.callContract('chargedParticles', 'breakCovalentBond', this.network, fullParameters);
+    const parameters = [
+      receiver, 
+      this.contractAddress, 
+      this.tokenId, 
+      basketManagerId, 
+      nftTokenAddress, 
+      nftTokenId, 
+      nftTokenAmount
+    ];
+    return await this.callContract('chargedParticles', 'breakCovalentBond', this.network, parameters);
   }
 
 
@@ -191,4 +261,11 @@ export default class NftService extends BaseService {
     const tokenURI = await this.callContract('protonB', 'tokenURI', this.network, [this.tokenId]);
     return tokenURI;
   }
+}
+
+enum managerId {
+  'aave',
+  'aave.b',
+  'generic',
+  'generic.b'
 }
