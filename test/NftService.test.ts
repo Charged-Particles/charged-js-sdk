@@ -21,7 +21,7 @@ describe('NFT service class', () => {
     const tokenId = 43;
     const network = 42;
   
-    it.only ('get tokens across more than one network', async () => {
+    it ('get tokens across more than one network', async () => {
       const charged = new Charged({providers, signer})
 
       const nft = charged.NFT(particleBAddress, tokenId, network)
@@ -62,5 +62,37 @@ describe('NFT service class', () => {
       const nft = charged.NFT(particleBAddress, tokenId, network)
       const NftBridgedChains = await nft.getSignerAddress();
       console.log(NftBridgedChains)
+    });
+
+    it ('Get signer connected network id using an external provider', async() => {
+      const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
+      const charged = new Charged({externalProvider: externalWeb3Provider});
+
+      const nft = charged.NFT(particleBAddress, tokenId, network)
+      const chainId = await nft.getSignerConnectedNetwork();
+      console.log({chainId})
+    });
+
+    it.only ('Get signer connected network id using > 1 providers', async() => {
+      const charged = new Charged({providers, signer});
+
+      const nft = charged.NFT(particleBAddress, tokenId, network)
+      const chainId = await nft.getSignerConnectedNetwork();
+      console.log({chainId})
+    });
+
+    it.only ('Get signer connected network id using 1 provider', async() => {
+
+      let _providers = [
+        {
+          network: 42,
+          service: {'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'}
+        }
+      ]
+      const charged = new Charged({providers: _providers, signer});
+
+      const nft = charged.NFT(particleBAddress, tokenId, network)
+      const chainId = await nft.getSignerConnectedNetwork();
+      console.log({chainId})
     });
 });
