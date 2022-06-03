@@ -123,4 +123,27 @@ export default class BaseService {
     // console.log(userAddress);
 
   }
+
+  public async getSignerConnectedNetwork(network: ethers.providers.Networkish = 0) {
+    const { providers, externalProvider } = this.config;
+
+    const chainIds = Object.keys(providers);
+
+    if (chainIds.length !== 0) {
+      if (chainIds.length > 1) {
+        return network;
+      } else {
+        console.log('providers', {providers})
+        return chainIds[0];
+      }
+    } else if (externalProvider) {
+      console.log('externalProvider', {externalProvider})
+      const _network = await externalProvider.getNetwork();
+      return _network;
+    } else {
+      throw new Error(`Could not fetch network: ${network} from supplied providers`);
+    }
+  
+  }
+
 }
