@@ -128,9 +128,12 @@ export default class BaseService {
     if (chainIds.length !== 0) {
       if (chainIds.length > 1 && network) {
         return network;
-      } else {
+      } else if(chainIds.length == 1){
         return Number(chainIds[0]);
+      } else {
+        throw new Error('Please specify the targeted network');
       }
+
     } else if (externalProvider) {
       const externalProviderNetwork = await externalProvider.getNetwork();
       return externalProviderNetwork.chainId;

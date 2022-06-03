@@ -1,8 +1,13 @@
 {
     "configurations": [
     
-
-
+        {
+            "type": "node-terminal",
+            "name": "Run Script: NFTservice test",
+            "request": "launch",
+            "command": "yarn run test NftService.test.ts --no-cache",
+            "cwd": "${workspaceFolder}"
+        },
         {
             "type": "node-terminal",
             "name": "Run Script: Charged test",

@@ -24,12 +24,12 @@ describe('NFT service class', () => {
     it ('get tokens across more than one network', async () => {
       const charged = new Charged({providers, signer})
 
-      const nft = charged.NFT(particleBAddress, tokenId, network)
+      const nft = charged.NFT(particleBAddress, tokenId)
 
       const NftBridgedChains = await nft.getChainIdsForBridgedNFTs();
   
       // check the that keys exist for one network only
-      expect(NftBridgedChains).toEqual([{'chainId': network}]);
+      expect(NftBridgedChains).toEqual([network]);
     });
 
     it ('Throws when getting tokens across more than one network with wrong ABI', async () => {
@@ -37,51 +37,47 @@ describe('NFT service class', () => {
       const wrongAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
       const tokenId = 43;
       
-      await expect(() => {
-        const data = charged.utils.getBridgedNFTs(wrongAddress, tokenId);
-        return data;
+      const nft = charged.NFT(wrongAddress, tokenId)
+
+      await expect(async() => {
+        return await nft.getChainIdsForBridgedNFTs();
       }).rejects.toThrow();
     });
     
     it ('Gets bridged NFT chain ids using an injected signer', async() => {
-
       const charged = new Charged({providers, signer});
-
-      
-      const nft = charged.NFT(particleBAddress, tokenId, network);
+      const nft = charged.NFT(particleBAddress, tokenId);
       const NftBridgedChains = await nft.getChainIdsForBridgedNFTs();
-      // console.log(NftBridgedChains);
 
-      expect(NftBridgedChains).toEqual([{'chainId': network}]);
+      expect(NftBridgedChains).toEqual([42]);
     });
 
     it ('Get bridge NFT chain ids using an external provider', async() => {
       const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
       const charged = new Charged({externalProvider: externalWeb3Provider});
 
-      const nft = charged.NFT(particleBAddress, tokenId, network)
+      const nft = charged.NFT(particleBAddress, tokenId)
       const NftBridgedChains = await nft.getSignerAddress();
-      console.log(NftBridgedChains)
+      expect(NftBridgedChains).toEqual(1)
     });
 
     it ('Get signer connected network id using an external provider', async() => {
       const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
       const charged = new Charged({externalProvider: externalWeb3Provider});
 
-      const nft = charged.NFT(particleBAddress, tokenId, network)
+      const nft = charged.NFT(particleBAddress, tokenId)
       const chainId = await nft.getSignerConnectedNetwork();
-      console.log({chainId})
+      expect(chainId).toEqual(1)
     });
 
     it.only ('Get signer connected network id using > 1 providers', async() => {
       const charged = new Charged({providers, signer});
-
-      const nft = charged.NFT(particleBAddress, tokenId, network)
-      const chainId = await nft.getSignerConnectedNetwork();
-      console.log({chainId})
+      const nft = charged.NFT(particleBAddress, tokenId);
+      const chainId = await nft.getSignerConnectedNetwork(1);
+      expect(chainId).toEqual(1);
     });
 
-    it.only ('Get signer connected network id using 1 provider', async() => {
+    it ('Get signer connected network id using 1 provider', async() => {
 
       let _providers = [
         {
@@ -91,7 +87,7 @@ describe('NFT service class', () => {
       ]
       const charged = new Charged({providers: _providers, signer});
 
-      const nft = charged.NFT(particleBAddress, tokenId, network)
+      const nft = charged.NFT(particleBAddress, tokenId)
       const chainId = await nft.getSignerConnectedNetwork();
       console.log({chainId})
     });
