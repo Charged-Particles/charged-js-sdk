@@ -1,4 +1,4 @@
-import { Contract, ethers } from 'ethers';
+import { Contract, ethers} from 'ethers';
 import { Configuration } from '../types';
 import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
 import { isValidContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
@@ -118,32 +118,24 @@ export default class BaseService {
       const accounts = await web3Provider.request({ method: 'eth_accounts' });
       return accounts[0];
     };
-    
-    // const userAddress = externalProvider.request({ method: 'eth_accounts' });
-    // console.log(userAddress);
-
   }
 
-  public async getSignerConnectedNetwork(network: ethers.providers.Networkish = 0) {
+  public async getSignerConnectedNetwork(network?: number): Promise<number> {
     const { providers, externalProvider } = this.config;
 
     const chainIds = Object.keys(providers);
 
     if (chainIds.length !== 0) {
-      if (chainIds.length > 1) {
+      if (chainIds.length > 1 && network) {
         return network;
       } else {
-        console.log('providers', {providers})
-        return chainIds[0];
+        return Number(chainIds[0]);
       }
     } else if (externalProvider) {
-      console.log('externalProvider', {externalProvider})
-      const _network = await externalProvider.getNetwork();
-      return _network;
+      const externalProviderNetwork = await externalProvider.getNetwork();
+      return externalProviderNetwork.chainId;
     } else {
       throw new Error(`Could not fetch network: ${network} from supplied providers`);
     }
-  
   }
-
 }

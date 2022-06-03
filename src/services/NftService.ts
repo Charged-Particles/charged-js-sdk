@@ -10,8 +10,6 @@ export default class NftService extends BaseService {
 
   public tokenId: number;
 
-  public network?: Networkish;
-
   constructor(
     config: Configuration,
     contractAddress: string,
@@ -49,6 +47,7 @@ export default class NftService extends BaseService {
         // this.network = await provider.getNetwork();
 
         if (contractExists !== '0x') {                                                // contract exists on respective network
+
           let contract = new ethers.Contract(
             this.contractAddress,
             getAbi('protonB'),
@@ -58,9 +57,10 @@ export default class NftService extends BaseService {
           const signerAddress = await this.getSignerAddress();
           const owner = await contract.ownerOf(this.tokenId);
 
-          if (signerAddress == owner.toLowerCase()) {
+          if (signerAddress.toLowerCase() == owner.toLowerCase()) {
             rawData.push(Number(chainId));
           }
+
         }
       }
     } catch (error) {
@@ -73,37 +73,39 @@ export default class NftService extends BaseService {
     return rawData;
   }
 
-  public async bridgeNFTCheck() {
+  public async bridgeNFTCheck(signerNetwork: Networkish) {
     const chainIdsForBridgedNFTs = await this.getChainIdsForBridgedNFTs();
-    const signerNetwork = await this.getSignerConnectedNetwork(this.network);
 
-    if (chainIdsForBridgedNFTs.length == 1) {
-      this.network = chainIdsForBridgedNFTs[0];
-    }
-
+    console.log("chainIdsForBridgedNFTs", chainIdsForBridgedNFTs)
     if (chainIdsForBridgedNFTs.includes(signerNetwork)) {
-      return true
+      return true;
     }
 
     throw new Error(`Signer is connected to network: ${signerNetwork} which is not supported`)
-
   }
 
   public async energizeParticle(
     walletManagerId:String, 
     assetToken:String,
-    assetAmount:BigNumberish
+    assetAmount:BigNumberish,
+    chainId?: number
   ) {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
-    await this.bridgeNFTCheck();
-    const contract = this.getContractInstance('chargedParticles', this.network);
-    const result = await contract.energizeParticle(this.contractAddress, this.tokenId, walletManagerId, assetToken, assetAmount, '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213');
-    return result;
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const params = [
+      this.contractAddress,
+      this.tokenId, walletManagerId, 
+      assetToken, 
+      assetAmount, 
+      '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213'
+    ];
+
+    return await this.callContract('chargedParticles', 'energizeParticle', signerNetwork, params);
   }
 
   public async tokenURI() {
-    const tokenURI = await this.callContract('protonB', 'tokenURI', this.network, [this.tokenId]);
-    return tokenURI;
+    return await this.fetchAllNetworks('protonB', 'tokenURI', [this.tokenId]);
   }
 }
-

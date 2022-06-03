@@ -33,16 +33,20 @@ describe('Charged class', () => {
 
     const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
     const tokenId = 4;
-    const network = 1;
+    // const network = 1;
 
-    const nft = charged.NFT(particleBAddress, tokenId, network);
+    const nft = charged.NFT(particleBAddress, tokenId);
 
     expect(nft.contractAddress).toEqual(particleBAddress);
     expect(nft.tokenId).toEqual(tokenId);
-    expect(nft.network).toEqual(network);
 
     const tokenURI = await nft.tokenURI()
-    expect(tokenURI).toEqual('https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85');
+
+    expect(tokenURI).toEqual({
+      "1": "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85", 
+      "42": "ipfs://QmRfQguqZqppZXuwV4HNKRocF5JPGbjGaKoSjAMdw5TksH"
+    });
+
   });
 
   it ('Initializes charged with default providers', async() => {
@@ -63,14 +67,19 @@ describe('Charged class', () => {
     const charged = new Charged({providers, signer: myWallet});
     
     const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-    const tokenId = 18;
+    const tokenId = 43;
     const network = 42;
     
-    const nft = charged.NFT(particleBAddress, tokenId, network);
-    const result = await nft.energizeParticle('aave.B', '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD', BigNumber.from(10));
+    const nft = charged.NFT(particleBAddress, tokenId);
+    const result = await nft.energizeParticle(
+      'aave.B', 
+      '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
+      BigNumber.from(10),
+      network
+    );
     
-    // const resp = await result.wait();
-    // console.log({resp}); // TODO: expect !
+    const resp = await result.wait();
+    console.log({resp}); // TODO: expect !
   });
 
   it ('Initializes with ether.js external provider', async() => {
