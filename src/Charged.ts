@@ -18,6 +18,8 @@ export default class Charged  {
 
   public externalProvider?: providers.Provider;
 
+  public web3Provider?: providers.ExternalProvider;
+
   public utils: any;
 
   readonly configuration: Configuration;
@@ -35,11 +37,7 @@ export default class Charged  {
       if (externalProvider instanceof ethers.providers.Provider) {
         this.externalProvider = externalProvider;
       } else {
-
-        const userAddress = externalProvider.request({ method: 'eth_accounts' });
-
-        console.log(userAddress);
-
+        this.web3Provider = externalProvider; 
         this.externalProvider = new ethers.providers.Web3Provider(externalProvider);
       }
       
@@ -61,7 +59,8 @@ export default class Charged  {
     this.configuration = { 
       signer,
       providers: this.providers, 
-      externalProvider: this.externalProvider 
+      externalProvider: this.externalProvider,
+      web3Provider: this.web3Provider
     };
 
     this.utils = new UtilsService(this.configuration);
