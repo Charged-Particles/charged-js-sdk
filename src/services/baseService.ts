@@ -42,7 +42,7 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
-  public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = [], isStaticCall:boolean = false) {
+  public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = [], isStaticCall:boolean = false)  {
     const { providers, externalProvider } = this.config;
 
     try {
@@ -59,6 +59,7 @@ export default class BaseService {
       }
 
       const responses = await Promise.all(transactions);
+      console.log('res',responses);
       const formattedResponse: {[number: number]: any} = {};
 
       responses.forEach((response, index) => {
@@ -87,11 +88,8 @@ export default class BaseService {
       } else {
         return requestedContract[methodName](...params);
       }
-
     } catch(e) {
-
       console.log('fetchQuery error:', e);
-      return {};
     }
   }
 

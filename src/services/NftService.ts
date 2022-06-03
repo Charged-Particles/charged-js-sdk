@@ -10,19 +10,20 @@ export default class NftService extends BaseService {
 
   public tokenId: number;
 
-  public network: number;
+  public networks: number[] = [];
 
   constructor(
     config: Configuration,
     contractAddress: string,
     tokenId: number,
-    network: number // TODO: deduce network from passed particle address
   ) {
       super(config);
       
       this.contractAddress = contractAddress;
       this.tokenId = tokenId;
-      this.network = network;
+      this.getNetworkFromProvider().then(value => {
+        this.networks = value;
+      });
    }
     
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -112,7 +113,7 @@ export default class NftService extends BaseService {
       assetAmount, 
       referrer
     ];
-    return await this.callContract('chargedParticles', 'energizeParticle', this.network, parameters);
+    return await this.callContract('chargedParticles', 'energizeParticle', this.networks[0], parameters);
   }
 
   /// @notice Allows the owner or operator of the Token to collect or transfer the interest generated
@@ -130,7 +131,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.callContract('chargedParticles', 'dischargeParticle', this.network, parameters);
+    return await this.callContract('chargedParticles', 'dischargeParticle', this.networks[0], parameters);
   }
 
   /// @notice Allows the owner or operator of the Token to collect or transfer a specific amount of the interest
@@ -150,7 +151,7 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    return await this.callContract('chargedParticles', 'dischargeParticleAmount', this.network, parameters);
+    return await this.callContract('chargedParticles', 'dischargeParticleAmount', this.networks[0], parameters);
   }
 
   /// @notice Allows the Creator of the Token to collect or transfer a their portion of the interest (if any)
@@ -169,7 +170,7 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    return await this.callContract('chargedParticles', 'dischargeParticleForCreator', this.network, parameters);
+    return await this.callContract('chargedParticles', 'dischargeParticleForCreator', this.networks[0], parameters);
   }
 
 
@@ -187,7 +188,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.callContract('chargedParticles', 'releaseParticle', this.network, parameters);
+    return await this.callContract('chargedParticles', 'releaseParticle', this.networks[0], parameters);
   }
 
 
@@ -207,7 +208,7 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    return await this.callContract('chargedParticles', 'releaseParticleAmount', this.network, parameters);
+    return await this.callContract('chargedParticles', 'releaseParticleAmount', this.networks[0], parameters);
   }
 
   /// @notice Deposit other NFT Assets into the Particle
@@ -230,7 +231,7 @@ export default class NftService extends BaseService {
       nftTokenId, 
       nftTokenAmount
     ];
-    return await this.callContract('chargedParticles', 'covalentBond', this.network, parameters);
+    return await this.callContract('chargedParticles', 'covalentBond', this.networks[0], parameters);
   }
 
   /// @notice Release NFT Assets from the Particle
@@ -252,20 +253,20 @@ export default class NftService extends BaseService {
       nftTokenId, 
       nftTokenAmount
     ];
-    return await this.callContract('chargedParticles', 'breakCovalentBond', this.network, parameters);
+    return await this.callContract('chargedParticles', 'breakCovalentBond', this.networks[0], parameters);
   }
 
 
 
   public async tokenURI() {
-    const tokenURI = await this.callContract('protonB', 'tokenURI', this.network, [this.tokenId]);
+    const tokenURI = await this.callContract('protonB', 'tokenURI', this.networks[0], [this.tokenId]);
     return tokenURI;
   }
 }
 
 enum managerId {
   'aave',
-  'aave.b',
+  'aave.B',
   'generic',
-  'generic.b'
+  'generic.B'
 }
