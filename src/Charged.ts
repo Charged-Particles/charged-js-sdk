@@ -69,9 +69,9 @@ export default class Charged  {
   public NFT(
     contractAddress: string,
     tokenId: number,
-    network: number // TODO: deduce network from passed particle address
+    // network: number // TODO: deduce network from passed particle address
   ) {
-    return new NftService(this.configuration, contractAddress, tokenId, network);
+    return new NftService(this.configuration, contractAddress, tokenId);
   }
 }
 

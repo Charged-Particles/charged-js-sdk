@@ -10,19 +10,19 @@ export default class NftService extends BaseService {
 
   public tokenId: number;
 
-  public network: number;
+  public network?: Networkish;
 
   constructor(
     config: Configuration,
     contractAddress: string,
     tokenId: number,
-    network: number // TODO: deduce network from passed particle address
+    // network: number // TODO: deduce network from passed particle address
   ) {
       super(config);
       
       this.contractAddress = contractAddress;
       this.tokenId = tokenId;
-      this.network = network;
+      // this.network = network;
   }
   
   public async getChainIdsForBridgedNFTs() {
@@ -46,6 +46,7 @@ export default class NftService extends BaseService {
         }
 
         let contractExists = await provider.getCode(this.contractAddress);
+        // this.network = await provider.getNetwork();
 
         if (contractExists !== '0x') {                                                // contract exists on respective network
           let contract = new ethers.Contract(
@@ -73,9 +74,12 @@ export default class NftService extends BaseService {
   }
 
   public async bridgeNFTCheck() {
-    // get the signer network id and compare against getChainIdsForBridgedNFTs
     const chainIdsForBridgedNFTs = await this.getChainIdsForBridgedNFTs();
     const signerNetwork = await this.getSignerConnectedNetwork(this.network);
+
+    if (chainIdsForBridgedNFTs.length == 1) {
+      this.network = chainIdsForBridgedNFTs[0];
+    }
 
     if (chainIdsForBridgedNFTs.includes(signerNetwork)) {
       return true
