@@ -4,6 +4,7 @@ import { getAbi } from '../utils/initContract';
 import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
 
 import BaseService from './baseService';
+import { Networkish } from '@ethersproject/networks';
 export default class NftService extends BaseService {
   public contractAddress: string;
 
@@ -27,7 +28,7 @@ export default class NftService extends BaseService {
   public async getChainIdsForBridgedNFTs() {
     const { providers } = this.config;
 
-    const rawData: object[] = [];
+    const rawData: Networkish[] = [];
     
     try {
       for await (const network of SUPPORTED_NETWORKS) {
@@ -57,7 +58,7 @@ export default class NftService extends BaseService {
           const owner = await contract.ownerOf(this.tokenId);
 
           if (signerAddress == owner.toLowerCase()) {
-            rawData.push({'chainId': Number(chainId)});
+            rawData.push(Number(chainId));
           }
         }
       }
@@ -71,11 +72,26 @@ export default class NftService extends BaseService {
     return rawData;
   }
 
+  public async bridgeNFTCheck() {
+    // get the signer network id and compare against getChainIdsForBridgedNFTs
+    const chainIdsForBridgedNFTs = await this.getChainIdsForBridgedNFTs();
+    const signerNetwork = await this.getSignerConnectedNetwork(this.network);
+
+    if (chainIdsForBridgedNFTs.includes(signerNetwork)) {
+      return true
+    }
+
+    throw new Error(`Signer is connected to network: ${signerNetwork} which is not supported`)
+
+  }
+
   public async energizeParticle(
     walletManagerId:String, 
     assetToken:String,
     assetAmount:BigNumberish
   ) {
+
+    await this.bridgeNFTCheck();
     const contract = this.getContractInstance('chargedParticles', this.network);
     const result = await contract.energizeParticle(this.contractAddress, this.tokenId, walletManagerId, assetToken, assetAmount, '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213');
     return result;
