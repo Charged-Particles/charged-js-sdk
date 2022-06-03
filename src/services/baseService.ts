@@ -59,7 +59,6 @@ export default class BaseService {
       }
 
       const responses = await Promise.all(transactions);
-      console.log('res',responses);
       const formattedResponse: {[number: number]: any} = {};
 
       responses.forEach((response, index) => {

@@ -39,7 +39,7 @@ export default class NftService extends BaseService {
   /// @param walletManagerId      The Liquidity-Provider ID to check the Asset balance of
   /// @param assetToken           The Address of the Asset Token to check
   /// @return The Amount of underlying Assets held within the Token as a BigNumber
-  public async getMass( walletManagerId: string, assetToken:string ) {
+  public async getMass( walletManagerId:managerId, assetToken:string ) {
     const parameters = [
       this.contractAddress, 
       this.tokenId, 
@@ -264,9 +264,11 @@ export default class NftService extends BaseService {
   }
 }
 
-enum managerId {
-  'aave',
-  'aave.B',
-  'generic',
-  'generic.B'
-}
+type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
+
+// enum managerId {
+//   aave = 'aave',
+//   aaveB = 'aave.B',
+//   generic = 'generic',
+//   genericB = 'generic.B'
+// }
