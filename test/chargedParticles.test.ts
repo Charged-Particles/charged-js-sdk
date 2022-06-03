@@ -62,5 +62,18 @@ describe('baseService class', () => {
       expect(Number(charge)).toBeCloseTo(0.07);
       expect(Number(bonds)).toEqual(3);
     });
+
+    it ('should energize', async () => {
+      // @ts-ignore
+      const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+      const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+      const tokenId = 18;
+      
+      const nft = charged.NFT(address, tokenId);
+      const result = await nft.energize('aave.B', '0x075A36BA8846C6B6F53644fDd3bf17E5151789DC', 10, '');
+
+      console.log(result);
+      expect(1).toEqual(1);
+    });
   
 });
