@@ -26,7 +26,7 @@ export default class NftService extends BaseService {
   public async getChainIdsForBridgedNFTs() {
     const { providers } = this.config;
 
-    const rawData: Networkish[] = [];
+    const tokenChainIds: Networkish[] = [];
     
     try {
       for await (const network of SUPPORTED_NETWORKS) {
@@ -43,8 +43,7 @@ export default class NftService extends BaseService {
           }
         }
 
-        let contractExists = await provider.getCode(this.contractAddress);
-        // this.network = await provider.getNetwork();
+        const contractExists = await provider.getCode(this.contractAddress);
 
         if (contractExists !== '0x') {                                                // contract exists on respective network
 
@@ -58,7 +57,7 @@ export default class NftService extends BaseService {
           const owner = await contract.ownerOf(this.tokenId);
 
           if (signerAddress.toLowerCase() == owner.toLowerCase()) {
-            rawData.push(Number(chainId));
+            tokenChainIds.push(Number(chainId));
           }
 
         }
@@ -70,18 +69,15 @@ export default class NftService extends BaseService {
 
     // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
     // when we go to write check if the owner matches the signer
-    return rawData;
+    return tokenChainIds;
   }
 
   public async bridgeNFTCheck(signerNetwork: Networkish) {
-    const chainIdsForBridgedNFTs = await this.getChainIdsForBridgedNFTs();
+    const tokenChainIds = await this.getChainIdsForBridgedNFTs();
 
-    console.log("chainIdsForBridgedNFTs", chainIdsForBridgedNFTs)
-    if (chainIdsForBridgedNFTs.includes(signerNetwork)) {
-      return true;
-    }
+    if (tokenChainIds.includes(signerNetwork)) { return true };
 
-    throw new Error(`Signer is connected to network: ${signerNetwork} which is not supported`)
+    throw new Error(`Signer network: ${signerNetwork}, does not match any token chain ids.`)
   }
 
   public async energizeParticle(
