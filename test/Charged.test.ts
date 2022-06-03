@@ -1,5 +1,5 @@
 import { rpcUrlMainnet } from '../src/utils/config';
-import { getWallet } from '../src/utils/ethers.service';
+import { getWallet } from '../src/utils/testUtilities';
 import { BigNumber, ethers } from 'ethers';
 const Web3HttpProvider = require('web3-providers-http');
 

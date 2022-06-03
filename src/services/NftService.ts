@@ -28,46 +28,42 @@ export default class NftService extends BaseService {
     const { providers } = this.config;
 
     const rawData: object[] = [];
-    // const bridgedData: object[] = [];
-
+    
     try {
       for await (const network of SUPPORTED_NETWORKS) {
-        let chainId = String(network.chainId);
-
+        let chainId = network.chainId;
+        
         let provider = providers[chainId];
-
+        
         if(provider == undefined) {
-          const network = ethers.providers.getNetwork(chainId);
-          if (Boolean(network?._defaultProvider)) {
-            provider = ethers.getDefaultProvider(network);
+          const _network = ethers.providers.getNetwork(chainId);
+          if (Boolean(_network?._defaultProvider)) {
+            provider = ethers.getDefaultProvider(_network);
           } else {
             continue;
           }
         }
 
         let contractExists = await provider.getCode(this.contractAddress);
-        // console.log({contractExists});
+
         if (contractExists !== '0x') {                                                // contract exists on respective network
           let contract = new ethers.Contract(
             this.contractAddress,
             getAbi('protonB'),
             provider
-            );
+          );
 
-            const singer = this.getSigner();
-            const signerAddress = await singer?.getAddress();
+          const signerAddress = await this.getSignerAddress();
+          const owner = await contract.ownerOf(this.tokenId);
 
-            const owner = await contract.ownerOf(this.tokenId);
-
-            console.log({owner, signerAddress})
-            if (signerAddress == owner) {
-              rawData.push({'chainId': Number(chainId)});
-            }
+          if (signerAddress == owner.toLowerCase()) {
+            rawData.push({'chainId': Number(chainId)});
           }
         }
+      }
     } catch (error) {
       console.log(error);
-      // throw error;
+      throw error;
     }
 
     // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
@@ -89,6 +85,5 @@ export default class NftService extends BaseService {
     const tokenURI = await this.callContract('protonB', 'tokenURI', this.network, [this.tokenId]);
     return tokenURI;
   }
-
 }
 

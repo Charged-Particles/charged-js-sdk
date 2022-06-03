@@ -108,10 +108,19 @@ export default class BaseService {
     return networks;
   }
 
-  public getSigner() {
-    const { signer } = this.config;
+  public async getSignerAddress() {
+    const { signer, web3Provider } = this.config;
 
-    return signer;
-    // if (signer) { } 
+    if (signer) { return signer?.getAddress(); };
+
+    if (web3Provider) {
+      //@ts-ignore 
+      const accounts = await web3Provider.request({ method: 'eth_accounts' });
+      return accounts[0];
+    };
+    
+    // const userAddress = externalProvider.request({ method: 'eth_accounts' });
+    // console.log(userAddress);
+
   }
 }

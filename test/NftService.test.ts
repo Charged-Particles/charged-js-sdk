@@ -1,5 +1,8 @@
+import { rpcUrlMainnet } from '../src/utils/config';
+import { getWallet } from '../src/utils/testUtilities';
+const Web3HttpProvider = require('web3-providers-http');
+
 import Charged from '../src/Charged';
-import { getWallet } from '../src/utils/ethers.service';
 
 describe('NFT service class', () => {
     const signer = getWallet();
@@ -12,25 +15,27 @@ describe('NFT service class', () => {
         network: 42,
         service: {'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'}
       }
-    ]
-  
-    it ('get tokens across more than one network', async () => {
-      const charged = new Charged({providers})
-      const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
-      const tokenId = 4;
+    ];
 
-      const data = await charged.utils.getBridgedNFTs(particleBAddress, tokenId);
+    const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+    const tokenId = 43;
+    const network = 42;
+  
+    it.only ('get tokens across more than one network', async () => {
+      const charged = new Charged({providers, signer})
+
+      const nft = charged.NFT(particleBAddress, tokenId, network)
+
+      const NftBridgedChains = await nft.getChainIdsForBridgedNFTs();
   
       // check the that keys exist for one network only
-      expect(data[0]).toHaveProperty('tokenId', 4);
-      expect(data[0]).toHaveProperty('chainId', 42);
-      expect(data[0]).toHaveProperty('ownerOf', '0x6d46b37708dA7Ed4E5C4509495768Fecd3D17C01');
+      expect(NftBridgedChains).toEqual([{'chainId': network}]);
     });
 
     it ('Throws when getting tokens across more than one network with wrong ABI', async () => {
       const charged = new Charged({providers})
       const wrongAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
-      const tokenId = 4;
+      const tokenId = 43;
       
       await expect(() => {
         const data = charged.utils.getBridgedNFTs(wrongAddress, tokenId);
@@ -38,17 +43,24 @@ describe('NFT service class', () => {
       }).rejects.toThrow();
     });
     
-    it.only ('Gets bridged NFT chain id using an injected signer', async() => {
+    it ('Gets bridged NFT chain ids using an injected signer', async() => {
 
       const charged = new Charged({providers, signer});
-      const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-      const tokenId = 43;
-      const network = 42;
+
       
       const nft = charged.NFT(particleBAddress, tokenId, network);
       const NftBridgedChains = await nft.getChainIdsForBridgedNFTs();
       // console.log(NftBridgedChains);
 
       expect(NftBridgedChains).toEqual([{'chainId': network}]);
-    })
+    });
+
+    it ('Get bridge NFT chain ids using an external provider', async() => {
+      const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
+      const charged = new Charged({externalProvider: externalWeb3Provider});
+
+      const nft = charged.NFT(particleBAddress, tokenId, network)
+      const NftBridgedChains = await nft.getSignerAddress();
+      console.log(NftBridgedChains)
+    });
 });
