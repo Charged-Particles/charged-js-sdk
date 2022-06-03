@@ -1,6 +1,8 @@
 import { BigNumberish, ethers } from 'ethers';
 import { Configuration } from '../types';
+
 import { getAbi } from '../utils/initContract';
+
 import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
 
 import BaseService from './baseService';
@@ -49,7 +51,7 @@ export default class NftService extends BaseService {
 
           let contract = new ethers.Contract(
             this.contractAddress,
-            getAbi('protonB'),
+            getAbi('erc721'),
             provider
           );
 
@@ -102,6 +104,6 @@ export default class NftService extends BaseService {
   }
 
   public async tokenURI() {
-    return await this.fetchAllNetworks('protonB', 'tokenURI', [this.tokenId]);
+    return await this.fetchAllNetworks('erc721', 'tokenURI', [this.tokenId]);
   }
 }

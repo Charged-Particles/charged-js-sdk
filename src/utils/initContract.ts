@@ -59,7 +59,7 @@ export const isValidContractName = (contractName:string) => {
     case 'chargedState': return;
     case 'chargedSettings': return;
     case 'chargedManagers': return;
-    case 'protonB': return;
+    case 'erc721': return;
     default: throw 'bad contract name passed to initContract';
   }
 }
@@ -71,7 +71,7 @@ export const getAbi = (contractName:string) => {
     case 'chargedState': return ChargedState;
     case 'chargedSettings': return ChargedSettings;
     case 'chargedManagers': return ChargedManagers;
-    case 'protonB': return ProtonB;
+    case 'erc721': return ProtonB;
     default: throw 'unknown contract name while trying to get abi';
   }
 }
