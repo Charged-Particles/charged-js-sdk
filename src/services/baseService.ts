@@ -63,7 +63,7 @@ export default class BaseService {
           this.callContract(
             contractName, 
             methodName, 
-            Number(networks[0]), 
+            networks[0], // get the only network for the injected provider.
             params
           )
         );
@@ -78,7 +78,6 @@ export default class BaseService {
 
     } catch(error) {
       console.log('fetchAllNetworks error: ', error);
-
       return [];
     }
   }
@@ -139,26 +138,24 @@ export default class BaseService {
     const chainIds = Object.keys(providers);
     const chainIdsLength = chainIds.length;
 
-    if (chainIdsLength !== 0) {
+    if (chainIdsLength) {
 
-      if (chainIdsLength > 1 && network) {
-        return network;
+      if (chainIdsLength > 1 && network) { 
+        return network; // specify network intent when more than one provider.
 
-      } else if(chainIdsLength == 1){
-        return Number(chainIds[0]);
+      } else if(chainIdsLength == 1) {
+        return Number(chainIds[0]); // return the network of the single provider
 
       } else {
         throw new Error('Please specify the targeted network');
 
       }
-
     } else if (externalProvider) {
       const externalProviderNetwork = await externalProvider.getNetwork();
       return externalProviderNetwork.chainId;
       
     } else {
       throw new Error(`Could not fetch network: ${network} from supplied providers`);
-
     }
   }
 }
