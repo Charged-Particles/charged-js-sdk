@@ -1,12 +1,9 @@
-import { BigNumberish, ethers } from 'ethers';
-import { Configuration } from '../types';
-
-import { getAbi } from '../utils/initContract';
-
-import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
-
-import BaseService from './baseService';
+import { BigNumberish, ethers,Contract } from 'ethers';
 import { Networkish } from '@ethersproject/networks';
+import { Configuration } from '../types';
+import { getAbi } from '../utils/initContract';
+import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
+import BaseService from './baseService';
 export default class NftService extends BaseService {
   public contractAddress: string;
 
@@ -16,15 +13,35 @@ export default class NftService extends BaseService {
     config: Configuration,
     contractAddress: string,
     tokenId: number,
-    // network: number // TODO: deduce network from passed particle address
   ) {
       super(config);
-      
       this.contractAddress = contractAddress;
       this.tokenId = tokenId;
-      // this.network = network;
   }
-  
+
+  // Overrides parent method: uses contract address to set instance.
+  public getContractInstance(contractName:string, network: number): Contract{
+    const { providers, externalProvider, signer } = this.config;
+
+    const provider = providers[network] ?? externalProvider;
+
+    if (!this.contractInstances[this.contractAddress]) {
+      let requestedContract = new ethers.Contract(
+        this.contractAddress,
+        getAbi('erc721'),
+        provider
+      );
+        
+      if(signer && provider && contractName) {
+        const connectedWallet = signer.connect(provider);
+        requestedContract = requestedContract.connect(connectedWallet);
+      }
+
+      this.contractInstances[this.contractAddress] = requestedContract;
+    }
+    return this.contractInstances[this.contractAddress];
+  } 
+
   public async getChainIdsForBridgedNFTs() {
     const { providers } = this.config;
 
