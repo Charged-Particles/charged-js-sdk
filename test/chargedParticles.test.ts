@@ -5,21 +5,21 @@ import Charged from '../src/Charged';
 import kovanAddresses from '../src/networks/v2/kovan.json';
 import mainnetAddresses from '../src/networks/v2/mainnet.json';
 
-describe('baseService class', () => {
+describe('chargedParticles contract test', () => {
     const providersKovan =  [
       {
         network: 42,
-        service: {'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'}
+        service: {'alchemy': process.env.ALCHEMY_KOVAN}
       }
     ]
     const providers =  [
       {
         network: 1,
-        service: {'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE'}
+        service: {'alchemy': process.env.ALCHEMY_MAINNET}
       },
       {
         network: 42,
-        service: {'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'}
+        service: {'alchemy': process.env.ALCHEMY_KOVAN}
       }
     ]
     
@@ -51,8 +51,6 @@ describe('baseService class', () => {
       const massBN = await nft.getMass('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
       const chargeBN = await nft.getCharge('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
       const bondsBN = await nft.getBonds('generic.B');
-      console.log(chargeBN)
-      console.log(bondsBN)
       const mass = ethers.utils.formatUnits(massBN['42']);
       const charge = ethers.utils.formatUnits(chargeBN['42']);
       const bonds = bondsBN['42'].toNumber();
@@ -69,6 +67,8 @@ describe('baseService class', () => {
       const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
       const tokenId = 18;
       
+      console.log('SLAYYYY')
+      console.log(charged.providers);
       const nft = charged.NFT(address, tokenId);
       const result = await nft.energize('aave.B', '0x075A36BA8846C6B6F53644fDd3bf17E5151789DC', 10, '');
 

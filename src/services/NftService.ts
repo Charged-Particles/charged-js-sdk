@@ -113,6 +113,7 @@ export default class NftService extends BaseService {
       assetAmount, 
       referrer
     ];
+    console.log('HERE !!', this.networks);
     return await this.callContract('chargedParticles', 'energizeParticle', this.networks[0], parameters);
   }
 

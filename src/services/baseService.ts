@@ -13,10 +13,13 @@ export default class BaseService {
     this.contractInstances = {};
   }
 
-  public getContractInstance(contractName:string, network: number): Contract{
+  public getContractInstance(contractName:string, network: number): Contract {
+    // console.log('bussyt', this.config);
     const { providers, externalProvider, signer } = this.config;
 
+    console.log('am i undef', network);
     const provider = providers[network] ?? externalProvider;
+    console.log('SKJHSDGSAD', providers);
 
     const networkFormatted:string = getAddressFromNetwork(network);
     // check if safe contract name was given
@@ -25,17 +28,21 @@ export default class BaseService {
     const address = getAddressByNetwork(networkFormatted, contractName)
 
     if (!this.contractInstances[address]) {
-      let requestedContract = new ethers.Contract(
-        address,
-        getAbi(contractName),
-        provider
-      );
-        
-      if(signer && provider) {
-        const connectedWallet = signer.connect(provider);
-        requestedContract = requestedContract.connect(connectedWallet);
+
+      let requestedContract, connectedWallet;
+      if(signer) {
+        console.log('prov',provider);
+        connectedWallet = signer.connect(provider);
       }
 
+      console.log(connectedWallet);
+      requestedContract = new ethers.Contract(
+        address,
+        getAbi(contractName),
+        connectedWallet ?? provider
+      )
+
+      // console.log('butt', requestedContract)
       this.contractInstances[address] = requestedContract;
     }
 
