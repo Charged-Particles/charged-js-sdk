@@ -28,7 +28,7 @@ describe('Charged class', () => {
     console.log(allStateAddresses);
   });
 
-  it ('Initializes NFT service', async () => {
+  it.only ('Initializes NFT service', async () => {
     const charged = new Charged({providers});
 
     const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';

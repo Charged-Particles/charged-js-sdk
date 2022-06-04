@@ -15,12 +15,10 @@ export default class BaseService {
   public getContractInstance(contractName:string, network: number): Contract{
     const { providers, externalProvider, signer } = this.config;
 
-    const provider = providers[network] ?? externalProvider;
-
-    const networkFormatted:string = getAddressFromNetwork(network);
-    // check if safe contract name was given
     isValidContractName(contractName);
-    
+
+    const provider = providers[network] ?? externalProvider;
+    const networkFormatted:string = getAddressFromNetwork(network);
     const address = getAddressByNetwork(networkFormatted, contractName)
 
     if (!this.contractInstances[address]) {
@@ -51,22 +49,36 @@ export default class BaseService {
 
       if (Object.keys(providers).length !== 0) {
         for (const network in providers) {
-          transactions.push(this.callContract(contractName, methodName, Number(network), params));
+          transactions.push(
+            this.callContract(
+              contractName, 
+              methodName, 
+              Number(network), 
+              params
+            )
+          );
         } 
       } else if(Boolean(externalProvider)) {
-        transactions.push(this.callContract(contractName, methodName, Number(networks[0]), params));
+        transactions.push(
+          this.callContract(
+            contractName, 
+            methodName, 
+            Number(networks[0]), 
+            params
+          )
+        );
       }
 
       const responses = await Promise.all(transactions);
       const formattedResponse: {[number: number]: any} = {};
 
-      responses.forEach((response, index) => {
+      return responses.forEach((response, index) => {
         formattedResponse[networks[index]] = response;
       });
 
-      return formattedResponse; 
     } catch(error) {
-      console.log('fetchAllNetworks error >>>> ', error);
+      console.log('fetchAllNetworks error: ', error);
+
       return [];
     }
   }
@@ -77,7 +89,6 @@ export default class BaseService {
     network: number,
     params: any[] = []
   ) {
-
     try {
       const requestedContract = this.getContractInstance(contractName, network);
       return requestedContract[methodName](...params);
@@ -114,31 +125,40 @@ export default class BaseService {
     if (signer) { return signer?.getAddress(); };
 
     if (web3Provider) {
-      //@ts-ignore 
+      //@ts-ignore  TODO: remove ignore and filter type for metamask provider.
       const accounts = await web3Provider.request({ method: 'eth_accounts' });
       return accounts[0];
     };
+
+    throw new Error('No signer provided');
   }
 
   public async getSignerConnectedNetwork(network?: number): Promise<number> {
     const { providers, externalProvider } = this.config;
 
     const chainIds = Object.keys(providers);
+    const chainIdsLength = chainIds.length;
 
-    if (chainIds.length !== 0) {
-      if (chainIds.length > 1 && network) {
+    if (chainIdsLength !== 0) {
+
+      if (chainIdsLength > 1 && network) {
         return network;
-      } else if(chainIds.length == 1){
+
+      } else if(chainIdsLength == 1){
         return Number(chainIds[0]);
+
       } else {
         throw new Error('Please specify the targeted network');
+
       }
 
     } else if (externalProvider) {
       const externalProviderNetwork = await externalProvider.getNetwork();
       return externalProviderNetwork.chainId;
+      
     } else {
       throw new Error(`Could not fetch network: ${network} from supplied providers`);
+
     }
   }
 }
