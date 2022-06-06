@@ -157,7 +157,7 @@ export default class NftService extends BaseService {
   /// @param referrer         TODO: WHAT IS THIS?
   /// @param chainId          Optional parameter that allows for the user to specify which network to write to.
   /// @return yieldTokensAmount The amount of Yield-bearing Tokens added to the escrow for the Token as a BigNumber
-  public async energize( walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, referrer:string, chainId?:number ) {
+  public async energize( walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, chainId?:number, referrer?:string ) {
 
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -169,9 +169,8 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken, 
       assetAmount, 
-      referrer
+      referrer ?? '0x0000000000000000000000000000000000000000'
     ];
-    console.log('HERE !!', signerNetwork);
     return await this.callContract('chargedParticles', 'energizeParticle', signerNetwork, parameters);
   }
 

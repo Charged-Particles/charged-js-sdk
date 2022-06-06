@@ -18,29 +18,25 @@ export default class UtilsService extends BaseService {
 
   /// @notice returns the state adress from the ChargedParticles contract
   /// @returns string of state address
-  public async getStateAddress(): Promise<MultiNetworkResponse> {
+  public async getStateAddress() {
     return await this.fetchAllNetworks('chargedParticles', 'getStateAddress');
   }
 
   /// @notice returns the settings adress from the ChargedParticles contract
   /// @returns string of settings address
-  public async getSettingsAddress(): Promise<MultiNetworkResponse> {
+  public async getSettingsAddress() {
     return await this.fetchAllNetworks('chargedParticles', 'getSettingsAddress');
   }
 
   /// @notice returns the managers adress from the ChargedParticles contract
   /// @returns string of settings address
-  public async getManagersAddress(): Promise<MultiNetworkResponse> {
+  public async getManagersAddress() {
     return await this.fetchAllNetworks('chargedParticles', 'getManagersAddress');
   }
 
   /// @notice returns the deposit fee of the protocol
   /// @returns protocol fee
-  public async getFeesForDeposit(): Promise<MultiNetworkResponse> {
+  public async getFeesForDeposit() {
     return await this.fetchAllNetworks('chargedParticles', 'getFeesForDeposit');
   }
-}
-
-type MultiNetworkResponse = {
-  [network: string]: string
 }

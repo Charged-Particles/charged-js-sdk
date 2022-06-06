@@ -18,7 +18,6 @@ export default class BaseService {
   ): Contract {
     const { providers, externalProvider, signer } = this.config;
 
-    console.log('am i undef', network);
     const provider = providers[network] ?? externalProvider;
     const address = contractAddress ?? getAddressByNetwork(network, contractName);
 
@@ -26,18 +25,15 @@ export default class BaseService {
 
       let requestedContract, connectedWallet;
       if(signer) {
-        console.log('prov',provider);
         connectedWallet = signer.connect(provider);
       }
 
-      console.log(connectedWallet);
       requestedContract = new ethers.Contract(
         address,
         getAbi(contractName),
         connectedWallet ?? provider
       )
 
-      // console.log('butt', requestedContract)
       this.contractInstances[address] = requestedContract;
     }
 

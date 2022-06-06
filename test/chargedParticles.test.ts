@@ -2,8 +2,8 @@ import { ethers } from 'ethers';
 import 'dotenv/config';
 import Charged from '../src/Charged';
 
-// import kovanAddresses from '../src/networks/v2/kovan.json';
-// import mainnetAddresses from '../src/networks/v2/mainnet.json';
+import kovanAddresses from '../src/networks/v2/kovan.json';
+import mainnetAddresses from '../src/networks/v2/mainnet.json';
 
 describe('chargedParticles contract test', () => {
     const providersKovan =  [
@@ -12,68 +12,94 @@ describe('chargedParticles contract test', () => {
         service: {'alchemy': process.env.ALCHEMY_KOVAN}
       }
     ]
-    // const providers =  [
-    //   {
-    //     network: 1,
-    //     service: {'alchemy': process.env.ALCHEMY_MAINNET}
-    //   },
-    //   {
-    //     network: 42,
-    //     service: {'alchemy': process.env.ALCHEMY_KOVAN}
-    //   }
-    // ]
+    const providers =  [
+      {
+        network: 1,
+        service: {'alchemy': process.env.ALCHEMY_MAINNET}
+      },
+      {
+        network: 42,
+        service: {'alchemy': process.env.ALCHEMY_KOVAN}
+      }
+    ]
     
+    const ENJCoin = '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2';
+    const walletAddress = '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213';
 
-    // it ('get state, managers, and settings addresses correctly on multiple chains', async () => {
+    const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+    const tokenId = 18;
 
-    //   const charged = new Charged({providers});
+    it ('get state, managers, and settings addresses correctly on multiple chains', async () => {
 
-    //   const stateAddys = await charged.utils.getStateAddress();
-    //   const managersAddys = await charged.utils.getManagersAddress();
-    //   const settingsAddys = await charged.utils.getSettingsAddress();
+      const charged = new Charged({providers});
+
+      const stateAddys = await charged.utils.getStateAddress();
+      const managersAddys = await charged.utils.getManagersAddress();
+      const settingsAddys = await charged.utils.getSettingsAddress();
   
-    //   // check the that keys exist for one network only
-    //   expect(stateAddys).toHaveProperty('42', kovanAddresses.chargedState.address);
-    //   expect(managersAddys).toHaveProperty('42', kovanAddresses.chargedManagers.address);
-    //   expect(settingsAddys).toHaveProperty('42', kovanAddresses.chargedSettings.address);
-    //   expect(stateAddys).toHaveProperty('1', mainnetAddresses.chargedState.address);
-    //   expect(managersAddys).toHaveProperty('1', mainnetAddresses.chargedManagers.address);
-    //   expect(settingsAddys).toHaveProperty('1', mainnetAddresses.chargedSettings.address);
-    // });
+      // check the that keys exist for one network only
+      expect(stateAddys).toHaveProperty('42.value', kovanAddresses.chargedState.address);
+      expect(managersAddys).toHaveProperty('42.value', kovanAddresses.chargedManagers.address);
+      expect(settingsAddys).toHaveProperty('42.value', kovanAddresses.chargedSettings.address);
+      expect(stateAddys).toHaveProperty('1.value', mainnetAddresses.chargedState.address);
+      expect(managersAddys).toHaveProperty('1.value', mainnetAddresses.chargedManagers.address);
+      expect(settingsAddys).toHaveProperty('1.value', mainnetAddresses.chargedSettings.address);
+    });
 
-    // it ('should get mass, charge, and # of bonds of a proton', async () => {
-    //   // @ts-ignore
-    //   const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
-    //   const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-    //   const tokenId = 18;
-      
-    //   const nft = charged.NFT(address, tokenId);
-    //   const massBN = await nft.getMass('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
-    //   const chargeBN = await nft.getCharge('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
-    //   const bondsBN = await nft.getBonds('generic.B');
-    //   const mass = ethers.utils.formatUnits(massBN['42']);
-    //   const charge = ethers.utils.formatUnits(chargeBN['42']);
-    //   const bonds = bondsBN['42'].toNumber();
-
-    //   expect(Number(mass)).toEqual(1000);
-    //   // This value could be out of date. Check https://staging.app.charged.fi/go/energize/0xd1bce91a13089b1f3178487ab8d0d2ae191c1963/18
-    //   expect(Number(charge)).toBeCloseTo(0.07);
-    //   expect(Number(bonds)).toEqual(3);
-    // });
-
-    it ('should energize', async () => {
+    // test discharge here so we can expect 0 interest on next test 
+    it ('should discharge', async () => {
+      // ignoring .env type checking
       // @ts-ignore
       const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
-      const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-      const tokenId = 18;
       
-      console.log('SLAYYYY')
-      console.log(charged.providers);
       const nft = charged.NFT(address, tokenId);
-      const result = await nft.energize('aave.B', '0x075A36BA8846C6B6F53644fDd3bf17E5151789DC', 10, '');
+      const result = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
 
-      console.log(result);
-      expect(1).toEqual(1);
+      // TODO: Expect something with the response?
+      expect(result).toHaveProperty('chainId', 42);
+    })
+
+    it ('should get mass, charge, and # of bonds of a proton', async () => {
+      // ignoring .env type checking
+      // @ts-ignore
+      const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+      
+      const nft = charged.NFT(address, tokenId);
+      const massBN = await nft.getMass('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
+      const chargeBN = await nft.getCharge('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
+      const bondsBN = await nft.getBonds('generic.B');
+      const mass = ethers.utils.formatUnits(massBN['42'].value);
+      const charge = ethers.utils.formatUnits(chargeBN['42'].value);
+      const bonds = bondsBN['42'].value.toNumber();
+
+      expect(Number(mass)).toEqual(1047);
+      // This value could be out of date. Check https://staging.app.charged.fi/go/energize/0xd1bce91a13089b1f3178487ab8d0d2ae191c1963/18
+      expect(Number(charge)).toBeCloseTo(0);
+      expect(Number(bonds)).toEqual(3);
     });
+
+    it ('should energize', async () => {
+      // ignoring .env type checking
+      // @ts-ignore
+      const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+      
+      const nft = charged.NFT(address, tokenId);
+      const result = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
+
+      // TODO: Expect something with the response?
+      expect(result).toHaveProperty('chainId', 42);
+    });
+
+    it ('should release 47 ENJ tokens', async () => {
+      // ignoring .env type checking
+      // @ts-ignore
+      const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+      
+      const nft = charged.NFT(address, tokenId);
+      const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"),);
+
+      // TODO: Expect something with the response?
+      expect(result).toHaveProperty('chainId', 42);
+    })
   
 });
