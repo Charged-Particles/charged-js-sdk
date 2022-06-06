@@ -77,13 +77,13 @@ export default class BaseService {
       }
 
       const responses = await Promise.allSettled(transactions);
-      const formattedResponse: {[number: number]: any} = {};
+      const formattedResponse: {[number: number]: {value: any, status: string}} = {};
 
       responses.forEach((response, index) => {
         if (response.status === "fulfilled") {
-          formattedResponse[networks[index]] =  response.value;
+          formattedResponse[networks[index]] =  {value: response.value, status: 'fulfilled'};
         } else {
-          formattedResponse[networks[index]] =  response.reason;
+          formattedResponse[networks[index]] =  {value: response.reason, status: 'rejected'};
         }
       });
 

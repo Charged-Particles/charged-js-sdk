@@ -43,8 +43,8 @@ describe('Charged class', () => {
     const tokenURI = await nft.tokenURI()
 
     expect(tokenURI).toEqual({
-      "1": "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85", 
-      "42": "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85"
+      "1": {value: "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85", status: 'fulfilled'}, 
+      "42": {value: "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85", status: 'fulfilled'}
     });
 
   });
@@ -59,8 +59,8 @@ describe('Charged class', () => {
   
     const stateAddresses = await charged.utils.getStateAddress();
 
-    expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
-    expect(stateAddresses).toHaveProperty('42', '0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca');
+    expect(stateAddresses).toHaveProperty('1', {"status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f"});
+    expect(stateAddresses).toHaveProperty('42', {"status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca"});
   });
 
   it ('energize a test particle', async () => {
@@ -87,7 +87,7 @@ describe('Charged class', () => {
     const charged = new Charged({externalProvider: externalProvider});
     const stateAddresses = await charged.utils.getStateAddress();
 
-    expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+    expect(stateAddresses).toHaveProperty('1', {"status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f"});
   });
 
   it ('Initializes with Web3 external provider', async() => {
@@ -95,6 +95,6 @@ describe('Charged class', () => {
     const charged = new Charged({externalProvider: externalWeb3Provider});
     const stateAddresses = await charged.utils.getStateAddress();
 
-    expect(stateAddresses).toHaveProperty('1', '0x48974C6ae5A0A25565b0096cE3c81395f604140f');
+    expect(stateAddresses).toHaveProperty('1', {"status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f"});
   });
 })
