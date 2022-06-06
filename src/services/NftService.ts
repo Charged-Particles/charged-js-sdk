@@ -183,6 +183,11 @@ export default class NftService extends BaseService {
   /// @return creatorAmount       Amount of Asset Token discharged to the Creator as a BigNumber
   /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
   public async discharge( receiver:string, walletManagerId:managerId, assetToken:string, chainId?:number ) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
     const parameters = [
       receiver, 
       this.contractAddress, 
@@ -202,6 +207,11 @@ export default class NftService extends BaseService {
   /// @return creatorAmount       Amount of Asset Token discharged to the Creator as a BigNumber
   /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
   public async dischargeAmount( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, chainId?:number ) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
     const parameters = [
       receiver, 
       this.contractAddress, 
@@ -221,6 +231,11 @@ export default class NftService extends BaseService {
   /// @param assetAmount          The specific amount of Asset Token to Discharge from the Particle
   /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
   public async dischargeForCreator( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, chainId?:number ) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
     const parameters = [
       receiver, 
       this.contractAddress, 
@@ -240,6 +255,11 @@ export default class NftService extends BaseService {
   /// @return creatorAmount       Amount of Asset Token released to the Creator as a BigNumber
   /// @return receiverAmount      Amount of Asset Token released to the Receiver (includes principalAmount) as a BigNumber
   public async release( receiver:string, walletManagerId:managerId, assetToken:string, chainId?:number ) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
     const parameters = [
       receiver, 
       this.contractAddress, 
@@ -259,6 +279,11 @@ export default class NftService extends BaseService {
   /// @return creatorAmount Amount of Asset Token released to the Creator as a BigNumber
   /// @return receiverAmount Amount of Asset Token released to the Receiver (includes principalAmount) as a BigNumber
   public async releaseAmount( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, chainId?:number ) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
     const parameters = [
       receiver, 
       this.contractAddress, 
@@ -282,6 +307,11 @@ export default class NftService extends BaseService {
   /// @param nftTokenAmount       The amount of Tokens to Deposit (ERC1155-specific)
   /// @returns success            boolean
   public async bond( basketManagerId:string, nftTokenAddress:string, nftTokenId:string, nftTokenAmount:string, chainId?:number ) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
     const parameters = [
       this.contractAddress, 
       this.tokenId, 
@@ -303,6 +333,11 @@ export default class NftService extends BaseService {
   /// @param  nftTokenAmount       The amount of Tokens to Withdraw (ERC1155-specific)
   /// @returns success             boolean
   public async breakBond( receiver:string, basketManagerId:string, nftTokenAddress:string, nftTokenId:string, nftTokenAmount:string, chainId?:number ) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
     const parameters = [
       receiver, 
       this.contractAddress, 
@@ -322,6 +357,7 @@ export default class NftService extends BaseService {
       'erc721', 
       'tokenURI', 
       [this.tokenId],
+      false,
       this.contractAddress
     );
   }

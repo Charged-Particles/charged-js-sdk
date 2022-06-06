@@ -19,7 +19,6 @@ import kovanAddresses from '../networks/v2/kovan.json';
 import polygonAddresses from '../networks/v2/polygon.json';
 import mumbaiAddresses from '../networks/v2/mumbai.json';
 
-
 // Boilerplate. Returns the CP contract with the correct provider. If a signer is given, the writeContract will be created as well.
 export const initContract = (contractName:string, providerOrSigner?:MultiProvider | MultiSigner, network?:Networkish) => {
   const networkFormatted:String = getAddressFromNetwork(network);
@@ -59,7 +58,7 @@ export const isValidContractName = (contractName:string) => {
     case 'chargedState': return;
     case 'chargedSettings': return;
     case 'chargedManagers': return;
-    case 'protonB': return;
+    case 'erc721': return;
     default: throw 'bad contract name passed to initContract';
   }
 }
@@ -71,16 +70,18 @@ export const getAbi = (contractName:string) => {
     case 'chargedState': return ChargedState;
     case 'chargedSettings': return ChargedSettings;
     case 'chargedManagers': return ChargedManagers;
-    case 'protonB': return ProtonB;
+    case 'erc721': return ProtonB;
     default: throw 'unknown contract name while trying to get abi';
   }
 }
 
-export const getAddressByNetwork = (network:string, contractName:string):string =>{
+export const getAddressByNetwork = (network: Networkish, contractName: string):string =>{
+   isValidContractName(contractName);
+
   // if a unsupported chain is given. default to mainnet
-  // ts ignores are used because the json files are not working nicely with typescript
+  // TODO: ts ignores are used because the json files are not working nicely with typescript
   let address:string;
-  switch(network) {
+  switch(getAddressFromNetwork(network)) {
     // @ts-ignore
      case 'mainnet': address = mainnetAddresses[contractName].address; break;
     // @ts-ignore
@@ -95,3 +96,43 @@ export const getAddressByNetwork = (network:string, contractName:string):string 
 
   return address;
 }
+/**
+* Checks if the given string is a checksummed address
+*
+* @method isChecksumAddress
+* @param {String} address the given HEX adress
+* @return {Boolean}
+*/
+export const isChecksumAddress = (address:string) => {
+  // Check each case
+  address = address.replace('0x','');
+  var addressHash = ethers.utils.keccak256(address.toLowerCase());
+  for (var i = 0; i < 40; i++ ) {
+      // the nth letter should be uppercase if the nth digit of casemap is 1
+      if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
+          return false;
+      }
+  }
+  return true;
+};
+
+/**
+ * Checks if the given string is an address
+ *
+ * @method isAddress
+ * @param {String} address the given HEX adress
+ * @return {Boolean}
+*/
+export const isAddress = (address: string): boolean => {
+  if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+      // check if it has the basic requirements of an address
+      return false;
+  } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
+      // If it's all small caps or all all caps, return true
+      return true;
+  } else {
+      // Otherwise check each case
+      return isChecksumAddress(address);
+  }
+};
+
