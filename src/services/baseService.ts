@@ -162,7 +162,6 @@ export default class BaseService {
 
       } else {
         throw new Error('Please specify the targeted network');
-
       }
     } else if (externalProvider) {
       const externalProviderNetwork = await externalProvider.getNetwork();

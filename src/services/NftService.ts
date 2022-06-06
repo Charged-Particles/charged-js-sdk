@@ -14,9 +14,9 @@ export default class NftService extends BaseService {
     contractAddress: string,
     tokenId: number,
   ) {
-      super(config);
-      this.contractAddress = contractAddress;
-      this.tokenId = tokenId;
+    super(config);
+    this.contractAddress = contractAddress;
+    this.tokenId = tokenId;
   }
 
   public async getChainIdsForBridgedNFTs() {
@@ -41,7 +41,7 @@ export default class NftService extends BaseService {
 
         const contractExists = await provider.getCode(this.contractAddress);
 
-        if (contractExists !== '0x') {                                                // contract exists on respective network
+        if (contractExists !== '0x') {// contract exists on respective network
 
           let contract = new ethers.Contract(
             this.contractAddress,
@@ -71,9 +71,9 @@ export default class NftService extends BaseService {
   public async bridgeNFTCheck(signerNetwork: Networkish) {
     const tokenChainIds = await this.getChainIdsForBridgedNFTs();
 
-    if (tokenChainIds.includes(signerNetwork)) { return true };
+    if (tokenChainIds.includes(signerNetwork)) { return true }; // TODO: store this in class and retrieve to avoid expensive calls.
 
-    throw new Error(`Signer network: ${signerNetwork}, does not match any token chain ids.`)
+    throw new Error(`Signer network: ${signerNetwork}, does not match provider chain.`)
   }
 
   public async energizeParticle(
@@ -88,7 +88,8 @@ export default class NftService extends BaseService {
 
     const params = [
       this.contractAddress,
-      this.tokenId, walletManagerId, 
+      this.tokenId, 
+      walletManagerId, 
       assetToken, 
       assetAmount, 
       '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213'
