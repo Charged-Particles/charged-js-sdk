@@ -1,8 +1,6 @@
-import { Contract, ethers } from 'ethers';
+import { Contract, ethers} from 'ethers';
 import { Configuration } from '../types';
-import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
-import { isValidContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
-
+import { getAbi, getAddressByNetwork } from '../utils/initContract';
 export default class BaseService {
   readonly contractInstances: { [address: string]: Contract };
 
@@ -13,16 +11,15 @@ export default class BaseService {
     this.contractInstances = {};
   }
 
-  public getContractInstance(contractName:string, network: number): Contract{
+  public getContractInstance(
+    contractName:string,
+    network: number, 
+    contractAddress?: string
+  ): Contract {
     const { providers, externalProvider, signer } = this.config;
 
     const provider = providers[network] ?? externalProvider;
-
-    const networkFormatted:string = getAddressFromNetwork(network);
-    // check if safe contract name was given
-    isValidContractName(contractName);
-    
-    const address = getAddressByNetwork(networkFormatted, contractName)
+    const address = contractAddress ?? getAddressByNetwork(network, contractName);
 
     if (!this.contractInstances[address]) {
       let requestedContract = new ethers.Contract(
@@ -42,7 +39,12 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
-  public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = []) {
+  public async fetchAllNetworks(
+    contractName: string, 
+    methodName: string, 
+    params: any[] = [],
+    contractAddress?: string 
+  ) {
     const { providers, externalProvider } = this.config;
 
     try {
@@ -52,22 +54,43 @@ export default class BaseService {
 
       if (Object.keys(providers).length !== 0) {
         for (const network in providers) {
-          transactions.push(this.callContract(contractName, methodName, Number(network), params));
+          transactions.push(
+            this.callContract(
+              contractName, 
+              methodName, 
+              Number(network), 
+              params,
+              contractAddress
+            )
+          );
         } 
       } else if(Boolean(externalProvider)) {
-        transactions.push(this.callContract(contractName, methodName, Number(networks[0]), params));
+        transactions.push(
+          this.callContract(
+            contractName, 
+            methodName, 
+            networks[0], // get the only network for the injected provider.
+            params,
+            contractAddress
+          )
+        );
       }
 
-      const responses = await Promise.all(transactions);
-      const formattedResponse: {[number: number]: any} = {};
+      const responses = await Promise.allSettled(transactions);
+      const formattedResponse: {[number: number]: {value: any, status: string}} = {};
 
       responses.forEach((response, index) => {
-        formattedResponse[networks[index]] = response;
+        if (response.status === "fulfilled") {
+          formattedResponse[networks[index]] =  {value: response.value, status: 'fulfilled'};
+        } else {
+          formattedResponse[networks[index]] =  {value: response.reason, status: 'rejected'};
+        }
       });
 
-      return formattedResponse; 
+      return formattedResponse;
+
     } catch(error) {
-      console.log('fetchAllNetworks error >>>> ', error);
+      console.log('fetchAllNetworks error: ', error);
       return [];
     }
   }
@@ -76,11 +99,11 @@ export default class BaseService {
     contractName: string, 
     methodName: string, 
     network: number,
-    params: any[] = []
+    params: any[] = [],
+    contractAddress?: string
   ) {
-
     try {
-      const requestedContract = this.getContractInstance(contractName, network);
+      const requestedContract = this.getContractInstance(contractName, network, contractAddress);
       return requestedContract[methodName](...params);
 
     } catch(e) {
@@ -108,35 +131,44 @@ export default class BaseService {
   
     return networks;
   }
-  
-  public async storeTokenIdsAcrossChains(contractAddress: string, tokenId: number) {
-    const { providers } = this.config;
 
-    const data: object[] = [];
+  public async getSignerAddress() {
+    const { signer, web3Provider } = this.config;
 
-    try {
-      for await (const network of Object.keys(providers)) {
-        const contractExist  = await providers[network].getCode(contractAddress);
-        
-        if (contractExist !== '0x') {                                                // contract exists on respective network
+    if (signer) { return signer?.getAddress(); };
 
-          let contract = new ethers.Contract(
-            contractAddress,
-            getAbi('protonB'),
-            providers[network]
-          );
+    if (web3Provider) {
+      //@ts-ignore  TODO: remove ignore and filter type for metamask provider.
+      const accounts = await web3Provider.request({ method: 'eth_accounts' });
+      return accounts[0];
+    };
 
-          const owner = await contract.ownerOf(tokenId);
-          data.push({'tokenId': tokenId, 'chainId': Number(network), 'ownerOf': owner});
-        }
+    throw new Error('No signer provided');
+  }
+
+  public async getSignerConnectedNetwork(network?: number): Promise<number> {
+    const { providers, externalProvider } = this.config;
+
+    const chainIds = Object.keys(providers);
+    const chainIdsLength = chainIds.length;
+
+    if (chainIdsLength) {
+
+      if (chainIdsLength > 1 && network) { 
+        return network; // specify network intent when more than one provider.
+
+      } else if(chainIdsLength == 1) {
+        return Number(chainIds[0]); // return the network of the single provider
+
+      } else {
+        throw new Error('Please specify the targeted network');
       }
-    } catch (error) {
-      throw error;
+    } else if (externalProvider) {
+      const externalProviderNetwork = await externalProvider.getNetwork();
+      return externalProviderNetwork.chainId;
+      
+    } else {
+      throw new Error(`Could not fetch network: ${network} from supplied providers`);
     }
-
-    // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
-    // when we go to write check if the owner matches the signer
-
-    return data;
   }
 }

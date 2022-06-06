@@ -18,6 +18,8 @@ export default class Charged  {
 
   public externalProvider?: providers.Provider;
 
+  public web3Provider?: providers.ExternalProvider;
+
   public utils: any;
 
   readonly configuration: Configuration;
@@ -28,14 +30,14 @@ export default class Charged  {
 
     if (providers) {
       providers?.forEach(({network, service }) => {
-        ethers.providers.getNetwork(network);
         this.providers[network] = ethers.getDefaultProvider(network, service); 
       });
     } else if (externalProvider) {
-
+      
       if (externalProvider instanceof ethers.providers.Provider) {
         this.externalProvider = externalProvider;
       } else {
+        this.web3Provider = externalProvider; 
         this.externalProvider = new ethers.providers.Web3Provider(externalProvider);
       }
       
@@ -46,7 +48,7 @@ export default class Charged  {
         if (Boolean(network._defaultProvider)) {
           this.providers[chainId] = ethers.getDefaultProvider(network);
         }
-      })
+      });
 
       console.log(
         `Charged Particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
@@ -57,41 +59,14 @@ export default class Charged  {
     this.configuration = { 
       signer,
       providers: this.providers, 
-      externalProvider: this.externalProvider 
+      externalProvider: this.externalProvider,
+      web3Provider: this.web3Provider
     };
 
     this.utils = new UtilsService(this.configuration);
   }
   
-  public NFT(
-    contractAddress: string,
-    tokenId: number,
-    network: number // TODO: deduce network from passed particle address
-  ) {
-    return new NftService(this.configuration, contractAddress, tokenId, network);
+  public NFT(contractAddress: string, tokenId: number) {
+    return new NftService(this.configuration, contractAddress, tokenId);
   }
 }
-
-/*
-
-Provider
-[
-  {
-    network: 1,
-    service: 'alchmey' | 'infura',
-    apiKey: 'secret'
-  },
-  { 
-    network:42,
-    service: 'alchemy'
-    apikey: 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a'
-  }
-]
-
-// RPC 
-[
-  chainId => url,
-  1 => https://eth-mainnet.alchemyapi.io/v2/qw02QqWNMg2kby3q3N39PxUT3KaRS5UE
-]
-
-*/
