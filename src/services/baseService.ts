@@ -1,7 +1,6 @@
 import { Contract, ethers} from 'ethers';
 import { Configuration } from '../types';
-import { getAddressFromNetwork } from '../utils/getAddressFromNetwork';
-import { isValidContractName, getAbi, getAddressByNetwork } from '../utils/initContract';
+import { getAbi, getAddressByNetwork } from '../utils/initContract';
 export default class BaseService {
   readonly contractInstances: { [address: string]: Contract };
 
@@ -12,14 +11,15 @@ export default class BaseService {
     this.contractInstances = {};
   }
 
-  public getContractInstance(contractName:string, network: number): Contract{
+  public getContractInstance(
+    contractName:string,
+    network: number, 
+    contractAddress?: string
+  ): Contract {
     const { providers, externalProvider, signer } = this.config;
 
-    isValidContractName(contractName);
-
     const provider = providers[network] ?? externalProvider;
-    const networkFormatted:string = getAddressFromNetwork(network);
-    const address = getAddressByNetwork(networkFormatted, contractName)
+    const address = contractAddress ?? getAddressByNetwork(network, contractName);
 
     if (!this.contractInstances[address]) {
       let requestedContract = new ethers.Contract(
@@ -39,7 +39,12 @@ export default class BaseService {
     return this.contractInstances[address];
   }
 
-  public async fetchAllNetworks(contractName: string, methodName: string, params: any[] = []) {
+  public async fetchAllNetworks(
+    contractName: string, 
+    methodName: string, 
+    params: any[] = [],
+    contractAddress?: string 
+  ) {
     const { providers, externalProvider } = this.config;
 
     try {
@@ -54,7 +59,8 @@ export default class BaseService {
               contractName, 
               methodName, 
               Number(network), 
-              params
+              params,
+              contractAddress
             )
           );
         } 
@@ -64,17 +70,24 @@ export default class BaseService {
             contractName, 
             methodName, 
             networks[0], // get the only network for the injected provider.
-            params
+            params,
+            contractAddress
           )
         );
       }
 
-      const responses = await Promise.all(transactions);
+      const responses = await Promise.allSettled(transactions);
       const formattedResponse: {[number: number]: any} = {};
 
-      return responses.forEach((response, index) => {
-        formattedResponse[networks[index]] = response;
+      responses.forEach((response, index) => {
+        if (response.status === "fulfilled") {
+          formattedResponse[networks[index]] =  response.value;
+        } else {
+          formattedResponse[networks[index]] =  response.reason;
+        }
       });
+
+      return formattedResponse;
 
     } catch(error) {
       console.log('fetchAllNetworks error: ', error);
@@ -86,10 +99,11 @@ export default class BaseService {
     contractName: string, 
     methodName: string, 
     network: number,
-    params: any[] = []
+    params: any[] = [],
+    contractAddress?: string
   ) {
     try {
-      const requestedContract = this.getContractInstance(contractName, network);
+      const requestedContract = this.getContractInstance(contractName, network, contractAddress);
       return requestedContract[methodName](...params);
 
     } catch(e) {

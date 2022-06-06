@@ -28,10 +28,10 @@ describe('Charged class', () => {
     console.log(allStateAddresses);
   });
 
-  it.only ('Initializes NFT service', async () => {
+  it ('Initializes NFT service', async () => {
     const charged = new Charged({providers});
 
-    const particleBAddress = '0x517fEfB53b58Ec8764ca885731Db20Ca2dcac7b7';
+    const particleBAddress = '0x04d572734006788B646ce35b133Bdf7160f79995';
     const tokenId = 4;
     // const network = 1;
 
@@ -44,7 +44,7 @@ describe('Charged class', () => {
 
     expect(tokenURI).toEqual({
       "1": "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85", 
-      "42": "ipfs://QmRfQguqZqppZXuwV4HNKRocF5JPGbjGaKoSjAMdw5TksH"
+      "42": "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85"
     });
 
   });
