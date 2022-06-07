@@ -1,4 +1,4 @@
-import { BigNumberish, ethers } from 'ethers';
+import { BigNumberish, ContractTransaction, ethers } from 'ethers';
 import { Networkish } from '@ethersproject/networks';
 import { Configuration } from '../types';
 import { getAbi } from '../utils/initContract';
@@ -178,7 +178,9 @@ export default class NftService extends BaseService {
       assetAmount, 
       referrer ?? '0x0000000000000000000000000000000000000000'
     ];
-    return await this.callContract('chargedParticles', 'energizeParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.callContract('chargedParticles', 'energizeParticle', signerNetwork, parameters);
+    const receipt = await tx.wait();
+    return receipt;
   }
 
   /// @notice Allows the owner or operator of the Token to collect or transfer the interest generated
@@ -206,7 +208,9 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.callContract('chargedParticles', 'dischargeParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.callContract('chargedParticles', 'dischargeParticle', signerNetwork, parameters);
+    const receipt = await tx.wait();
+    return receipt;
   }
 
   /// @notice Allows the owner or operator of the Token to collect or transfer a specific amount of the interest
@@ -237,7 +241,9 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    return await this.callContract('chargedParticles', 'dischargeParticleAmount', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.callContract('chargedParticles', 'dischargeParticleAmount', signerNetwork, parameters);
+    const receipt = await tx.wait();
+    return receipt;
   }
 
   /// @notice Allows the Creator of the Token to collect or transfer a their portion of the interest (if any)
@@ -267,7 +273,9 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    return await this.callContract('chargedParticles', 'dischargeParticleForCreator', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.callContract('chargedParticles', 'dischargeParticleForCreator', signerNetwork, parameters);
+    const receipt = await tx.wait();
+    return receipt;
   }
 
 
@@ -295,7 +303,9 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.callContract('chargedParticles', 'releaseParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.callContract('chargedParticles', 'releaseParticle', signerNetwork, parameters);
+    const receipt = await tx.wait();
+    return receipt;
   }
 
 
@@ -326,7 +336,9 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    return await this.callContract('chargedParticles', 'releaseParticleAmount', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.callContract('chargedParticles', 'releaseParticleAmount', signerNetwork, parameters);
+    const receipt = await tx.wait();
+    return receipt;
   }
 
   /// @notice Deposit other NFT Assets into the Particle
@@ -360,7 +372,9 @@ export default class NftService extends BaseService {
       nftTokenId, 
       nftTokenAmount
     ];
-    return await this.callContract('chargedParticles', 'covalentBond', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.callContract('chargedParticles', 'covalentBond', signerNetwork, parameters);
+    const receipt = await tx.wait();
+    return receipt;
   }
 
   /// @notice Release NFT Assets from the Particle
@@ -394,7 +408,9 @@ export default class NftService extends BaseService {
       nftTokenId, 
       nftTokenAmount
     ];
-    return await this.callContract('chargedParticles', 'breakCovalentBond', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.callContract('chargedParticles', 'breakCovalentBond', signerNetwork, parameters);
+    const receipt = await tx.wait();
+    return receipt;
   }
 
 

@@ -56,7 +56,7 @@ describe('chargedParticles contract test', () => {
       const result = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
 
       // TODO: Expect something with the response?
-      expect(result).toHaveProperty('chainId', 42);
+      expect(result).toHaveProperty('confirmations');
     })
 
     it ('should get mass, charge, and # of bonds of a proton', async () => {
@@ -72,7 +72,7 @@ describe('chargedParticles contract test', () => {
       const charge = ethers.utils.formatUnits(chargeBN['42'].value);
       const bonds = bondsBN['42'].value.toNumber();
 
-      expect(Number(mass)).toBeCloseTo(1000);
+      expect(Number(mass)).toBeCloseTo(1094);
       // This value could be out of date. Check https://staging.app.charged.fi/go/energize/0xd1bce91a13089b1f3178487ab8d0d2ae191c1963/18
       expect(Number(charge)).toBeCloseTo(0);
       expect(Number(bonds)).toEqual(3);
@@ -87,7 +87,7 @@ describe('chargedParticles contract test', () => {
       const result = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
       // TODO: Expect something with the response?
-      expect(result).toHaveProperty('chainId', 42);
+      expect(result).toHaveProperty('confirmations');
     });
 
     it ('should release 47 ENJ tokens', async () => {
@@ -99,7 +99,7 @@ describe('chargedParticles contract test', () => {
       const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
       // TODO: Expect something with the response?
-      expect(result).toHaveProperty('chainId', 42);
+      expect(result).toHaveProperty('confirmations');
     })
   
 });
