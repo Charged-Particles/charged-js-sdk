@@ -1,8 +1,6 @@
 import { BigNumberish, ethers } from 'ethers';
 import { Networkish } from '@ethersproject/networks';
 import { Configuration } from '../types';
-import { getAbi } from '../utils/initContract';
-import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
 import BaseService from './baseService';
 export default class NftService extends BaseService {
   public contractAddress: string;
@@ -25,12 +23,12 @@ export default class NftService extends BaseService {
     const tokenChainIds: Networkish[] = [];
     
     try {
-      for await (const network of SUPPORTED_NETWORKS) {
+      for await (const network of providers) {
         let chainId = network.chainId;
         
-        let provider = providers[chainId];
+        let provider = providers[chainId] ?? providers[0];
         
-        if(provider == undefined) {
+        if(provider === void(0)) {
           const _network = ethers.providers.getNetwork(chainId);
           if (Boolean(_network?._defaultProvider)) {
             provider = ethers.getDefaultProvider(_network);
@@ -42,20 +40,7 @@ export default class NftService extends BaseService {
         const contractExists = await provider.getCode(this.contractAddress);
 
         if (contractExists !== '0x') {// contract exists on respective network
-
-          let contract = new ethers.Contract(
-            this.contractAddress,
-            getAbi('erc721'),
-            provider
-          );
-
-          const signerAddress = await this.getSignerAddress();
-          const owner = await contract.ownerOf(this.tokenId);
-
-          if (signerAddress.toLowerCase() == owner.toLowerCase()) {
-            tokenChainIds.push(Number(chainId));
-          }
-
+          tokenChainIds.push(Number(chainId));
         }
       }
     } catch (error) {

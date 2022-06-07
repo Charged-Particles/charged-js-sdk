@@ -55,7 +55,7 @@ describe('NFT service class', () => {
     it.skip ('Get bridge NFT chain ids using an external provider', async() => {
       // TODO: avoid hitting the metamask function if not a web3 provider !!!!!
       const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
-      const charged = new Charged({externalProvider: externalWeb3Provider});
+      const charged = new Charged({providers: externalWeb3Provider});
 
       const nft = charged.NFT(particleBAddress, tokenId)
       const NftBridgedChains = await nft.getSignerAddress();
@@ -65,7 +65,7 @@ describe('NFT service class', () => {
     it ('Get signer connected network id using an external provider', async() => {
 
       const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
-      const charged = new Charged({externalProvider: externalWeb3Provider});
+      const charged = new Charged({providers: externalWeb3Provider});
 
       const nft = charged.NFT(particleBAddress, tokenId)
       const chainId = await nft.getSignerConnectedNetwork();
