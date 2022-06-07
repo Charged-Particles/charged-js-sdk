@@ -3,6 +3,7 @@ import { Configuration } from '../types';
 import { getAbi, getAddressByNetwork } from '../utils/initContract';
 export default class BaseService {
   readonly contractInstances: { [address: string]: Contract };
+  readonly contractInstancesWrite: { [address: string]: Contract };
 
   readonly config: Configuration;
 
@@ -13,7 +14,7 @@ export default class BaseService {
 
   public getContractInstance(
     contractName:string,
-    network: number, 
+    network: number,
     contractAddress?: string
   ): Contract {
     const { providers, externalProvider, signer } = this.config;
@@ -27,121 +28,90 @@ export default class BaseService {
         getAbi(contractName),
         provider
       );
-        
-      if(signer && provider) {
-        const connectedWallet = signer.connect(provider);
-        requestedContract = requestedContract.connect(connectedWallet);
+
+      // Read Provider
+      this.contractInstances[address] = requestedContract;
+
+      // Write Provider
+      if (signer) {
+        // const connectedWallet = signer.connect(provider);
+        // requestedContract = requestedContract.connect(connectedWallet);
+        this.contractInstancesWrite[address] = requestedContract.connect(signer);
       }
 
-      this.contractInstances[address] = requestedContract;
     }
 
     return this.contractInstances[address];
   }
 
   public async fetchAllNetworks(
-    contractName: string, 
-    methodName: string, 
+    contractName: string,
+    methodName: string,
     params: any[] = [],
-    contractAddress?: string 
+    contractAddress?: string
   ) {
-    const { providers, externalProvider } = this.config;
+    const { providers } = this.config;
 
-    try {
-      let transactions = [];
+    // const key = ethers.utils.sha256(JSON.stringify(cacheKey));
 
-      const networks = await this.getNetworkFromProvider();
 
-      if (Object.keys(providers).length !== 0) {
-        for (const network in providers) {
-          transactions.push(
-            this.callContract(
-              contractName, 
-              methodName, 
-              Number(network), 
-              params,
-              contractAddress
-            )
-          );
-        } 
-      } else if(Boolean(externalProvider)) {
-        transactions.push(
-          this.callContract(
-            contractName, 
-            methodName, 
-            networks[0], // get the only network for the injected provider.
-            params,
-            contractAddress
-          )
-        );
-      }
+    let transactions = [];
 
-      const responses = await Promise.allSettled(transactions);
-      const formattedResponse: {[number: number]: {value: any, status: string}} = {};
-
-      responses.forEach((response, index) => {
-        if (response.status === "fulfilled") {
-          formattedResponse[networks[index]] =  {value: response.value, status: 'fulfilled'};
-        } else {
-          formattedResponse[networks[index]] =  {value: response.reason, status: 'rejected'};
-        }
-      });
-
-      return formattedResponse;
-
-    } catch(error) {
-      console.log('fetchAllNetworks error: ', error);
-      return [];
+    for (const network in providers) {
+      transactions.push(
+        this.callContract(
+          contractName,
+          methodName,
+          Number(network),
+          params,
+          contractAddress
+        )
+      );
     }
+
+    const responses = await Promise.allSettled(transactions);
+    const formattedResponse: {[number: number]: {value: any, status: string}} = {};
+
+    responses.forEach((response, index) => {
+      if (response.status === "fulfilled") {
+        formattedResponse[networks[index]] =  {value: response.value, status: 'fulfilled'};
+      } else {
+        formattedResponse[networks[index]] =  {value: response.reason, status: 'rejected'};
+      }
+    });
+
+    return formattedResponse;
   }
 
-  public async callContract(
-    contractName: string, 
-    methodName: string, 
+  public async readContract(
+    contractName: string,
+    methodName: string,
     network: number,
     params: any[] = [],
     contractAddress?: string
   ) {
-    try {
-      const requestedContract = this.getContractInstance(contractName, network, contractAddress);
-      return requestedContract[methodName](...params);
-
-    } catch(e) {
-
-      console.log('fetchQuery error:', e);
-      return {};
-    }
+    const requestedContract = this.getContractInstance(contractName, network, contractAddress);
+    return requestedContract.callStatic[methodName](...params);
+  }
+  public async writeContract(
+    contractName: string,
+    methodName: string,
+    params: any[] = [],
+    contractAddress?: string
+  ) {
+    const requestedContract = this.getContractInstance(contractName, network, contractAddress);
+    return requestedContract.callStatic[methodName](...params);
   }
 
-  public async getNetworkFromProvider(): Promise<number[]> {
-    const { providers, externalProvider } = this.config;
+  public async getNetworkFromProvider(provider): Promise<number[]> {
 
-    let networks:number[] = [];
-
-    if (Object.keys(providers).length !== 0) {
-      for (const network in providers) {
-        networks.push(Number(network));
-      } 
-    } else if (Boolean(externalProvider)) {
-      const currentNetwork = await externalProvider?.getNetwork();
-
-      // TODO: throw if no network found
-      networks.push(Number(currentNetwork?.chainId));
-    }
-  
-    return networks;
+    return await provider?.getNetwork();;
   }
 
   public async getSignerAddress() {
     const { signer, web3Provider } = this.config;
 
-    if (signer) { return signer?.getAddress(); };
-
-    if (web3Provider) {
-      //@ts-ignore  TODO: remove ignore and filter type for metamask provider.
-      const accounts = await web3Provider.request({ method: 'eth_accounts' });
-      return accounts[0];
-    };
+    if (signer) { return await signer?.getAddress(); };
 
     throw new Error('No signer provided');
   }
@@ -154,7 +124,7 @@ export default class BaseService {
 
     if (chainIdsLength) {
 
-      if (chainIdsLength > 1 && network) { 
+      if (chainIdsLength > 1 && network) {
         return network; // specify network intent when more than one provider.
 
       } else if(chainIdsLength == 1) {
@@ -166,7 +136,7 @@ export default class BaseService {
     } else if (externalProvider) {
       const externalProviderNetwork = await externalProvider.getNetwork();
       return externalProviderNetwork.chainId;
-      
+
     } else {
       throw new Error(`Could not fetch network: ${network} from supplied providers`);
     }

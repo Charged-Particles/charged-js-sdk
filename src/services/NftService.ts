@@ -4,10 +4,12 @@ import { Configuration } from '../types';
 import { getAbi } from '../utils/initContract';
 import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
 import BaseService from './baseService';
-export default class NftService extends BaseService {
-  public contractAddress: string;
 
+export default class NftService extends BaseService {
+
+  public contractAddress: string;
   public tokenId: number;
+  public chainIds: [number];
 
   constructor(
     config: Configuration,
@@ -17,96 +19,62 @@ export default class NftService extends BaseService {
     super(config);
     this.contractAddress = contractAddress;
     this.tokenId = tokenId;
+
+    (async () => {
+      this.chainIds = await this.findContractChains();
+    })();
   }
 
-  public async getChainIdsForBridgedNFTs() {
+  public async findContractChains() {
     const { providers } = this.config;
 
     const tokenChainIds: Networkish[] = [];
-    
-    try {
-      for await (const network of SUPPORTED_NETWORKS) {
-        let chainId = network.chainId;
-        
-        let provider = providers[chainId];
-        
-        if(provider == undefined) {
-          const _network = ethers.providers.getNetwork(chainId);
-          if (Boolean(_network?._defaultProvider)) {
-            provider = ethers.getDefaultProvider(_network);
-          } else {
-            continue;
-          }
-        }
-
-        const contractExists = await provider.getCode(this.contractAddress);
-
-        if (contractExists !== '0x') {// contract exists on respective network
-
-          let contract = new ethers.Contract(
-            this.contractAddress,
-            getAbi('erc721'),
-            provider
-          );
-
-          const signerAddress = await this.getSignerAddress();
-          const owner = await contract.ownerOf(this.tokenId);
-
-          if (signerAddress.toLowerCase() == owner.toLowerCase()) {
-            tokenChainIds.push(Number(chainId));
-          }
-
-        }
+    for await (const network of providers) {
+      let chainId = network.chainId;
+      let provider = providers[chainId];
+      const contractExists = await provider.getCode(this.contractAddress);
+      if (contractExists !== '0x') {// contract exists on respective network
+        tokenChainIds.push(chainId);
       }
-    } catch (error) {
-      console.log(error);
-      throw error;
     }
-
-    // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
-    // when we go to write check if the owner matches the signer
     return tokenChainIds;
   }
 
-  public async bridgeNFTCheck(signerNetwork: Networkish) {
-    const tokenChainIds = await this.getChainIdsForBridgedNFTs();
-
-    if (tokenChainIds.includes(signerNetwork)) { return true }; // TODO: store this in class and retrieve to avoid expensive calls.
-
-    throw new Error(`Signer network: ${signerNetwork}, does not match provider chain.`)
+  public async isSignerOnContractChain(signerNetwork: Networkish) {
+    return this.chainIds.includes(signerNetwork);
   }
 
   public async energizeParticle(
-    walletManagerId:String, 
+    walletManagerId:String,
     assetToken:String,
     assetAmount:BigNumberish,
-    chainId?: number
   ) {
-    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
-    await this.bridgeNFTCheck(signerNetwork);
+    // const signerNetwork = await this.getSignerConnectedNetwork();
+    const signerNetwork = await this.config.signer?.getChainId();
+    if (!await this.isSignerOnContractChain(signerNetwork)) {
+      throw new Error(`Signer network: ${signerNetwork}, does not match provider chain.`)
+    }
 
     const params = [
       this.contractAddress,
-      this.tokenId, 
-      walletManagerId, 
-      assetToken, 
-      assetAmount, 
+      this.tokenId,
+      walletManagerId,
+      assetToken,
+      assetAmount,
       '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213'
     ];
 
-    return await this.callContract(
-      'chargedParticles', 
-      'energizeParticle', 
-      signerNetwork, 
+    return await this.writeContract(
+      'chargedParticles',
+      'energizeParticle',
       params
     );
   }
 
   public async tokenURI() {
     return await this.fetchAllNetworks(
-      'erc721', 
-      'tokenURI', 
+      'erc721',
+      'tokenURI',
       [this.tokenId],
       this.contractAddress
     );

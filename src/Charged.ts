@@ -4,11 +4,11 @@ import { SUPPORTED_NETWORKS } from "./utils/getAddressFromNetwork";
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
 
-// Types 
+// Types
 import { networkProvider, Configuration } from "./types";
 
 type constructorCharged = {
-  providers?: networkProvider[],  
+  providers?: networkProvider[],
   externalProvider?: providers.Provider | providers.ExternalProvider,
   signer?: Signer,
 };
@@ -16,9 +16,9 @@ type constructorCharged = {
 export default class Charged  {
   public providers: {[network: number ]: providers.Provider} = {};
 
-  public externalProvider?: providers.Provider;
+  public externalProvider?: providers.Provider; // GET RID OF THIS
 
-  public web3Provider?: providers.ExternalProvider;
+  public web3Provider?: providers.ExternalProvider; // GET RID OF THIS
 
   public utils: any;
 
@@ -30,21 +30,15 @@ export default class Charged  {
 
     if (providers) {
       providers?.forEach(({network, service }) => {
-        this.providers[network] = ethers.getDefaultProvider(network, service); 
+        if (!_.includes(_.map(SUPPORTED_NETWORKS, 'chainId'), network)) {
+          throw new Error('...');
+        }
+        this.providers[network] = ethers.getDefaultProvider(network, service);
       });
-    } else if (externalProvider) {
-      
-      if (externalProvider instanceof ethers.providers.Provider) {
-        this.externalProvider = externalProvider;
-      } else {
-        this.web3Provider = externalProvider; 
-        this.externalProvider = new ethers.providers.Web3Provider(externalProvider);
-      }
-      
     } else {
       SUPPORTED_NETWORKS.forEach(({chainId}) => {
         const network = ethers.providers.getNetwork(chainId);
-        
+
         if (Boolean(network._defaultProvider)) {
           this.providers[chainId] = ethers.getDefaultProvider(network);
         }
@@ -56,16 +50,23 @@ export default class Charged  {
       );
     }
 
-    this.configuration = { 
+    if (signer) {
+      this.signer = signer;
+      if (!(signer instanceof ethers.providers.Provider)) {
+        this.signer = new ethers.providers.Web3Provider(signer);
+      }
+    }
+
+    this.configuration = {
       signer,
-      providers: this.providers, 
+      providers: this.providers,
       externalProvider: this.externalProvider,
       web3Provider: this.web3Provider
     };
 
     this.utils = new UtilsService(this.configuration);
   }
-  
+
   public NFT(contractAddress: string, tokenId: number) {
     return new NftService(this.configuration, contractAddress, tokenId);
   }

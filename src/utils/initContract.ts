@@ -23,7 +23,7 @@ import mumbaiAddresses from '../networks/v2/mumbai.json';
 export const initContract = (contractName:string, providerOrSigner?:MultiProvider | MultiSigner, network?:Networkish) => {
   const networkFormatted:String = getAddressFromNetwork(network);
   const defaultProvider:ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
-  
+
   // check if safe contract name was given
   isValidContractName(contractName);
 
@@ -98,7 +98,7 @@ export const getAddressByNetwork = (network: Networkish, contractName: string):s
 }
 /**
 * Checks if the given string is a checksummed address
-*
+*  Same as ethers.utils.isAddress()  or convert with ethers.utils.getAddress()
 * @method isChecksumAddress
 * @param {String} address the given HEX adress
 * @return {Boolean}
@@ -135,4 +135,3 @@ export const isAddress = (address: string): boolean => {
       return isChecksumAddress(address);
   }
 };
-
