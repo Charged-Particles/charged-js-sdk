@@ -91,15 +91,8 @@ export default class BaseService {
     params: any[] = [],
     contractAddress?: string
   ) {
-    try {
-      const requestedContract = this.getContractInstance(contractName, network, contractAddress);
-      return requestedContract[methodName](...params);
-
-    } catch (e) {
-
-      console.log('fetchQuery error:', e);
-      return {};
-    }
+    const requestedContract = this.getContractInstance(contractName, network, contractAddress);
+    return requestedContract[methodName](...params);
   }
 
   public async getNetworkFromProvider(): Promise<number[]> {
