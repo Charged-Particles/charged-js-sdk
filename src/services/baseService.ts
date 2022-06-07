@@ -16,9 +16,9 @@ export default class BaseService {
     network: number, 
     contractAddress?: string
   ): Contract {
-    const { providers, externalProvider, signer } = this.config;
+    const { providers, signer } = this.config;
 
-    const provider = providers[network] ?? externalProvider;
+    const provider = providers[network];
     const address = contractAddress ?? getAddressByNetwork(network, contractName);
 
     if (!this.contractInstances[address]) {
@@ -45,7 +45,7 @@ export default class BaseService {
     params: any[] = [],
     contractAddress?: string 
   ) {
-    const { providers, externalProvider } = this.config;
+    const { providers } = this.config;
 
     try {
       let transactions = [];
@@ -64,16 +64,6 @@ export default class BaseService {
             )
           );
         } 
-      } else if(Boolean(externalProvider)) {
-        transactions.push(
-          this.callContract(
-            contractName, 
-            methodName, 
-            networks[0], // get the only network for the injected provider.
-            params,
-            contractAddress
-          )
-        );
       }
 
       const responses = await Promise.allSettled(transactions);
@@ -114,7 +104,8 @@ export default class BaseService {
   }
 
   public async getNetworkFromProvider(): Promise<number[]> {
-    const { providers, externalProvider } = this.config;
+    // TODO: update for single provider
+    const { providers } = this.config;
 
     let networks:number[] = [];
 
@@ -122,32 +113,21 @@ export default class BaseService {
       for (const network in providers) {
         networks.push(Number(network));
       } 
-    } else if (Boolean(externalProvider)) {
-      const currentNetwork = await externalProvider?.getNetwork();
-
-      // TODO: throw if no network found
-      networks.push(Number(currentNetwork?.chainId));
-    }
+    } 
   
     return networks;
   }
 
   public async getSignerAddress() {
-    const { signer, web3Provider } = this.config;
+    const { signer } = this.config;
 
     if (signer) { return signer?.getAddress(); };
-
-    if (web3Provider) {
-      //@ts-ignore  TODO: remove ignore and filter type for metamask provider.
-      const accounts = await web3Provider.request({ method: 'eth_accounts' });
-      return accounts[0];
-    };
 
     throw new Error('No signer provided');
   }
 
   public async getSignerConnectedNetwork(network?: number): Promise<number> {
-    const { providers, externalProvider } = this.config;
+    const { providers } = this.config;
 
     const chainIds = Object.keys(providers);
     const chainIdsLength = chainIds.length;
@@ -163,10 +143,6 @@ export default class BaseService {
       } else {
         throw new Error('Please specify the targeted network');
       }
-    } else if (externalProvider) {
-      const externalProviderNetwork = await externalProvider.getNetwork();
-      return externalProviderNetwork.chainId;
-      
     } else {
       throw new Error(`Could not fetch network: ${network} from supplied providers`);
     }

@@ -17,7 +17,5 @@ export type networkProvider = {
 
 export type Configuration = {
   providers?: any;
-  externalProvider?: providers.Provider;
   signer?: Signer;
-  web3Provider?: providers.ExternalProvider; 
 };
