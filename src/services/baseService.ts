@@ -44,8 +44,8 @@ export default class BaseService {
     contractName: string, 
     methodName: string, 
     params: any[] = [],
-    isStaticCall?:boolean,
     contractAddress?: string,
+    isStaticCall?:boolean,
   ) {
     const { providers, externalProvider } = this.config;
 
@@ -62,8 +62,8 @@ export default class BaseService {
               methodName, 
               Number(network), 
               params,
-              isStaticCall,
               contractAddress,
+              isStaticCall,
             )
           );
         } 
@@ -74,8 +74,8 @@ export default class BaseService {
             methodName, 
             networks[0], // get the only network for the injected provider.
             params,
-            isStaticCall,
             contractAddress,
+            isStaticCall,
           )
         );
       }
@@ -104,8 +104,8 @@ export default class BaseService {
     methodName: string, 
     network: number,
     params: any[] = [],
-    isStaticCall?:boolean,
     contractAddress?:string,  
+    isStaticCall?:boolean,
   ) {
     try {
       const requestedContract = this.getContractInstance(contractName, network, contractAddress);

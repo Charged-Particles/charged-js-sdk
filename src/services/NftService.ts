@@ -5,6 +5,7 @@ import { getAbi } from '../utils/initContract';
 import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
 import BaseService from './baseService';
 
+type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
 export default class NftService extends BaseService {
   public contractAddress: string;
@@ -98,7 +99,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters, true);
+    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters, undefined, true);
   }
 
   /// @notice Gets the amount of Interest that the Particle has generated representing
@@ -113,7 +114,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters, true);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters, undefined, true);
   }
   
   /// @notice Gets the amount of LP Tokens that the Particle has generated representing
@@ -128,7 +129,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters, true);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters, undefined, true);
   }
 
   /// @notice Gets the total amount of ERC721 Tokens that the Particle holds
@@ -136,7 +137,7 @@ export default class NftService extends BaseService {
   /// @return The total amount of ERC721 tokens that are held  within the Particle as a BigNumber
   public async getBonds(basketManagerId: string) {
     const parameters = [this.contractAddress, this.tokenId, basketManagerId];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters, true);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters, undefined, true);
   }
 
    /***********************************|
@@ -157,7 +158,13 @@ export default class NftService extends BaseService {
   /// @param referrer         TODO: WHAT IS THIS?
   /// @param chainId          Optional parameter that allows for the user to specify which network to write to.
   /// @return yieldTokensAmount The amount of Yield-bearing Tokens added to the escrow for the Token as a BigNumber
-  public async energize( walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, chainId?:number, referrer?:string ) {
+  public async energize( 
+    walletManagerId:managerId, 
+    assetToken:string, 
+    assetAmount:BigNumberish, 
+    chainId?:number, 
+    referrer?:string 
+    ) {
 
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -181,7 +188,12 @@ export default class NftService extends BaseService {
   /// @param assetToken           The Address of the Asset Token being discharged
   /// @return creatorAmount       Amount of Asset Token discharged to the Creator as a BigNumber
   /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
-  public async discharge( receiver:string, walletManagerId:managerId, assetToken:string, chainId?:number ) {
+  public async discharge( 
+    receiver:string, 
+    walletManagerId:managerId, 
+    assetToken:string, 
+    chainId?:number 
+    ) {
     
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -205,7 +217,13 @@ export default class NftService extends BaseService {
   /// @param assetAmount          The specific amount of Asset Token to Discharge from the Token
   /// @return creatorAmount       Amount of Asset Token discharged to the Creator as a BigNumber
   /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
-  public async dischargeAmount( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, chainId?:number ) {
+  public async dischargeAmount( 
+    receiver:string, 
+    walletManagerId:managerId, 
+    assetToken:string, 
+    assetAmount:BigNumberish, 
+    chainId?:number 
+    ) {
     
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -229,7 +247,13 @@ export default class NftService extends BaseService {
   /// @param assetToken           The Address of the Asset Token being discharged
   /// @param assetAmount          The specific amount of Asset Token to Discharge from the Particle
   /// @return receiverAmount      Amount of Asset Token discharged to the Receiver as a BigNumber
-  public async dischargeForCreator( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, chainId?:number ) {
+  public async dischargeForCreator( 
+    receiver:string, 
+    walletManagerId:managerId, 
+    assetToken:string, 
+    assetAmount:BigNumberish, 
+    chainId?:number 
+    ) {
     
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -253,7 +277,12 @@ export default class NftService extends BaseService {
   /// @param assetToken           The Address of the Asset Token being released
   /// @return creatorAmount       Amount of Asset Token released to the Creator as a BigNumber
   /// @return receiverAmount      Amount of Asset Token released to the Receiver (includes principalAmount) as a BigNumber
-  public async release( receiver:string, walletManagerId:managerId, assetToken:string, chainId?:number ) {
+  public async release( 
+    receiver:string, 
+    walletManagerId:managerId, 
+    assetToken:string, 
+    chainId?:number 
+    ) {
     
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -277,7 +306,13 @@ export default class NftService extends BaseService {
   /// @param assetAmount          The specific amount of Asset Token to Release from the Particle
   /// @return creatorAmount Amount of Asset Token released to the Creator as a BigNumber
   /// @return receiverAmount Amount of Asset Token released to the Receiver (includes principalAmount) as a BigNumber
-  public async releaseAmount( receiver:string, walletManagerId:managerId, assetToken:string, assetAmount:BigNumberish, chainId?:number ) {
+  public async releaseAmount( 
+    receiver:string, 
+    walletManagerId:managerId, 
+    assetToken:string, 
+    assetAmount:BigNumberish, 
+    chainId?:number 
+    ) {
     
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -305,7 +340,13 @@ export default class NftService extends BaseService {
   /// @param nftTokenId           The ID of the NFT Token being deposited
   /// @param nftTokenAmount       The amount of Tokens to Deposit (ERC1155-specific)
   /// @returns success            boolean
-  public async bond( basketManagerId:string, nftTokenAddress:string, nftTokenId:string, nftTokenAmount:string, chainId?:number ) {
+  public async bond( 
+    basketManagerId:string, 
+    nftTokenAddress:string, 
+    nftTokenId:string, 
+    nftTokenAmount:string, 
+    chainId?:number 
+    ) {
     
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -331,7 +372,14 @@ export default class NftService extends BaseService {
   /// @param  nftTokenId           The ID of the NFT Token being deposited
   /// @param  nftTokenAmount       The amount of Tokens to Withdraw (ERC1155-specific)
   /// @returns success             boolean
-  public async breakBond( receiver:string, basketManagerId:string, nftTokenAddress:string, nftTokenId:string, nftTokenAmount:string, chainId?:number ) {
+  public async breakBond( 
+    receiver:string, 
+    basketManagerId:string, 
+    nftTokenAddress:string, 
+    nftTokenId:string, 
+    nftTokenAmount:string, 
+    chainId?:number 
+    ) {
     
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
@@ -356,17 +404,8 @@ export default class NftService extends BaseService {
       'erc721', 
       'tokenURI', 
       [this.tokenId],
+      this.contractAddress,
       false,
-      this.contractAddress
     );
   }
 }
-
-type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
-
-// enum managerId {
-//   aave = 'aave',
-//   aaveB = 'aave.B',
-//   generic = 'generic',
-//   genericB = 'generic.B'
-// }

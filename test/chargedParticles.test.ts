@@ -9,22 +9,22 @@ describe('chargedParticles contract test', () => {
     const providersKovan =  [
       {
         network: 42,
-        service: {'alchemy': process.env.ALCHEMY_KOVAN}
+        service: {'alchemy': process.env.ALCHEMY_KOVAN_KEY}
       }
     ]
     const providers =  [
       {
         network: 1,
-        service: {'alchemy': process.env.ALCHEMY_MAINNET}
+        service: {'alchemy': process.env.ALCHEMY_MAINNET_KEY}
       },
       {
         network: 42,
-        service: {'alchemy': process.env.ALCHEMY_KOVAN}
+        service: {'alchemy': process.env.ALCHEMY_KOVAN_KEY}
       }
     ]
     
     const ENJCoin = '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2';
-    const walletAddress = '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213';
+    const walletAddress = '0x277bfc4a8dc79a9f194ad4a83468484046fafd3a';
 
     const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
     const tokenId = 18;
@@ -72,7 +72,7 @@ describe('chargedParticles contract test', () => {
       const charge = ethers.utils.formatUnits(chargeBN['42'].value);
       const bonds = bondsBN['42'].value.toNumber();
 
-      expect(Number(mass)).toEqual(1047);
+      expect(Number(mass)).toBeCloseTo(1000);
       // This value could be out of date. Check https://staging.app.charged.fi/go/energize/0xd1bce91a13089b1f3178487ab8d0d2ae191c1963/18
       expect(Number(charge)).toBeCloseTo(0);
       expect(Number(bonds)).toEqual(3);
@@ -96,7 +96,7 @@ describe('chargedParticles contract test', () => {
       const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
       
       const nft = charged.NFT(address, tokenId);
-      const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"),);
+      const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
       // TODO: Expect something with the response?
       expect(result).toHaveProperty('chainId', 42);
