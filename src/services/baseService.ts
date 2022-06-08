@@ -77,7 +77,6 @@ export default class BaseService {
         const { chainId } = await providers['external'].getNetwork()
         network = chainId;
       }
-      
 
       networks.push(Number(network));
       transactions.push(
@@ -127,21 +126,6 @@ export default class BaseService {
     const action = 'read';
     const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
     return requestedContract.callStatic[methodName](...params);
-  }
-
-  public async getNetworkFromProvider(): Promise<number[]> {
-    // TODO: update for single provider
-    const { providers } = this.config;
-
-    let networks: number[] = [];
-
-    if (Object.keys(providers).length !== 0) {
-      for (const network in providers) {
-        networks.push(Number(network));
-      }
-    }
-
-    return networks;
   }
 
   
