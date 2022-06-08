@@ -94,4 +94,17 @@ describe('Charged class', () => {
 
     expect(stateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
   });
+
+  it.only('Should fetch from Polygon', async () => {
+    const mumbaiProvider = [{ network: 80001, service: {alchemy: process.env.ALCHEMY_MUMBAI_KEY}}];
+
+    const charged = new Charged({providers: mumbaiProvider})
+
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    console.log(allStateAddresses);
+    // expect(allStateAddresses).toHaveProperty('1');
+
+  });
+
 })
