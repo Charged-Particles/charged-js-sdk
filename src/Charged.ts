@@ -1,5 +1,9 @@
 import { ethers, providers, Signer } from "ethers";
-import { SUPPORTED_NETWORKS } from "./utils/getAddressFromNetwork";
+
+import {
+  SUPPORTED_NETWORKS,
+  getPolygonRpcProvider,
+  getMumbaiRpcProvider } from "./utils/utilities";
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
@@ -24,18 +28,22 @@ export default class Charged {
     const { providers, signer } = params;
 
     if (providers) {
-
       if (Array.isArray(providers)) {
         providers?.forEach(({ network, service }) => {
-          this.providers[network] = ethers.getDefaultProvider(network, service);
+          if (network == 137) {                                                               // Polygon
+            this.providers[network] = ethers.getDefaultProvider(getPolygonRpcProvider(network, service.alchemy));
+          } else if (network == 80001) {                                                      // Mumbai
+            this.providers[network] = ethers.getDefaultProvider(getMumbaiRpcProvider(network, service.alchemy));
+          } else {                                                                            // Mainnet / Kovan
+            this.providers[network] = ethers.getDefaultProvider(network, service);
+          }
         });
       } else if (providers instanceof ethers.providers.Provider) {
         this.providers['external'] = providers;
       } else {
         this.providers['external'] = new ethers.providers.Web3Provider(providers);
       }
-    }
-    else {
+    } else {
       SUPPORTED_NETWORKS.forEach(({ chainId }) => {
         const network = ethers.providers.getNetwork(chainId);
         if (Boolean(network._defaultProvider)) {
