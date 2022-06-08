@@ -95,16 +95,20 @@ describe('Charged class', () => {
     expect(stateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
   });
 
-  it.only('Should fetch from Polygon', async () => {
+  it.only('Should fetch from Mumbai', async () => {
     const mumbaiProvider = [{ network: 80001, service: {alchemy: process.env.ALCHEMY_MUMBAI_KEY}}];
-
     const charged = new Charged({providers: mumbaiProvider})
-
     const allStateAddresses = await charged.utils.getStateAddress();
 
-    console.log(allStateAddresses);
-    // expect(allStateAddresses).toHaveProperty('1');
+    expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
+  });
 
+  it.only('Should fetch from Polygon', async () => {
+    const polygonProvider = [{ network: 137, service: {alchemy: process.env.ALCHEMY_POLYGON_KEY}}];
+    const charged = new Charged({providers: polygonProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('137', { "status": "fulfilled", "value": "0x9c00b8CF03f58c0420CDb6DE72E27Bf11964025b" });
   });
 
 })
