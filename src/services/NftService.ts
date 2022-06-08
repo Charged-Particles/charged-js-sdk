@@ -1,8 +1,6 @@
-import { BigNumberish, ethers } from 'ethers';
+import { BigNumberish } from 'ethers';
 import { Networkish } from '@ethersproject/networks';
 import { Configuration } from '../types';
-import { getAbi } from '../utils/initContract';
-import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
 import BaseService from './baseService';
 export default class NftService extends BaseService {
   public contractAddress: string;
@@ -25,41 +23,24 @@ export default class NftService extends BaseService {
     const tokenChainIds: Networkish[] = [];
     
     try {
-      for await (const network of SUPPORTED_NETWORKS) {
-        let chainId = network.chainId;
+      for (const chainId in providers) {
         
         let provider = providers[chainId];
         
-        if(provider == undefined) {
-          const _network = ethers.providers.getNetwork(chainId);
-          if (Boolean(_network?._defaultProvider)) {
-            provider = ethers.getDefaultProvider(_network);
-          } else {
-            continue;
-          }
-        }
+        if(provider === void(0)) { continue };
 
         const contractExists = await provider.getCode(this.contractAddress);
 
         if (contractExists !== '0x') {// contract exists on respective network
-
-          let contract = new ethers.Contract(
-            this.contractAddress,
-            getAbi('erc721'),
-            provider
-          );
-
-          const signerAddress = await this.getSignerAddress();
-          const owner = await contract.ownerOf(this.tokenId);
-
-          if (signerAddress.toLowerCase() == owner.toLowerCase()) {
+          if (chainId == 'external') { //external provider
+            const providerNetwork = await provider.getNetwork();
+            return providerNetwork.chainId;
+          } else {
             tokenChainIds.push(Number(chainId));
           }
-
         }
       }
     } catch (error) {
-      console.log(error);
       throw error;
     }
 
@@ -71,6 +52,8 @@ export default class NftService extends BaseService {
   public async bridgeNFTCheck(signerNetwork: Networkish) {
     const tokenChainIds = await this.getChainIdsForBridgedNFTs();
 
+    if(signerNetwork == undefined) { throw new Error("Could not retrieve signers network.") };
+
     if (tokenChainIds.includes(signerNetwork)) { return true }; // TODO: store this in class and retrieve to avoid expensive calls.
 
     throw new Error(`Signer network: ${signerNetwork}, does not match provider chain.`)
@@ -80,9 +63,9 @@ export default class NftService extends BaseService {
     walletManagerId:String, 
     assetToken:String,
     assetAmount:BigNumberish,
-    chainId?: number
+    network?:number
   ) {
-    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    const signerNetwork = await this.getSignerConnectedNetwork(network);
 
     await this.bridgeNFTCheck(signerNetwork);
 

@@ -84,7 +84,7 @@ describe('Charged class', () => {
 
   it ('Initializes with ether.js external provider', async() => {
     const externalProvider = ethers.getDefaultProvider(1, {'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE'});
-    const charged = new Charged({externalProvider: externalProvider});
+    const charged = new Charged({providers: externalProvider});
     const stateAddresses = await charged.utils.getStateAddress();
 
     expect(stateAddresses).toHaveProperty('1', {"status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f"});
@@ -92,7 +92,7 @@ describe('Charged class', () => {
 
   it ('Initializes with Web3 external provider', async() => {
     const externalWeb3Provider = new Web3HttpProvider(rpcUrlMainnet);
-    const charged = new Charged({externalProvider: externalWeb3Provider});
+    const charged = new Charged({providers: externalWeb3Provider});
     const stateAddresses = await charged.utils.getStateAddress();
 
     expect(stateAddresses).toHaveProperty('1', {"status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f"});
