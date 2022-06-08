@@ -1,5 +1,23 @@
-import { Networkish } from '@ethersproject/networks';
+import { Networkish, Network} from '@ethersproject/networks';
 
+export const getMumbaiRpcProvider = (chainId: number, apiKey: string): Network => {
+   const mumbai: Network = {
+     name: 'mumbai',
+     chainId,
+     _defaultProvider: (providers) => new providers.JsonRpcProvider(`https://polygon-mumbai.g.alchemy.com/v2/${apiKey}`)
+   }
+   return mumbai;
+ }
+ 
+export const getPolygonRpcProvider = (chainId: number, apiKey: string): Network => {
+   const polygon: Network = {
+     name: 'polygon',
+     chainId,
+     _defaultProvider: (providers) => new providers.JsonRpcProvider(`https://polygon-mainnet.g.alchemy.com/v2/${apiKey}`)
+   }
+   return polygon;
+ }
+ 
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
 export const getAddressFromNetwork = (network?:Networkish) => {
   // if network is not given. default to mainnet
