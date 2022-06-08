@@ -1,8 +1,6 @@
-import { BigNumberish, ContractTransaction, ethers } from 'ethers';
+import { BigNumberish, ContractTransaction } from 'ethers';
 import { Networkish } from '@ethersproject/networks';
 import { Configuration } from '../types';
-import { getAbi } from '../utils/initContract';
-import { SUPPORTED_NETWORKS } from '../utils/getAddressFromNetwork';
 import BaseService from './baseService';
 
 type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
@@ -28,41 +26,24 @@ export default class NftService extends BaseService {
     const tokenChainIds: Networkish[] = [];
     
     try {
-      for await (const network of SUPPORTED_NETWORKS) {
-        let chainId = network.chainId;
+      for (const chainId in providers) {
         
         let provider = providers[chainId];
         
-        if(provider == undefined) {
-          const _network = ethers.providers.getNetwork(chainId);
-          if (Boolean(_network?._defaultProvider)) {
-            provider = ethers.getDefaultProvider(_network);
-          } else {
-            continue;
-          }
-        }
+        if(provider === void(0)) { continue };
 
         const contractExists = await provider.getCode(this.contractAddress);
 
         if (contractExists !== '0x') {// contract exists on respective network
-
-          let contract = new ethers.Contract(
-            this.contractAddress,
-            getAbi('erc721'),
-            provider
-          );
-
-          const signerAddress = await this.getSignerAddress();
-          const owner = await contract.ownerOf(this.tokenId);
-
-          if (signerAddress.toLowerCase() == owner.toLowerCase()) {
+          if (chainId == 'external') { //external provider
+            const providerNetwork = await provider.getNetwork();
+            return providerNetwork.chainId;
+          } else {
             tokenChainIds.push(Number(chainId));
           }
-
         }
       }
     } catch (error) {
-      console.log(error);
       throw error;
     }
 
@@ -73,6 +54,8 @@ export default class NftService extends BaseService {
 
   public async bridgeNFTCheck(signerNetwork: Networkish) {
     const tokenChainIds = await this.getChainIdsForBridgedNFTs();
+
+    if(signerNetwork == undefined) { throw new Error("Could not retrieve signers network.") };
 
     if (tokenChainIds.includes(signerNetwork)) { return true }; // TODO: store this in class and retrieve to avoid expensive calls.
 
@@ -99,7 +82,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters, undefined, true);
+    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters, undefined);
   }
 
   /// @notice Gets the amount of Interest that the Particle has generated representing
@@ -114,7 +97,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters, undefined, true);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters, undefined);
   }
   
   /// @notice Gets the amount of LP Tokens that the Particle has generated representing
@@ -129,7 +112,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters, undefined, true);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters, undefined);
   }
 
   /// @notice Gets the total amount of ERC721 Tokens that the Particle holds
@@ -137,7 +120,7 @@ export default class NftService extends BaseService {
   /// @return The total amount of ERC721 tokens that are held  within the Particle as a BigNumber
   public async getBonds(basketManagerId: string) {
     const parameters = [this.contractAddress, this.tokenId, basketManagerId];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters, undefined, true);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters, undefined);
   }
 
    /***********************************|
@@ -178,7 +161,7 @@ export default class NftService extends BaseService {
       assetAmount, 
       referrer ?? '0x0000000000000000000000000000000000000000'
     ];
-    const tx: ContractTransaction = await this.callContract('chargedParticles', 'energizeParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'energizeParticle', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
   }
@@ -208,7 +191,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    const tx: ContractTransaction = await this.callContract('chargedParticles', 'dischargeParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'dischargeParticle', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
   }
@@ -241,7 +224,7 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    const tx: ContractTransaction = await this.callContract('chargedParticles', 'dischargeParticleAmount', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'dischargeParticleAmount', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
   }
@@ -273,7 +256,7 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    const tx: ContractTransaction = await this.callContract('chargedParticles', 'dischargeParticleForCreator', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'dischargeParticleForCreator', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
   }
@@ -303,7 +286,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    const tx: ContractTransaction = await this.callContract('chargedParticles', 'releaseParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'releaseParticle', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
   }
@@ -336,7 +319,7 @@ export default class NftService extends BaseService {
       assetToken, 
       assetAmount
     ];
-    const tx: ContractTransaction = await this.callContract('chargedParticles', 'releaseParticleAmount', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'releaseParticleAmount', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
   }
@@ -372,7 +355,7 @@ export default class NftService extends BaseService {
       nftTokenId, 
       nftTokenAmount
     ];
-    const tx: ContractTransaction = await this.callContract('chargedParticles', 'covalentBond', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'covalentBond', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
   }
@@ -408,7 +391,7 @@ export default class NftService extends BaseService {
       nftTokenId, 
       nftTokenAmount
     ];
-    const tx: ContractTransaction = await this.callContract('chargedParticles', 'breakCovalentBond', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'breakCovalentBond', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
   }
@@ -421,7 +404,6 @@ export default class NftService extends BaseService {
       'tokenURI', 
       [this.tokenId],
       this.contractAddress,
-      false,
     );
   }
 }
