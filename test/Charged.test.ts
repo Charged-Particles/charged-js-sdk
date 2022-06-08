@@ -69,6 +69,7 @@ describe('Charged class', () => {
     const network = 42;
 
     const nft = charged.NFT(particleBAddress, tokenId);
+
     const receipt = await nft.energize(
       'aave.B',
       '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',

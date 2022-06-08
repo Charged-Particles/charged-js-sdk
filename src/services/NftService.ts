@@ -149,6 +149,7 @@ export default class NftService extends BaseService {
     referrer?:string 
     ) {
 
+
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
 
     await this.bridgeNFTCheck(signerNetwork);
