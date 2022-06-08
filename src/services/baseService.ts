@@ -2,18 +2,22 @@ import { Contract, ethers } from 'ethers';
 import { Configuration } from '../types';
 import { getAbi, getAddressByNetwork } from '../utils/initContract';
 export default class BaseService {
-  readonly contractInstances: { [address: string]: Contract };
+  readonly contractInstances: { [action: string]: {[address: string]: Contract} };
 
   readonly config: Configuration;
 
   constructor(config: Configuration) {
     this.config = config;
-    this.contractInstances = {};
+    this.contractInstances = {
+      read: {},
+      write: {}
+    };
   }
 
   public getContractInstance(
     contractName: string,
     network: number,
+    action: string,
     contractAddress?: string
   ): Contract {
     const { providers, signer } = this.config;
@@ -21,22 +25,34 @@ export default class BaseService {
     const provider = providers[network] ?? providers['external'];
     const address = contractAddress ?? getAddressByNetwork(network, contractName);
 
-    if (!this.contractInstances[address]) {
-      let requestedContract = new ethers.Contract(
-        address,
-        getAbi(contractName),
-        provider
-      );
+    if (!this.contractInstances[action][address]) {
 
-      if (signer && provider) {
-        const connectedWallet = signer.connect(provider);
-        requestedContract = requestedContract.connect(connectedWallet);
+      if (action === 'read') {
+        const requestedContract = new ethers.Contract(
+          address,
+          getAbi(contractName),
+          provider
+        );
+
+        this.contractInstances[action][address] = requestedContract;
+
+      } else if (action === 'write') {
+        if (signer) {
+          const writeProvider = signer.connect(provider);
+          const requestedContract = new ethers.Contract(
+            address,
+            getAbi(contractName),
+            writeProvider
+          );
+
+          this.contractInstances[action][address] = requestedContract;
+        } else {
+          throw new Error('Trying to write with no signer');
+        }
       }
-
-      this.contractInstances[address] = requestedContract;
     }
 
-    return this.contractInstances[address];
+    return this.contractInstances[action][address];
   }
 
   public async fetchAllNetworks(
@@ -51,6 +67,11 @@ export default class BaseService {
     let networks: (number)[] = [];
 
     for (let network in providers) {
+      // Only query contracts that exist on network
+      if (contractAddress) {
+        const contractExistsOnNetwork = await providers[network].getCode(contractAddress);
+        if (contractExistsOnNetwork === '0x') { continue }; 
+      }
 
       if (network === 'external') {
         const { chainId } = await providers['external'].getNetwork()
@@ -58,9 +79,8 @@ export default class BaseService {
       }
 
       networks.push(Number(network));
-
       transactions.push(
-        this.callContract(
+        this.readContract(
           contractName,
           methodName,
           Number(network),
@@ -84,32 +104,31 @@ export default class BaseService {
     return formattedResponse;
   }
 
-  public async callContract(
+  public async writeContract(
     contractName: string,
     methodName: string,
     network: number,
     params: any[] = [],
     contractAddress?: string
   ) {
-    const requestedContract = this.getContractInstance(contractName, network, contractAddress);
+    const action = 'write';
+    const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
     return requestedContract[methodName](...params);
   }
 
-  public async getNetworkFromProvider(): Promise<number[]> {
-    // TODO: update for single provider
-    const { providers } = this.config;
-
-    let networks: number[] = [];
-
-    if (Object.keys(providers).length !== 0) {
-      for (const network in providers) {
-        networks.push(Number(network));
-      }
-    }
-
-    return networks;
+  public async readContract(
+    contractName: string,
+    methodName: string,
+    network: number,
+    params: any[] = [],
+    contractAddress?: string
+  ) {
+    const action = 'read';
+    const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
+    return requestedContract.callStatic[methodName](...params);
   }
 
+  
   public async getSignerAddress() {
     const { signer } = this.config;
 

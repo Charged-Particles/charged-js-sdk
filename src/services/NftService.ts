@@ -78,7 +78,7 @@ export default class NftService extends BaseService {
       '0xfd424d0e0cd49d6ad8f08893ce0d53f8eaeb4213'
     ];
 
-    return await this.callContract(
+    return await this.writeContract(
       'chargedParticles', 
       'energizeParticle', 
       signerNetwork, 
