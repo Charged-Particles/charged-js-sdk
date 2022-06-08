@@ -129,14 +129,20 @@ export default class BaseService {
       if (chainIdsLength > 1 && network) {
         return network; // specify network intent when more than one provider.
 
-      } else if (chainIdsLength == 1) {
-        return Number(chainIds[0]); // return the network of the single provider
+      } else if(chainIdsLength == 1) {
+        const chainIdFromSingleProvider = Number(chainIds[0]); // return the network of the single provider
+
+        if (chainIdFromSingleProvider == 0) { 
+          const externalProviderNetwork = await providers[0].getNetwork() 
+          return externalProviderNetwork.chainId;
+        } 
+        else { return chainIdFromSingleProvider };
 
       } else {
         throw new Error('Please specify the targeted network');
       }
     } else {
-      throw new Error(`Could not fetch network: ${network} from supplied providers`);
+      throw new Error(`Could not fetch network: from supplied providers`);
     }
   }
 }
