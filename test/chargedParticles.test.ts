@@ -5,6 +5,10 @@ import Charged from '../src/Charged';
 import kovanAddresses from '../src/networks/v2/kovan.json';
 import mainnetAddresses from '../src/networks/v2/mainnet.json';
 
+/*
+This test uses the team test wallet's mnemonic
+Also the alchemy keys as seen below
+*/
 describe('chargedParticles contract test', () => {
     const providersKovan =  [
       {
