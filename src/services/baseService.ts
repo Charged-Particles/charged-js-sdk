@@ -18,7 +18,7 @@ export default class BaseService {
   ): Contract {
     const { providers, signer } = this.config;
 
-    const provider = providers[network] ?? providers[0];
+    const provider = providers[network] ?? providers['external'];
     const address = contractAddress ?? getAddressByNetwork(network, contractName);
 
     if (!this.contractInstances[address]) {
@@ -52,8 +52,8 @@ export default class BaseService {
 
     for (let network in providers) {
 
-      if (network === '0') {
-        const { chainId } = await providers[0].getNetwork()
+      if (network === 'external') {
+        const { chainId } = await providers['external'].getNetwork()
         network = chainId;
       }
 
@@ -80,7 +80,7 @@ export default class BaseService {
         formattedResponse[networks[index]] = { value: response.reason, status: 'rejected' };
       }
     });
-
+    
     return formattedResponse;
   }
 
@@ -130,13 +130,13 @@ export default class BaseService {
         return network; // specify network intent when more than one provider.
 
       } else if(chainIdsLength == 1) {
-        const chainIdFromSingleProvider = Number(chainIds[0]); // return the network of the single provider
+        const chainIdFromSingleProvider = chainIds[0]; // return the network of the single provider
 
-        if (chainIdFromSingleProvider == 0) { 
-          const externalProviderNetwork = await providers[0].getNetwork() 
+        if (chainIdFromSingleProvider == 'external') { 
+          const externalProviderNetwork = await providers['external'].getNetwork() 
           return externalProviderNetwork.chainId;
         } 
-        else { return chainIdFromSingleProvider };
+        else { return Number(chainIdFromSingleProvider) };
 
       } else {
         throw new Error('Please specify the targeted network');

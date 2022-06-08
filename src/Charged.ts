@@ -13,7 +13,7 @@ type constructorCharged = {
 };
 
 export default class Charged {
-  public providers: { [network: number]: providers.Provider } = {};
+  public providers: { [network:string]: providers.Provider } = {};
 
   public utils: any;
 
@@ -30,9 +30,9 @@ export default class Charged {
           this.providers[network] = ethers.getDefaultProvider(network, service);
         });
       } else if (providers instanceof ethers.providers.Provider) {
-        this.providers[0] = providers;
+        this.providers['external'] = providers;
       } else {
-        this.providers[0] = new ethers.providers.Web3Provider(providers);
+        this.providers['external'] = new ethers.providers.Web3Provider(providers);
       }
     }
     else {

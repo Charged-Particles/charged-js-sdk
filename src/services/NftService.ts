@@ -32,7 +32,7 @@ export default class NftService extends BaseService {
         const contractExists = await provider.getCode(this.contractAddress);
 
         if (contractExists !== '0x') {// contract exists on respective network
-          if (chainId == '0') { //external provider
+          if (chainId == 'external') { //external provider
             const providerNetwork = await provider.getNetwork();
             return providerNetwork.chainId;
           } else {
