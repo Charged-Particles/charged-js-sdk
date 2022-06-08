@@ -2,18 +2,22 @@ import { Contract, ethers } from 'ethers';
 import { Configuration } from '../types';
 import { getAbi, getAddressByNetwork } from '../utils/initContract';
 export default class BaseService {
-  readonly contractInstances: { [address: string]: Contract };
+  readonly contractInstances: { [action: string]: {[address: string]: Contract} };
 
   readonly config: Configuration;
 
   constructor(config: Configuration) {
     this.config = config;
-    this.contractInstances = {};
+    this.contractInstances = {
+      read: {},
+      write: {}
+    };
   }
 
   public getContractInstance(
     contractName: string,
     network: number,
+    action: string,
     contractAddress?: string
   ): Contract {
     const { providers, signer } = this.config;
@@ -21,22 +25,36 @@ export default class BaseService {
     const provider = providers[network] ?? providers['external'];
     const address = contractAddress ?? getAddressByNetwork(network, contractName);
 
-    if (!this.contractInstances[address]) {
-      let requestedContract = new ethers.Contract(
-        address,
-        getAbi(contractName),
-        provider
-      );
+    const exists = this.contractInstances.action?.address ?? false;
+    
+    if (!exists) {
 
-      if (signer && provider) {
-        const connectedWallet = signer.connect(provider);
-        requestedContract = requestedContract.connect(connectedWallet);
+      if (action === 'read') {
+        const requestedContract = new ethers.Contract(
+          address,
+          getAbi(contractName),
+          provider
+        );
+
+        this.contractInstances[action][address] = requestedContract;
+
+      } else if (action === 'write') {
+        if (signer) {
+          const writeProvider = signer.connect(provider);
+          const requestedContract = new ethers.Contract(
+            address,
+            getAbi(contractName),
+            writeProvider
+          );
+
+          this.contractInstances[action][address] = requestedContract;
+        } else {
+          throw new Error('Trying to write with no signer');
+        }
       }
-
-      this.contractInstances[address] = requestedContract;
     }
 
-    return this.contractInstances[address];
+    return this.contractInstances[action][address];
   }
 
   public async fetchAllNetworks(
@@ -51,14 +69,19 @@ export default class BaseService {
     let networks: (number)[] = [];
 
     for (let network in providers) {
+      // Only query contracts that exist on network
+      if (contractAddress) {
+        const contractExistsOnNetwork = await providers[network].getCode(contractAddress);
+        if (contractExistsOnNetwork === '0x') { continue }; 
+      }
 
       if (network === 'external') {
         const { chainId } = await providers['external'].getNetwork()
         network = chainId;
       }
+      
 
       networks.push(Number(network));
-
       transactions.push(
         this.readContract(
           contractName,
@@ -91,7 +114,8 @@ export default class BaseService {
     params: any[] = [],
     contractAddress?: string
   ) {
-    const requestedContract = this.getContractInstance(contractName, network, contractAddress);
+    const action = 'write';
+    const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
     return requestedContract[methodName](...params);
   }
 
@@ -102,7 +126,8 @@ export default class BaseService {
     params: any[] = [],
     contractAddress?: string
   ) {
-    const requestedContract = this.getContractInstance(contractName, network, contractAddress);
+    const action = 'read';
+    const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
     return requestedContract.callStatic[methodName](...params);
   }
 

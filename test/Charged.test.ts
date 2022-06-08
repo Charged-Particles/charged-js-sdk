@@ -44,7 +44,6 @@ describe('Charged class', () => {
 
     expect(tokenURI).toEqual({
       "1": { value: "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85", status: 'fulfilled' },
-      "42": { value: "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85", status: 'fulfilled' }
     });
   });
 

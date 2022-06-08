@@ -13,5 +13,4 @@ export default class UtilsService extends BaseService {
   public async getStateAddress() {
     return await this.fetchAllNetworks('chargedParticles', 'getStateAddress');
   }
-
 }
