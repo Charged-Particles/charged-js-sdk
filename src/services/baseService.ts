@@ -25,9 +25,7 @@ export default class BaseService {
     const provider = providers[network] ?? providers['external'];
     const address = contractAddress ?? getAddressByNetwork(network, contractName);
 
-    const exists = this.contractInstances.action?.address ?? false;
-    
-    if (!exists) {
+    if (!this.contractInstances[action][address]) {
 
       if (action === 'read') {
         const requestedContract = new ethers.Contract(
