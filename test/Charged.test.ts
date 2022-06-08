@@ -10,11 +10,11 @@ describe('Charged class', () => {
   const providers = [
     {
       network: 1,
-      service: { 'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE' }
+      service: { 'alchemy': process.env.ALCHEMY_MAINNET_KEY }
     },
     {
       network: 42,
-      service: { 'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a' }
+      service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
     }
   ]
 
@@ -69,15 +69,14 @@ describe('Charged class', () => {
     const network = 42;
 
     const nft = charged.NFT(particleBAddress, tokenId);
-    const result = await nft.energizeParticle(
+    const receipt = await nft.energize(
       'aave.B',
       '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
       BigNumber.from(10),
       network
     );
 
-    const resp = await result.wait();
-    console.log({ resp }); // TODO: expect !
+    console.log({ receipt }); // TODO: expect !
   });
 
   it('Initializes with ether.js external provider', async () => {

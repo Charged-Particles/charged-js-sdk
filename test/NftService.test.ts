@@ -10,11 +10,11 @@ describe('NFT service class', () => {
   const providers = [
     {
       network: 1,
-      service: { 'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE' }
+      service: { 'alchemy': process.env.ALCHEMY_MAINNET_KEY }
     },
     {
       network: 42,
-      service: { 'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a' }
+      service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
     }
   ];
 
@@ -76,7 +76,7 @@ describe('NFT service class', () => {
     const nft = charged.NFT(particleBAddress, tokenId);
 
     await expect(async () => {
-      return await nft.energizeParticle(
+      return await nft.energize(
         'aave.B',
         '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
         BigNumber.from(10),
