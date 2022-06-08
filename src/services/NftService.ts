@@ -82,7 +82,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters, undefined);
+    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters);
   }
 
   /// @notice Gets the amount of Interest that the Particle has generated representing
@@ -97,7 +97,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters, undefined);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters);
   }
   
   /// @notice Gets the amount of LP Tokens that the Particle has generated representing
@@ -112,7 +112,7 @@ export default class NftService extends BaseService {
       walletManagerId, 
       assetToken
     ];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters, undefined);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters);
   }
 
   /// @notice Gets the total amount of ERC721 Tokens that the Particle holds
@@ -120,7 +120,16 @@ export default class NftService extends BaseService {
   /// @return The total amount of ERC721 tokens that are held  within the Particle as a BigNumber
   public async getBonds(basketManagerId: string) {
     const parameters = [this.contractAddress, this.tokenId, basketManagerId];
-    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters, undefined);
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters);
+  }
+
+  public async tokenURI() {
+    return await this.fetchAllNetworks(
+      'erc721', 
+      'tokenURI', 
+      [this.tokenId],
+      this.contractAddress,
+    );
   }
 
    /***********************************|
@@ -394,16 +403,5 @@ export default class NftService extends BaseService {
     const tx: ContractTransaction = await this.writeContract('chargedParticles', 'breakCovalentBond', signerNetwork, parameters);
     const receipt = await tx.wait();
     return receipt;
-  }
-
-
-
-  public async tokenURI() {
-    return await this.fetchAllNetworks(
-      'erc721', 
-      'tokenURI', 
-      [this.tokenId],
-      this.contractAddress,
-    );
   }
 }

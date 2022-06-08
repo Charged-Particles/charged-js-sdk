@@ -109,7 +109,7 @@ export default class BaseService {
     methodName: string,
     network: number,
     params: any[] = [],
-    contractAddress?:string,
+    contractAddress?: string
   ) {
     const action = 'write';
     const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);

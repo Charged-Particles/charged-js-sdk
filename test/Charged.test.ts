@@ -10,11 +10,11 @@ describe('Charged class', () => {
   const providers = [
     {
       network: 1,
-      service: { 'alchemy': 'qw02QqWNMg2kby3q3N39PxUT3KaRS5UE' }
+      service: { 'alchemy': process.env.ALCHEMY_MAINNET_KEY }
     },
     {
       network: 42,
-      service: { 'alchemy': 'rm-l6Zef1007gyxMQIwPI8rEhaHM8N6a' }
+      service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
     }
   ]
 
