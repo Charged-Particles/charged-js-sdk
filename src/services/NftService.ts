@@ -41,7 +41,6 @@ export default class NftService extends BaseService {
         }
       }
     } catch (error) {
-      console.log(error);
       throw error;
     }
 
