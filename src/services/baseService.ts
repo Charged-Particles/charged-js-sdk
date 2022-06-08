@@ -60,7 +60,7 @@ export default class BaseService {
       networks.push(Number(network));
 
       transactions.push(
-        this.callContract(
+        this.readContract(
           contractName,
           methodName,
           Number(network),
@@ -84,7 +84,7 @@ export default class BaseService {
     return formattedResponse;
   }
 
-  public async callContract(
+  public async writeContract(
     contractName: string,
     methodName: string,
     network: number,
@@ -93,6 +93,17 @@ export default class BaseService {
   ) {
     const requestedContract = this.getContractInstance(contractName, network, contractAddress);
     return requestedContract[methodName](...params);
+  }
+
+  public async readContract(
+    contractName: string,
+    methodName: string,
+    network: number,
+    params: any[] = [],
+    contractAddress?: string
+  ) {
+    const requestedContract = this.getContractInstance(contractName, network, contractAddress);
+    return requestedContract.callStatic[methodName](...params);
   }
 
   public async getNetworkFromProvider(): Promise<number[]> {
@@ -110,6 +121,7 @@ export default class BaseService {
     return networks;
   }
 
+  
   public async getSignerAddress() {
     const { signer } = this.config;
 
