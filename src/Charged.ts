@@ -5,24 +5,24 @@ import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
 
 // Types 
-import { networkProvider, ChargedState } from "./types";
+import { NetworkProvider, ChargedState } from "./types";
 
 type constructorCharged = {
-  providers?: networkProvider[] | providers.Provider | providers.ExternalProvider,
+  providers?: NetworkProvider[] | providers.Provider | providers.ExternalProvider,
   signer?: Signer,
 };
 
 export default class Charged {
-  
+
   public utils: any;
-  
+
   readonly state: ChargedState;
-  
+
   constructor(params: constructorCharged = {}) {
-    
+
     const { providers, signer } = params;
 
-    let initializedProviders: { [network:string]: providers.Provider } = {};
+    let initializedProviders: { [network: string]: providers.Provider } = {};
 
     if (providers) {
 
