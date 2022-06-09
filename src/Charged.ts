@@ -1,9 +1,8 @@
 import { ethers, providers, Signer } from "ethers";
 
 import {
-  SUPPORTED_NETWORKS,
-  getPolygonRpcProvider,
-  getMumbaiRpcProvider
+  getDefaultProviderByNetwork,
+  SUPPORTED_NETWORKS
 } from "./utils/utilities";
 
 import UtilsService from "./services/UtilsService";
@@ -31,13 +30,7 @@ export default class Charged {
     if (providers) {
       if (Array.isArray(providers)) {
         providers?.forEach(({ network, service }) => {
-          if (network == 137) {                                                               // Polygon
-            this.providers[network] = ethers.getDefaultProvider(getPolygonRpcProvider(network, service.alchemy));
-          } else if (network == 80001) {                                                      // Mumbai
-            this.providers[network] = ethers.getDefaultProvider(getMumbaiRpcProvider(network, service.alchemy));
-          } else {                                                                            // Mainnet / Kovan
-            this.providers[network] = ethers.getDefaultProvider(network, service);
-          }
+          this.providers[network] = getDefaultProviderByNetwork(network, service);
         });
       } else if (providers instanceof ethers.providers.Provider) {
         this.providers['external'] = providers;
