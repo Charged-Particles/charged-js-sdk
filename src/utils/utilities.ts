@@ -1,22 +1,49 @@
 import { Networkish, Network} from '@ethersproject/networks';
+import { ethers } from 'ethers';
 
 export const getMumbaiRpcProvider = (chainId: number, apiKey: string): Network => {
-   const mumbai: Network = {
+   const mumbaiRpcProvider: Network = {
      name: 'mumbai',
      chainId,
      _defaultProvider: (providers) => new providers.JsonRpcProvider(`https://polygon-mumbai.g.alchemy.com/v2/${apiKey}`)
    }
-   return mumbai;
- }
+   return mumbaiRpcProvider;
+}
  
 export const getPolygonRpcProvider = (chainId: number, apiKey: string): Network => {
-   const polygon: Network = {
+   const polygonRpcProvider: Network = {
      name: 'polygon',
      chainId,
      _defaultProvider: (providers) => new providers.JsonRpcProvider(`https://polygon-mainnet.g.alchemy.com/v2/${apiKey}`)
    }
-   return polygon;
- }
+   return polygonRpcProvider;
+}
+
+export const getDefaultProviderByNetwork = (network: number, service: any) => {
+   let apiKey;
+
+   const foundAlchemyKey = Object.hasOwn(service, 'alchemy');
+   const foundInfuraKey = Object.hasOwn(service, 'infura');
+   const foundEtherscanKey = Object.hasOwn(service, 'etherscan');
+
+   if (foundAlchemyKey) {
+      apiKey = service.alchemy;
+   } else if (foundInfuraKey) {
+      apiKey = service.infura;
+   } else if (foundEtherscanKey) {
+      apiKey = service.etherscan;
+   }
+
+   let defaultProvider;
+   if (network == 137) {                                                               // Polygon
+      defaultProvider = ethers.getDefaultProvider(getPolygonRpcProvider(network, apiKey));
+    } else if (network == 80001) {                                                      // Mumbai
+      defaultProvider = ethers.getDefaultProvider(getMumbaiRpcProvider(network, apiKey));
+    } else {                                                                            // Mainnet / Kovan
+      defaultProvider = ethers.getDefaultProvider(network, service);
+    }
+    return defaultProvider;
+}
  
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
 export const getAddressFromNetwork = (network?:Networkish) => {

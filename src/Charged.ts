@@ -3,7 +3,8 @@ import { ethers, providers, Signer } from "ethers";
 import {
   SUPPORTED_NETWORKS,
   getPolygonRpcProvider,
-  getMumbaiRpcProvider } from "./utils/utilities";
+  getMumbaiRpcProvider
+} from "./utils/utilities";
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
