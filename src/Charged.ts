@@ -14,7 +14,7 @@ type constructorCharged = {
 
 export default class Charged {
 
-  public utils: any;
+  public utils: UtilsService;
 
   readonly state: ChargedState;
 
