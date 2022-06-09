@@ -2,8 +2,8 @@ import { ethers } from 'ethers';
 import 'dotenv/config';
 import Charged from '../src/Charged';
 
-import kovanAddresses from '../src/networks/v2/kovan.json';
-import mainnetAddresses from '../src/networks/v2/mainnet.json';
+import kovanAddresses from '@charged-particles/protocol-subgraph/networks/kovan.json';
+import mainnetAddresses from '@charged-particles/protocol-subgraph/networks/mainnet.json';
 
 /*
 This test uses the team test wallet's mnemonic
