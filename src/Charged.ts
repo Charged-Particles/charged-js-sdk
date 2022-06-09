@@ -13,33 +13,34 @@ type constructorCharged = {
 };
 
 export default class Charged {
-  public providers: { [network:string]: providers.Provider } = {};
-
+  
   public utils: any;
-
+  
   readonly configuration: Configuration;
-
+  
   constructor(params: constructorCharged = {}) {
-
+    
     const { providers, signer } = params;
+
+    let initializeProviders: { [network:string]: providers.Provider } = {};
 
     if (providers) {
 
       if (Array.isArray(providers)) {
         providers?.forEach(({ network, service }) => {
-          this.providers[network] = ethers.getDefaultProvider(network, service);
+          initializeProviders[network] = ethers.getDefaultProvider(network, service);
         });
       } else if (providers instanceof ethers.providers.Provider) {
-        this.providers['external'] = providers;
+        initializeProviders['external'] = providers;
       } else {
-        this.providers['external'] = new ethers.providers.Web3Provider(providers);
+        initializeProviders['external'] = new ethers.providers.Web3Provider(providers);
       }
     }
     else {
       SUPPORTED_NETWORKS.forEach(({ chainId }) => {
         const network = ethers.providers.getNetwork(chainId);
         if (Boolean(network._defaultProvider)) {
-          this.providers[chainId] = ethers.getDefaultProvider(network);
+          initializeProviders[chainId] = ethers.getDefaultProvider(network);
         }
       });
 
@@ -51,7 +52,7 @@ export default class Charged {
 
     this.configuration = {
       signer,
-      providers: this.providers,
+      providers: initializeProviders,
     };
 
     this.utils = new UtilsService(this.configuration);
