@@ -3,7 +3,7 @@ import { ethers, providers, Signer } from "ethers";
 import {
   getDefaultProviderByNetwork,
   SUPPORTED_NETWORKS
-} from "./utils/utilities";
+} from "./utils/networkUtilities";
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
