@@ -5,7 +5,7 @@ import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
 
 // Types 
-import { networkProvider, Configuration } from "./types";
+import { networkProvider, ChargedState } from "./types";
 
 type constructorCharged = {
   providers?: networkProvider[] | providers.Provider | providers.ExternalProvider,
@@ -16,7 +16,7 @@ export default class Charged {
   
   public utils: any;
   
-  readonly configuration: Configuration;
+  readonly state: ChargedState;
   
   constructor(params: constructorCharged = {}) {
     
@@ -50,15 +50,15 @@ export default class Charged {
       );
     }
 
-    this.configuration = {
+    this.state = {
       signer,
       providers: initializedProviders,
     };
 
-    this.utils = new UtilsService(this.configuration);
+    this.utils = new UtilsService(this.state);
   }
 
   public NFT(contractAddress: string, tokenId: number) {
-    return new NftService(this.configuration, contractAddress, tokenId);
+    return new NftService(this.state, contractAddress, tokenId);
   }
 }

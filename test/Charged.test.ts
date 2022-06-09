@@ -50,7 +50,7 @@ describe('Charged class', () => {
   it('Initializes charged with default providers', async () => {
     const charged = new Charged();
 
-    const providers = charged.configuration.providers;
+    const providers = charged.state.providers;
 
     expect(providers).toHaveProperty('1');
     expect(providers).toHaveProperty('42');

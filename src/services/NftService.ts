@@ -1,6 +1,6 @@
 import { BigNumberish, ContractTransaction } from 'ethers';
 import { Networkish } from '@ethersproject/networks';
-import { Configuration } from '../types';
+import { ChargedState } from '../types';
 import BaseService from './baseService';
 
 type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
@@ -11,17 +11,17 @@ export default class NftService extends BaseService {
   public tokenId: number;
 
   constructor(
-    config: Configuration,
+    state: ChargedState,
     contractAddress: string,
     tokenId: number,
   ) {
-    super(config);
+    super(state);
     this.contractAddress = contractAddress;
     this.tokenId = tokenId;
   }
 
   public async getChainIdsForBridgedNFTs() {
-    const { providers } = this.config;
+    const { providers } = this.state;
 
     const tokenChainIds: Networkish[] = [];
     

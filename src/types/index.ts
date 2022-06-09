@@ -15,7 +15,7 @@ export type networkProvider = {
   service: any
 }
 
-export type Configuration = {
+export type ChargedState = {
   providers?: any;
   signer?: Signer;
 };
