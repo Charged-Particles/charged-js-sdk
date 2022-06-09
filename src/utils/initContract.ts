@@ -1,6 +1,5 @@
 // External Frameworks
 import { ethers } from 'ethers';
-import { Networkish } from '@ethersproject/networks'
 
 // ABIs
 import ChargedParticles from '../abis/v2/ChargedParticles.json';
@@ -11,17 +10,24 @@ import ProtonB from '../abis/v2/ProtonB.json';
 
 // Components
 import { MultiProvider, MultiSigner } from '../types';
-import { getAddressFromNetwork } from './getAddressFromNetwork';
+import { NetworkUniverseJSON, slay } from '../types/interfaces';
+import { getChainNameById } from './networkUtilities';
 
 // Contract addresses
-import mainnetAddresses from '../networks/v2/mainnet.json';
-import kovanAddresses from '../networks/v2/kovan.json';
-import polygonAddresses from '../networks/v2/polygon.json';
-import mumbaiAddresses from '../networks/v2/mumbai.json';
+import mainnetAddressesImport from '../networks/v2/mainnet.json';
+import kovanAddressesImport from '../networks/v2/kovan.json';
+import polygonAddressesImport from '../networks/v2/polygon.json';
+import mumbaiAddressesImport from '../networks/v2/mumbai.json';
+
+const mainnetAddresses:slay = mainnetAddressesImport;
+const kovanAddresses:NetworkUniverseJSON = kovanAddressesImport;
+const polygonAddresses:NetworkUniverseJSON = polygonAddressesImport;
+const mumbaiAddresses:NetworkUniverseJSON = mumbaiAddressesImport;
+
 
 // Boilerplate. Returns the CP contract with the correct provider. If a signer is given, the writeContract will be created as well.
-export const initContract = (contractName: string, providerOrSigner?: MultiProvider | MultiSigner, network?: Networkish) => {
-  const networkFormatted: String = getAddressFromNetwork(network);
+export const initContract = (contractName: string, providerOrSigner?: MultiProvider | MultiSigner, network?: number) => {
+  const networkFormatted: String = getChainNameById(network);
   const defaultProvider: ethers.providers.BaseProvider = ethers.providers.getDefaultProvider();
 
   // check if safe contract name was given
@@ -31,15 +37,10 @@ export const initContract = (contractName: string, providerOrSigner?: MultiProvi
   // ts ignores are used because the json files are not working nicely with typescript
   let address: string;
   switch (networkFormatted) {
-    // @ts-ignore
     case 'mainnet': address = mainnetAddresses[contractName].address; break;
-    // @ts-ignore
     case 'kovan': address = kovanAddresses[contractName].address; break;
-    // @ts-ignore
     case 'polygon': address = polygonAddresses[contractName].address; break;
-    // @ts-ignore
     case 'mumbai': address = mumbaiAddresses[contractName].address; break;
-    // @ts-ignore
     default: address = mainnetAddresses[contractName].address; break;
   }
 
@@ -75,24 +76,17 @@ export const getAbi = (contractName: string) => {
   }
 }
 
-export const getAddressByNetwork = (network: Networkish, contractName: string): string => {
+export const getAddressByNetwork = (network: number, contractName: string): string => {
   isValidContractName(contractName);
 
   // if a unsupported chain is given. default to mainnet
-  // TODO: ts ignores are used because the json files are not working nicely with typescript
   let address: string;
-  switch (getAddressFromNetwork(network)) {
-    // @ts-ignore
+  switch (getChainNameById(network)) {
     case 'mainnet': address = mainnetAddresses[contractName].address; break;
-    // @ts-ignore
     case 'kovan': address = kovanAddresses[contractName].address; break;
-    // @ts-ignore
     case 'polygon': address = polygonAddresses[contractName].address; break;
-    // @ts-ignore
     case 'mumbai': address = mumbaiAddresses[contractName].address; break;
-    // @ts-ignore
     default: address = mainnetAddresses[contractName].address; break;
   }
-
   return address;
 }
