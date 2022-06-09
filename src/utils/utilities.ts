@@ -1,48 +1,72 @@
-import { Networkish, Network} from '@ethersproject/networks';
 import { ethers } from 'ethers';
+import { Networkish, Network} from '@ethersproject/networks';
 
-export const getMumbaiRpcProvider = (chainId: number, apiKey: string): Network => {
-   const mumbaiRpcProvider: Network = {
-     name: 'mumbai',
+// ------------------------------------------------------------------------
+// TODO: move this into globals
+// ------------------------------------------------------------------------
+// alchemy rpcUrls
+const polygon_rpc_url_alchemy ="https://polygon-{chainName}.g.alchemy.com/v2/{apiKey}";
+const ethereum_rpc_url_alchemy ="https://eth-{chainName}.alchemyapi.io/v2/{apiKey}";
+// infura rpcUrls
+const polygon_rpc_url_infura = "https://polygon-{chainName}.infura.io/v3/{apiKey}";
+const ethereum_rpc_url_infura = "https://{chainName}.infura.io/v3/{apiKey}";
+// etherscan rpcUrls
+const rpc_url_etherscan = "";
+// ------------------------------------------------------------------------
+
+export const getRpcNetwork = (chainId: number, rpcUrl: string): Network => {
+   const rpcProvider: Network = {
+     name: getAddressFromNetwork(chainId),
      chainId,
-     _defaultProvider: (providers) => new providers.JsonRpcProvider(`https://polygon-mumbai.g.alchemy.com/v2/${apiKey}`)
+     _defaultProvider: (providers) => new providers.JsonRpcProvider(rpcUrl)
    }
-   return mumbaiRpcProvider;
-}
- 
-export const getPolygonRpcProvider = (chainId: number, apiKey: string): Network => {
-   const polygonRpcProvider: Network = {
-     name: 'polygon',
-     chainId,
-     _defaultProvider: (providers) => new providers.JsonRpcProvider(`https://polygon-mainnet.g.alchemy.com/v2/${apiKey}`)
-   }
-   return polygonRpcProvider;
+   return rpcProvider;
 }
 
-export const getDefaultProviderByNetwork = (network: number, service: any) => {
-   let apiKey;
+export const getRpcUrl = (network: number, service: any): string => {
+   let apiKey: string = '';
+   let rpcUrl: string = '';
 
-   const foundAlchemyKey = Object.hasOwn(service, 'alchemy');
-   const foundInfuraKey = Object.hasOwn(service, 'infura');
-   const foundEtherscanKey = Object.hasOwn(service, 'etherscan');
+   const providerName: string = Object.keys(service)[0];
+   const connectedToPolygon: boolean = network == 137 || network == 80001;
 
-   if (foundAlchemyKey) {
-      apiKey = service.alchemy;
-   } else if (foundInfuraKey) {
-      apiKey = service.infura;
-   } else if (foundEtherscanKey) {
-      apiKey = service.etherscan;
+   let chainName: string = getAddressFromNetwork(network);
+   if (chainName == 'polygon') {                         // To craft the correct url for polygon mainnet rpcUrl edge-case
+      chainName = 'mainnet';
    }
 
-   let defaultProvider;
-   if (network == 137) {                                                               // Polygon
-      defaultProvider = ethers.getDefaultProvider(getPolygonRpcProvider(network, apiKey));
-    } else if (network == 80001) {                                                      // Mumbai
-      defaultProvider = ethers.getDefaultProvider(getMumbaiRpcProvider(network, apiKey));
-    } else {                                                                            // Mainnet / Kovan
-      defaultProvider = ethers.getDefaultProvider(network, service);
-    }
-    return defaultProvider;
+   switch(providerName) {
+      case 'alchemy':
+         if (connectedToPolygon) {
+            rpcUrl = polygon_rpc_url_alchemy;
+         } else {
+            rpcUrl = ethereum_rpc_url_alchemy;
+         }
+         apiKey = service.alchemy;
+         break;
+      case 'infura':
+         if (connectedToPolygon) {
+            rpcUrl = polygon_rpc_url_infura;
+         } else {
+            rpcUrl = ethereum_rpc_url_infura;
+         }
+         apiKey = service.infura;
+         break;
+      case 'etherscan':
+         rpcUrl = rpc_url_etherscan;
+         apiKey = service.etherscan;
+         break;
+   }
+
+   return rpcUrl.replace('{chainName}', chainName).replace('{apiKey}', apiKey);
+}
+
+export const getDefaultProviderByNetwork = (network: number, service: any): ethers.providers.BaseProvider => {
+   const rpcUrl = getRpcUrl(network, service);
+   const defaultProvider: ethers.providers.BaseProvider = ethers.getDefaultProvider(getRpcNetwork(network, rpcUrl));
+   // should we reintroduce ethers.getDefaultProvider(network, service) for the !connectedToPolygon case???
+   console.log({defaultProvider});
+   return defaultProvider;
 }
  
 // Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
