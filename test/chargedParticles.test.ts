@@ -1,10 +1,7 @@
 import { ethers } from 'ethers';
 import 'dotenv/config';
 import Charged from '../src/index';
-import { abisAndNetworks } from '../src/index';
-
-import kovanAddresses from '@charged-particles/protocol-subgraph/networks/kovan.json';
-import mainnetAddresses from '@charged-particles/protocol-subgraph/networks/mainnet.json';
+import { chargedParticlesAbi, mainnetAddresses, kovanAddresses } from '../src/index';
 
 /*
 This test uses the team test wallet's mnemonic
@@ -109,11 +106,11 @@ describe('chargedParticles contract test', () => {
   
     it ('should create a contract from exported abis', async () => {
       const contract = new ethers.Contract(
-        abisAndNetworks.mainnet.chargedParticles.address,
-        abisAndNetworks.chargedParticles,
+        mainnetAddresses.chargedParticles.address,
+        chargedParticlesAbi,
         ethers.getDefaultProvider()
       )
 
-      expect(await contract.getStateAddress()).toEqual(abisAndNetworks.mainnet.chargedState.address);
+      expect(await contract.getStateAddress()).toEqual(mainnetAddresses.chargedState.address);
     })
 });
