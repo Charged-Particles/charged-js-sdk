@@ -49,7 +49,7 @@ describe('NFT service class', () => {
 
     const nft = charged.NFT(particleBAddressMainnet, tokenId)
     const NftBridgedChains = await nft.getChainIdsForBridgedNFTs();
-    expect(NftBridgedChains).toEqual(1)
+    expect(NftBridgedChains).toEqual([1])
 
     const nftKovanAddress = charged.NFT(particleBAddressKovan, tokenId)
     const NftBridgedChainsKovan = await nftKovanAddress.getChainIdsForBridgedNFTs();

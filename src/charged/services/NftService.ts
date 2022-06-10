@@ -35,7 +35,7 @@ export default class NftService extends BaseService {
         if (contractExists !== '0x') { // contract exists on respective network
           if (chainId == 'external') {
             const { chainId } = await provider.getNetwork();
-            return chainId;
+            tokenChainIds.push(chainId);
           } else {
             tokenChainIds.push(Number(chainId));
           }
@@ -53,7 +53,7 @@ export default class NftService extends BaseService {
   public async bridgeNFTCheck(signerNetwork: Networkish) {
     const tokenChainIds = await this.getChainIdsForBridgedNFTs();
 
-    if (signerNetwork == undefined) { throw new Error("Could not retrieve signers network.") };
+    if (signerNetwork === void(0)) { throw new Error("Could not retrieve signers network.") };
 
     if (tokenChainIds.includes(signerNetwork)) { return true }; // TODO: store this in class and retrieve to avoid expensive calls.
 
