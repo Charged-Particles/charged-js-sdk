@@ -1,5 +1,9 @@
 import { ethers, providers, Signer } from "ethers";
-import { SUPPORTED_NETWORKS } from "./utils/networkUtilities";
+
+import {
+  getDefaultProviderByNetwork,
+  SUPPORTED_NETWORKS
+} from "./utils/networkUtilities";
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
@@ -24,18 +28,16 @@ export default class Charged {
     const { providers, signer } = params;
 
     if (providers) {
-
       if (Array.isArray(providers)) {
         providers?.forEach(({ network, service }) => {
-          this.providers[network] = ethers.getDefaultProvider(network, service);
+          this.providers[network] = getDefaultProviderByNetwork(network, service);
         });
       } else if (providers instanceof ethers.providers.Provider) {
         this.providers['external'] = providers;
       } else {
         this.providers['external'] = new ethers.providers.Web3Provider(providers);
       }
-    }
-    else {
+    } else {
       SUPPORTED_NETWORKS.forEach(({ chainId }) => {
         const network = ethers.providers.getNetwork(chainId);
         if (Boolean(network._defaultProvider)) {

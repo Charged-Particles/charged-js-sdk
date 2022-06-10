@@ -94,4 +94,71 @@ describe('Charged class', () => {
 
     expect(stateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
   });
-})
+
+  it.only('Should fetch from Mumbai Alchemy', async () => {
+    const mumbaiProvider = [{ network: 80001, service: {alchemy: process.env.ALCHEMY_MUMBAI_KEY}}];
+    const charged = new Charged({providers: mumbaiProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
+  });
+
+  it.only('Should fetch from Polygon Alchemy', async () => {
+    const polygonProvider = [{ network: 137, service: {alchemy: process.env.ALCHEMY_POLYGON_KEY}}];
+    const charged = new Charged({providers: polygonProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('137', { "status": "fulfilled", "value": "0x9c00b8CF03f58c0420CDb6DE72E27Bf11964025b" });
+  });
+
+  // KOVAN is deprecated via alchemy !!! whoops
+  it.skip('Should fetch from Kovan Alchemy', async () => {
+    const kovanProvider = [{ network: 42, service: {alchemy: process.env.ALCHEMY_KOVAN_KEY}}];
+    const charged = new Charged({providers: kovanProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
+  });
+
+  it('Should fetch from Mainnet Alchemy', async () => {
+    const mainnetProvider = [{ network: 1, service: {alchemy: process.env.ALCHEMY_MAINNET_KEY}}];
+    const charged = new Charged({providers: mainnetProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
+  });
+
+  // INFURA_PROJECT_SECRET used for all four network tests below:
+  it('Should fetch from Mumbai Infura', async () => {
+    const mumbaiProvider = [{ network: 80001, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
+    const charged = new Charged({providers: mumbaiProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
+  });
+
+  it('Should fetch from Polygon Infura', async () => {
+    const polygonProvider = [{ network: 137, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
+    const charged = new Charged({providers: polygonProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('137', { "status": "fulfilled", "value": "0x9c00b8CF03f58c0420CDb6DE72E27Bf11964025b" });
+  });
+
+  it('Should fetch from Kovan Infura', async () => {
+    const kovanProvider = [{ network: 42, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
+    const charged = new Charged({providers: kovanProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
+  });
+
+  it('Should fetch from Mainnet Infura', async () => {
+    const mainnetProvider = [{ network: 1, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
+    const charged = new Charged({providers: mainnetProvider})
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
+  });
+
+});
