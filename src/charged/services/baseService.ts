@@ -1,6 +1,6 @@
 import { Contract, ethers } from 'ethers';
 import { ChargedState } from '../../types';
-import { getAbi, getAddressByNetwork } from '../../utils/initContract';
+import { getAbi, getAddress } from '../../utils/contractUtilities';
 export default class BaseService {
   readonly contractInstances: { [action: string]: {[address: string]: Contract} };
 
@@ -23,7 +23,7 @@ export default class BaseService {
     const { providers, signer } = this.state;
 
     const provider = providers[network] ?? providers['external'];
-    const address = contractAddress ?? getAddressByNetwork(network, contractName);
+    const address = contractAddress ?? getAddress(network, contractName);
 
     if (!this.contractInstances[action][address]) {
 

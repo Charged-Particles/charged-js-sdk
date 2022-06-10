@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { Networkish, Network } from '@ethersproject/networks';
+import { Network } from '@ethersproject/networks';
 
 // ------------------------------------------------------------------------
 // TODO: move this into globals
@@ -18,7 +18,7 @@ const rpcUrlEtherscan = "";
 
 export const getRpcNetwork = (chainId: number, rpcUrl: string): Network => {
   const rpcProvider: Network = {
-    name: getAddressFromNetwork(chainId),
+    name: getChainNameById(chainId),
     chainId,
     _defaultProvider: (providers) => new providers.JsonRpcProvider(rpcUrl)
   }
@@ -32,7 +32,7 @@ export const getRpcUrl = (network: number, service: any): string => {
   const providerName: string = Object.keys(service)[0];
   const connectedToPolygon: boolean = network == 137 || network == 80001;
 
-  let chainName: string = getAddressFromNetwork(network);
+  let chainName: string = getChainNameById(network);
   
   // Craft the correct url for polygon mainnet rpcUrl edge-case
   if (chainName == 'polygon') { chainName = 'mainnet' };
@@ -71,39 +71,16 @@ export const getDefaultProviderByNetwork = (network: number, service: any): ethe
   return defaultProvider;
 }
 
-// Charged Particles is only deployed on Mainnet, Kovan, Polygon, and Mumbai
-export const getAddressFromNetwork = (network?: Networkish) => {
+export const getChainNameById = (network?: number) => {
   // if network is not given. default to mainnet
-  if (!network) { return 'mainnet' };
-
-  if (typeof network === "string") {
-    switch (network) {
-      case 'homestead': return 'mainnet';
-      case 'kovan': return 'kovan';
-      case 'matic': return 'polygon';
-      case 'polygon': return 'polygon';
-      case 'maticmum': return 'mumbai';
-      case 'mumbai': return 'mumbai';
-      default: throw 'unsupported chain given to getAddressFromNetwork';
-    }
-  } else if (typeof network === "number") {
-    switch (network) {
-      case 1: return 'mainnet';
-      case 42: return 'kovan';
-      case 137: return 'polygon';
-      case 80001: return 'mumbai';
-      default: throw 'unsupported chain given to getAddressFromNetwork';
-    }
-  } else {
-    // network is a Network type object here. See ethers doc for more info.
-    switch (network.chainId) {
-      case 1: return 'mainnet';
-      case 42: return 'kovan';
-      case 137: return 'polygon';
-      case 80001: return 'mumbai';
-      default: throw 'unsupported chain given to getAddressFromNetwork';
-    }
-  }
+  if(!network) { return 'mainnet' };
+  switch(network) {
+    case 1: return 'mainnet';
+    case 42: return 'kovan';
+    case 137: return 'polygon';
+    case 80001: return 'mumbai';
+    default: throw `network id: ${network} is not valid in getAddressFromNetwork`;
+	}
 }
 
 export const SUPPORTED_NETWORKS = [
