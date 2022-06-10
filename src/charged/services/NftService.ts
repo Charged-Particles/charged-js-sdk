@@ -26,7 +26,7 @@ export default class NftService extends BaseService {
       for (const chainId in providers) {
         let provider = providers[chainId];
 
-        if (provider === void (0)) { continue };
+        if (provider === void(0)) { continue };
 
         const contractExists = await provider.getCode(this.contractAddress);
 
