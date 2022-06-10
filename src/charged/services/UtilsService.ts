@@ -1,4 +1,4 @@
-import { ChargedState } from '../types';
+import { ChargedState } from '../../types';
 import BaseService from './baseService';
 
 export default class UtilsService extends BaseService {

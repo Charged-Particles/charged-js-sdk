@@ -3,7 +3,7 @@ import { rpcUrlMainnet } from '../src/utils/config';
 import { getWallet } from '../src/utils/testUtilities';
 const Web3HttpProvider = require('web3-providers-http');
 
-import Charged from '../src/Charged';
+import Charged from '../src/charged/index';
 
 describe('NFT service class', () => {
   const signer = getWallet();

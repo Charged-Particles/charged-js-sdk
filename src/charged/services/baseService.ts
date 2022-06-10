@@ -1,6 +1,6 @@
 import { Contract, ethers } from 'ethers';
-import { ChargedState } from '../types';
-import { getAbi, getAddressByNetwork } from '../utils/initContract';
+import { ChargedState } from '../../types';
+import { getAbi, getAddressByNetwork } from '../../utils/initContract';
 export default class BaseService {
   readonly contractInstances: { [action: string]: {[address: string]: Contract} };
 

@@ -1,6 +1,6 @@
 import { ethers, providers, Signer } from "ethers";
-import { SUPPORTED_NETWORKS } from "./utils/getAddressFromNetwork";
-import { NetworkProvider, ChargedState } from "./types";
+import { SUPPORTED_NETWORKS } from "../utils/getAddressFromNetwork";
+import { NetworkProvider, ChargedState } from "../types";
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";

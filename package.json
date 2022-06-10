@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build --entry src/Charged.ts",
+    "build": "tsdx build --entry src/index.ts",
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",

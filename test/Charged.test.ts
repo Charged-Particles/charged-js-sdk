@@ -3,7 +3,7 @@ import { getWallet } from '../src/utils/testUtilities';
 import { BigNumber, ethers } from 'ethers';
 const Web3HttpProvider = require('web3-providers-http');
 
-import Charged from '../src/Charged';
+import Charged from '../src/charged/index';
 
 describe('Charged class', () => {
   const myWallet = getWallet();

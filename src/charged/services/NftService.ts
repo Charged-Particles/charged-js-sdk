@@ -1,6 +1,6 @@
 import { BigNumberish, ContractTransaction } from 'ethers';
 import { Networkish } from '@ethersproject/networks';
-import { ChargedState, managerId } from '../types';
+import { ChargedState, managerId } from '../../types';
 import BaseService from './baseService';
 
 export default class NftService extends BaseService {
