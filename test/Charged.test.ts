@@ -95,7 +95,7 @@ describe('Charged class', () => {
     expect(stateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
   });
 
-  it.only('Throws when Charged class is passed a not supported parameter', () => {
+  it('Throws when Charged class is passed a not supported parameter', () => {
     expect(() => {
       //@ts-ignore
       new Charged({externalProvider: providers});
