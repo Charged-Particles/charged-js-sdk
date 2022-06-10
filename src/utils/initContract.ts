@@ -11,7 +11,7 @@ import ProtonB from '../abis/v2/ProtonB.json';
 
 // Components
 import { MultiProvider, MultiSigner } from '../types';
-import { getAddressFromNetwork } from './getAddressFromNetwork';
+import { getAddressFromNetwork } from './networkUtilities';
 
 // Contract addresses
 import mainnetAddresses from '../networks/v2/mainnet.json';

@@ -1,5 +1,5 @@
 import { ethers, providers, Signer } from "ethers";
-import { SUPPORTED_NETWORKS } from "../utils/getAddressFromNetwork";
+import { SUPPORTED_NETWORKS, getDefaultProviderByNetwork } from "../utils/networkUtilities";
 import { NetworkProvider, ChargedState } from "../types";
 
 import UtilsService from "./services/UtilsService";
@@ -26,7 +26,7 @@ export default class Charged {
 
       if (Array.isArray(providers)) {
         providers?.forEach(({ network, service }) => {
-          initializedProviders[network] = ethers.getDefaultProvider(network, service);
+          initializedProviders[network] = getDefaultProviderByNetwork(network, service);
         });
       } else if (providers instanceof ethers.providers.Provider) {
         initializedProviders['external'] = providers;
