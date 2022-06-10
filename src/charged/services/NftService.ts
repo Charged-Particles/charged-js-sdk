@@ -1,5 +1,4 @@
 import { BigNumberish, ContractTransaction } from 'ethers';
-import { Networkish } from '@ethersproject/networks';
 import { ChargedState, managerId } from '../../types';
 import BaseService from './baseService';
 
@@ -18,24 +17,23 @@ export default class NftService extends BaseService {
     this.tokenId = tokenId;
   }
 
-  public async getChainIdsForBridgedNFTs() {
+  public async getChainIdsForBridgedNFTs(): Promise<number[]> {
     const { providers } = this.state;
 
-    const tokenChainIds: Networkish[] = [];
+    const tokenChainIds: number[] = [];
 
     try {
       for (const chainId in providers) {
-
         let provider = providers[chainId];
 
-        if (provider === void (0)) { continue };
+        if (provider === void(0)) { continue };
 
         const contractExists = await provider.getCode(this.contractAddress);
 
         if (contractExists !== '0x') { // contract exists on respective network
           if (chainId == 'external') {
             const { chainId } = await provider.getNetwork();
-            return chainId;
+            tokenChainIds.push(chainId);
           } else {
             tokenChainIds.push(Number(chainId));
           }
@@ -50,10 +48,10 @@ export default class NftService extends BaseService {
     return tokenChainIds;
   }
 
-  public async bridgeNFTCheck(signerNetwork: Networkish) {
+  public async bridgeNFTCheck(signerNetwork: number) {
     const tokenChainIds = await this.getChainIdsForBridgedNFTs();
 
-    if (signerNetwork == undefined) { throw new Error("Could not retrieve signers network.") };
+    if (signerNetwork === void(0)) { throw new Error("Could not retrieve signers network.") };
 
     if (tokenChainIds.includes(signerNetwork)) { return true }; // TODO: store this in class and retrieve to avoid expensive calls.
 
