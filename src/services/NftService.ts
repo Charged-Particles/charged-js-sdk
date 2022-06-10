@@ -1,9 +1,7 @@
 import { BigNumberish, ContractTransaction } from 'ethers';
 import { Networkish } from '@ethersproject/networks';
-import { ChargedState } from '../types';
+import { ChargedState, managerId } from '../types';
 import BaseService from './baseService';
-
-type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
 export default class NftService extends BaseService {
   public contractAddress: string;
@@ -34,10 +32,10 @@ export default class NftService extends BaseService {
 
         const contractExists = await provider.getCode(this.contractAddress);
 
-        if (contractExists !== '0x') {// contract exists on respective network
-          if (chainId == 'external') { //external provider
-            const providerNetwork = await provider.getNetwork();
-            return providerNetwork.chainId;
+        if (contractExists !== '0x') { // contract exists on respective network
+          if (chainId == 'external') {
+            const { chainId } = await provider.getNetwork();
+            return chainId;
           } else {
             tokenChainIds.push(Number(chainId));
           }
@@ -140,14 +138,10 @@ export default class NftService extends BaseService {
   ///    Must be called by the account providing the Asset
   ///    Account must Approve THIS contract as Operator of Asset
   ///
-  /// NOTE: DO NOT Energize an ERC20 Token, as anyone who holds any amount
-  ///       of the same ERC20 token could discharge or release the funds.
-  ///       All holders of the ERC20 token would essentially be owners of the Charged Particle.
-  ///
   /// @param walletManagerId  The Asset-Pair to Energize the Token with
   /// @param assetToken       The Address of the Asset Token being used
   /// @param assetAmount      The Amount of Asset Token to Energize the Token with
-  /// @param referrer         TODO: WHAT IS THIS?
+  /// @param referrer          
   /// @param chainId          Optional parameter that allows for the user to specify which network to write to.
   /// @return yieldTokensAmount The amount of Yield-bearing Tokens added to the escrow for the Token as a BigNumber
   public async energize(
@@ -170,7 +164,12 @@ export default class NftService extends BaseService {
       assetAmount,
       referrer ?? '0x0000000000000000000000000000000000000000'
     ];
-    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'energizeParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedParticles',
+      'energizeParticle',
+      signerNetwork,
+      parameters
+    );
     const receipt = await tx.wait();
     return receipt;
   }
@@ -200,7 +199,12 @@ export default class NftService extends BaseService {
       walletManagerId,
       assetToken
     ];
-    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'dischargeParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedParticles',
+      'dischargeParticle',
+      signerNetwork,
+      parameters
+    );
     const receipt = await tx.wait();
     return receipt;
   }
@@ -233,7 +237,12 @@ export default class NftService extends BaseService {
       assetToken,
       assetAmount
     ];
-    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'dischargeParticleAmount', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedParticles',
+      'dischargeParticleAmount',
+      signerNetwork,
+      parameters
+    );
     const receipt = await tx.wait();
     return receipt;
   }
@@ -265,7 +274,12 @@ export default class NftService extends BaseService {
       assetToken,
       assetAmount
     ];
-    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'dischargeParticleForCreator', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedParticles',
+      'dischargeParticleForCreator',
+      signerNetwork,
+      parameters
+    );
     const receipt = await tx.wait();
     return receipt;
   }
@@ -295,7 +309,12 @@ export default class NftService extends BaseService {
       walletManagerId,
       assetToken
     ];
-    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'releaseParticle', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedParticles',
+      'releaseParticle',
+      signerNetwork,
+      parameters
+    );
     const receipt = await tx.wait();
     return receipt;
   }
@@ -328,7 +347,12 @@ export default class NftService extends BaseService {
       assetToken,
       assetAmount
     ];
-    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'releaseParticleAmount', signerNetwork, parameters);
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedParticles',
+      'releaseParticleAmount',
+      signerNetwork,
+      parameters
+    );
     const receipt = await tx.wait();
     return receipt;
   }
@@ -364,11 +388,10 @@ export default class NftService extends BaseService {
       nftTokenId,
       nftTokenAmount
     ];
-
     const tx: ContractTransaction = await this.writeContract(
-      'chargedParticles', 
-      'covalentBond', 
-      signerNetwork, 
+      'chargedParticles',
+      'covalentBond',
+      signerNetwork,
       parameters
     );
 
@@ -409,8 +432,8 @@ export default class NftService extends BaseService {
 
     const tx: ContractTransaction = await this.writeContract(
       'chargedParticles',
-      'breakCovalentBond', 
-      signerNetwork, 
+      'breakCovalentBond',
+      signerNetwork,
       parameters
     );
 

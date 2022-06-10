@@ -19,3 +19,5 @@ export type ChargedState = {
   providers?: any;
   signer?: Signer;
 };
+
+export type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
