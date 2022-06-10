@@ -128,7 +128,6 @@ export default class BaseService {
     return requestedContract.callStatic[methodName](...params);
   }
 
-  
   public async getSignerAddress() {
     const { signer } = this.state;
 
