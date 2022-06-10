@@ -18,7 +18,7 @@ export default class Charged {
 
   constructor(params: ChargedConstructor = {}) {
 
-    const { providers, signer } = params;
+    const { providers, signer } = this.getValidatedParams(params);
 
     let initializedProviders: { [network: string]: providers.Provider } = {};
 
@@ -58,5 +58,16 @@ export default class Charged {
 
   public NFT(contractAddress: string, tokenId: number) {
     return new NftService(this.state, contractAddress, tokenId);
+  }
+
+  private getValidatedParams(params: ChargedConstructor) {
+    const validParameters = ['providers', 'signer', 'config'];
+
+    for (const param in params) {
+      if (!validParameters.includes(param)) {
+        throw Error(`${param} is not a valid parameter`);
+      }
+    }
+    return params;
   }
 }
