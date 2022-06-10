@@ -364,7 +364,14 @@ export default class NftService extends BaseService {
       nftTokenId,
       nftTokenAmount
     ];
-    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'covalentBond', signerNetwork, parameters);
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedParticles', 
+      'covalentBond', 
+      signerNetwork, 
+      parameters
+    );
+
     const receipt = await tx.wait();
     return receipt;
   }
@@ -388,7 +395,6 @@ export default class NftService extends BaseService {
   ) {
 
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -400,7 +406,14 @@ export default class NftService extends BaseService {
       nftTokenId,
       nftTokenAmount
     ];
-    const tx: ContractTransaction = await this.writeContract('chargedParticles', 'breakCovalentBond', signerNetwork, parameters);
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedParticles',
+      'breakCovalentBond', 
+      signerNetwork, 
+      parameters
+    );
+
     const receipt = await tx.wait();
     return receipt;
   }

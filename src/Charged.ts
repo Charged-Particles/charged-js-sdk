@@ -1,13 +1,11 @@
 import { ethers, providers, Signer } from "ethers";
 import { SUPPORTED_NETWORKS } from "./utils/getAddressFromNetwork";
+import { NetworkProvider, ChargedState } from "./types";
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
 
-// Types 
-import { NetworkProvider, ChargedState } from "./types";
-
-type constructorCharged = {
+type ChargedConstructor = {
   providers?: NetworkProvider[] | providers.Provider | providers.ExternalProvider,
   signer?: Signer,
 };
@@ -18,7 +16,7 @@ export default class Charged {
 
   readonly state: ChargedState;
 
-  constructor(params: constructorCharged = {}) {
+  constructor(params: ChargedConstructor = {}) {
 
     const { providers, signer } = params;
 
