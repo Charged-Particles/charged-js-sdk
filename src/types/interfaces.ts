@@ -10,19 +10,6 @@ export type ContractLocation = {
   startBlock: string
 }
 
-export interface swagasf {
-  [network: number]: {
-    [contract: string]: {
-      address: string,
-      startBlock: string
-    }
-  }
-}
-
-export interface butthole {
-
-}
-
 export interface NetworkContractLocations {
   [contract: string]: ContractLocation | string,
   network: string,

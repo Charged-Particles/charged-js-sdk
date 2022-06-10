@@ -27,17 +27,17 @@ export const getAbi = (contractName: string) => {
     case 'chargedSettings': return ChargedSettings;
     case 'chargedManagers': return ChargedManagers;
     case 'erc721': return ProtonB;
-    default: throw 'unknown contract name while trying to get abi';
+    default: throw `${contractName} is not valid in getAbi`;
   }
 }
 
 export const getAddress = (network: number, contractName: string) => {
-  const addresses = getAddressImport(network);
+  const addresses = getImportedContractLocations(network);
   const location = addresses[contractName];
   if(isContractLocation(location)) {
     return location.address;
   } else {
-    throw 'bad contract name passed into getAddressByNetwork';
+    throw `${contractName} is not valid in getAddress`;
   }
 }
 
@@ -46,12 +46,12 @@ const isContractLocation = (contract: ContractLocation | string): contract is Co
   return (contract as ContractLocation).address !== undefined;
 }
 
-const getAddressImport = (network: number) => {
+const getImportedContractLocations = (network: number) => {
   switch(network) {
     case 1: return mainnetAddresses;
     case 42: return kovanAddresses;
     case 137: return polygonAddresses;
     case 80001: return mumbaiAddresses;
-    default: throw 'bad/unknown network passed into getAddressImport'
+    default: throw `network id: ${network} is not a valid network in getImportedContractLocations`;
   }
 }
