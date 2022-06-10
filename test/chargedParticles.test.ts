@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import 'dotenv/config';
-import Charged from '../src/charged/index';
+import Charged from '../src/index';
+import { abisAndNetworks } from '../src/index';
 
 import kovanAddresses from '@charged-particles/protocol-subgraph/networks/kovan.json';
 import mainnetAddresses from '@charged-particles/protocol-subgraph/networks/mainnet.json';
@@ -33,7 +34,7 @@ describe('chargedParticles contract test', () => {
     const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
     const tokenId = 18;
 
-    it ('get state, managers, and settings addresses correctly on multiple chains', async () => {
+    it ('get state, managers, and settings  correctly on multiple chains', async () => {
 
       const charged = new Charged({providers});
 
@@ -106,4 +107,13 @@ describe('chargedParticles contract test', () => {
       expect(result).toHaveProperty('confirmations');
     })
   
+    it ('should create a contract from exported abis', async () => {
+      const contract = new ethers.Contract(
+        abisAndNetworks.mainnet.chargedParticles.address,
+        abisAndNetworks.chargedParticles,
+        ethers.getDefaultProvider()
+      )
+
+      expect(await contract.getStateAddress()).toEqual(abisAndNetworks.mainnet.chargedState.address);
+    })
 });
