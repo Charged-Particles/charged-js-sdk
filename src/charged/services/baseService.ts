@@ -37,8 +37,20 @@ export default class BaseService {
         this.contractInstances[action][address] = requestedContract;
 
       } else if (action === 'write') {
-        if (signer) {
-          const writeProvider = signer.connect(provider);
+        if (signer || providers['external']) {
+
+          let _signer;
+          let writeProvider;
+
+          if (Boolean(signer)) {
+            _signer = signer;
+            writeProvider = _signer?.connect(provider)
+          } else {
+            writeProvider = providers['external'].getSigner()
+            console.log({_signer});
+          }
+
+          
           const requestedContract = new ethers.Contract(
             address,
             getAbi(contractName),
