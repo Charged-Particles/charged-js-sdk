@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import 'dotenv/config';
-import Charged from '../src/Charged';
+import Charged from '../src/charged/index';
 
 import kovanAddresses from '@charged-particles/protocol-subgraph/networks/kovan.json';
 import mainnetAddresses from '@charged-particles/protocol-subgraph/networks/mainnet.json';

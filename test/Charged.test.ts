@@ -3,7 +3,7 @@ import { getWallet } from '../src/utils/testUtilities';
 import { BigNumber, ethers } from 'ethers';
 const Web3HttpProvider = require('web3-providers-http');
 
-import Charged from '../src/Charged';
+import Charged from '../src/charged/index';
 
 describe('Charged class', () => {
   const myWallet = getWallet();
@@ -50,7 +50,7 @@ describe('Charged class', () => {
   it('Initializes charged with default providers', async () => {
     const charged = new Charged();
 
-    const providers = charged.providers;
+    const providers = charged.state.providers;
 
     expect(providers).toHaveProperty('1');
     expect(providers).toHaveProperty('42');
@@ -95,7 +95,14 @@ describe('Charged class', () => {
     expect(stateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
   });
 
-  it.only('Should fetch from Mumbai Alchemy', async () => {
+  it('Throws when Charged class is passed a not supported parameter', () => {
+    expect(() => {
+      //@ts-ignore
+      new Charged({externalProvider: providers});
+    }).toThrow('externalProvider is not a valid parameter');
+  });
+
+  it('Should fetch from Mumbai Alchemy', async () => {
     const mumbaiProvider = [{ network: 80001, service: {alchemy: process.env.ALCHEMY_MUMBAI_KEY}}];
     const charged = new Charged({providers: mumbaiProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -103,7 +110,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
   });
 
-  it.only('Should fetch from Polygon Alchemy', async () => {
+  it('Should fetch from Polygon Alchemy', async () => {
     const polygonProvider = [{ network: 137, service: {alchemy: process.env.ALCHEMY_POLYGON_KEY}}];
     const charged = new Charged({providers: polygonProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -112,7 +119,7 @@ describe('Charged class', () => {
   });
 
   // KOVAN is deprecated via alchemy !!! whoops
-  it.skip('Should fetch from Kovan Alchemy', async () => {
+  it('Should fetch from Kovan Alchemy', async () => {
     const kovanProvider = [{ network: 42, service: {alchemy: process.env.ALCHEMY_KOVAN_KEY}}];
     const charged = new Charged({providers: kovanProvider})
     const allStateAddresses = await charged.utils.getStateAddress();

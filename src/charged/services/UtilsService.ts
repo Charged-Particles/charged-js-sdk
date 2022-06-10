@@ -1,10 +1,10 @@
-import { Configuration } from '../types';
+import { ChargedState } from '../../types';
 import BaseService from './baseService';
 
 export default class UtilsService extends BaseService {
 
-  constructor(config: Configuration) {
-    super(config);
+  constructor(state: ChargedState) {
+    super(state);
   }
 
   /// TODO: IMPLEMENT

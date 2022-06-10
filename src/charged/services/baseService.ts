@@ -1,13 +1,13 @@
 import { Contract, ethers } from 'ethers';
-import { Configuration } from '../types';
-import { getAbi, getAddress } from '../utils/contractUtilities';
+import { ChargedState } from '../../types';
+import { getAbi, getAddress } from '../../utils/contractUtilities';
 export default class BaseService {
   readonly contractInstances: { [action: string]: {[address: string]: Contract} };
 
-  readonly config: Configuration;
+  readonly state: ChargedState;
 
-  constructor(config: Configuration) {
-    this.config = config;
+  constructor(state: ChargedState) {
+    this.state = state;
     this.contractInstances = {
       read: {},
       write: {}
@@ -20,7 +20,7 @@ export default class BaseService {
     action: string,
     contractAddress?: string
   ): Contract {
-    const { providers, signer } = this.config;
+    const { providers, signer } = this.state;
 
     const provider = providers[network] ?? providers['external'];
     const address = contractAddress ?? getAddress(network, contractName);
@@ -61,7 +61,7 @@ export default class BaseService {
     params: any[] = [],
     contractAddress?: string
   ) {
-    const { providers } = this.config;
+    const { providers } = this.state;
 
     let transactions = [];
     let networks: (number)[] = [];
@@ -128,9 +128,8 @@ export default class BaseService {
     return requestedContract.callStatic[methodName](...params);
   }
 
-  
   public async getSignerAddress() {
-    const { signer } = this.config;
+    const { signer } = this.state;
 
     if (signer) { return signer?.getAddress(); };
 
@@ -138,7 +137,7 @@ export default class BaseService {
   }
 
   public async getSignerConnectedNetwork(network?: number): Promise<number> {
-    const { providers } = this.config;
+    const { providers } = this.state;
 
     const chainIds = Object.keys(providers);
     const chainIdsLength = chainIds.length;
