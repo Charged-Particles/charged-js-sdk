@@ -186,9 +186,7 @@ describe('Charged class', () => {
     }).rejects.toThrow('Trying to write with no signer');
   });
 
-  it.only('Default setting turns bridge nft check off', async() => {
-    // Uses default setting should not run nft bridge check.
-
+  it('Default setting turns bridge nft check off', async() => {
     const charged = new Charged({providers});
     const nft = charged.NFT(particleBAddress, tokenId);
 
@@ -197,7 +195,7 @@ describe('Charged class', () => {
     expect(NoNftBridgeCheck).toBeUndefined();
   });
 
-  it.only('Bridge NFT check setting to true', async() => {
+  it('Bridge NFT check setting to true', async() => {
     const userSetting = {sdk: {NftBridgeCheck: true}}
     const charged = new Charged({providers, config: userSetting});
     expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', true);

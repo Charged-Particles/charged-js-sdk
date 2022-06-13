@@ -85,7 +85,7 @@ describe('NFT service class', () => {
     }).rejects.toThrow();
   })
 
-  it.only ('Sets nonce to 1 for transaction', async() => {
+  it ('Sets nonce to 1 for transaction', async() => {
     const userSetting = {transactionOverride: { nonce: 1 } }
     const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
     const tokenId = 43;
