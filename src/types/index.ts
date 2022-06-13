@@ -21,3 +21,21 @@ export type ChargedState = {
 };
 
 export type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
+
+export type SettingsParam = {
+  sdk?: SdkSettings,
+  contractCallOverrides?: OverrideSettings
+}
+
+export type SdkSettings = {
+  NftBridgeCheck: boolean
+}
+
+export type OverrideSettings = {
+  from?: string,
+  value?: any,
+  gasPrice?: any,
+  gasLimit?: any,
+  blockTag?: any,
+  nonce?: any
+}
