@@ -102,7 +102,7 @@ describe('Charged class', () => {
     }).toThrow('externalProvider is not a valid parameter');
   });
 
-  it('Should fetch from Mumbai Alchemy', async () => {
+  it('Should fetch from Mumbai Alchemy using API key', async () => {
     const mumbaiProvider = [{ network: 80001, service: {alchemy: process.env.ALCHEMY_MUMBAI_KEY}}];
     const charged = new Charged({providers: mumbaiProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -110,7 +110,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
   });
 
-  it('Should fetch from Polygon Alchemy', async () => {
+  it('Should fetch from Polygon Alchemy using API key', async () => {
     const polygonProvider = [{ network: 137, service: {alchemy: process.env.ALCHEMY_POLYGON_KEY}}];
     const charged = new Charged({providers: polygonProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -119,7 +119,7 @@ describe('Charged class', () => {
   });
 
   // KOVAN is deprecated via alchemy !!! whoops
-  it('Should fetch from Kovan Alchemy', async () => {
+  it('Should fetch from Kovan Alchemy using API key', async () => {
     const kovanProvider = [{ network: 42, service: {alchemy: process.env.ALCHEMY_KOVAN_KEY}}];
     const charged = new Charged({providers: kovanProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -127,7 +127,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
   });
 
-  it('Should fetch from Mainnet Alchemy', async () => {
+  it('Should fetch from Mainnet Alchemy using API key', async () => {
     const mainnetProvider = [{ network: 1, service: {alchemy: process.env.ALCHEMY_MAINNET_KEY}}];
     const charged = new Charged({providers: mainnetProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -136,7 +136,7 @@ describe('Charged class', () => {
   });
 
   // INFURA_PROJECT_SECRET used for all four network tests below:
-  it('Should fetch from Mumbai Infura', async () => {
+  it('Should fetch from Mumbai Infura using project secret', async () => {
     const mumbaiProvider = [{ network: 80001, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
     const charged = new Charged({providers: mumbaiProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -144,7 +144,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
   });
 
-  it('Should fetch from Polygon Infura', async () => {
+  it('Should fetch from Polygon Infura using project secret', async () => {
     const polygonProvider = [{ network: 137, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
     const charged = new Charged({providers: polygonProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -152,7 +152,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('137', { "status": "fulfilled", "value": "0x9c00b8CF03f58c0420CDb6DE72E27Bf11964025b" });
   });
 
-  it('Should fetch from Kovan Infura', async () => {
+  it('Should fetch from Kovan Infura using project secret', async () => {
     const kovanProvider = [{ network: 42, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
     const charged = new Charged({providers: kovanProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -160,7 +160,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
   });
 
-  it('Should fetch from Mainnet Infura', async () => {
+  it('Should fetch from Mainnet Infura using project secret', async () => {
     const mainnetProvider = [{ network: 1, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
     const charged = new Charged({providers: mainnetProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -168,7 +168,55 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
   });
 
-  it.only('Throws when writing with no signer', async() => {
+  it('Should fetch from Kovan Infura using rpc url', async () => {
+    const kovanRpcUrlProvider = [
+      {
+        network: 42,
+        service: { 'rpc': `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_SECRET}`}
+      }
+    ];
+
+    const charged = new Charged({ providers: kovanRpcUrlProvider })
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
+  });
+
+  it('Should fetch from Mainnet Alchemy using rpc url', async () => {
+    const mainnetRpcUrlProvider = [
+      {
+        network: 1,
+        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`}
+      }
+    ];
+
+    const charged = new Charged({ providers: mainnetRpcUrlProvider })
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
+  });
+
+  it('Should fetch from both Kovan Infura and Mainnet Alchemy using rpc urls', async () => {
+
+    const providers = [
+      {
+        network: 1,
+        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`}
+      },
+      {
+        network: 42,
+        service: { 'rpc': `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_SECRET}`}
+      }
+    ];
+
+    const charged = new Charged({ providers })
+    const allStateAddresses = await charged.utils.getStateAddress();
+
+    expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
+    expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
+  });
+
+  it.skip('Throws when writing with no signer', async() => {
     const charged = new Charged({ providers });
 
     const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
