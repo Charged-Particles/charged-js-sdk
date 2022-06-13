@@ -1,10 +1,10 @@
 # Charged Particles SDK
 
-The Charged Particles SDK is a tool kit to help develops interact with the protocol with as little friction as possible. Click here to learn more about the protocol.
+The Charged Particles SDK is a tool kit to help develops interact with the protocol with as little friction as possible. Click [here](https://docs.charged.fi) to learn more about the protocol.
 
 ## Features
 
-- Full support for Charged Particles contracts. External contracts are…
+- Full support for Charged Particles contracts.
 - Easy to build with. Just pass provider keys and a signer if you wish to write and start building!
 - Compatible with either a web ui or a node environment.
 - Built with bridged NFTs in mind.
@@ -65,7 +65,7 @@ npm install @charged-particles/sdk
 *Be careful not to keep your API keys, seed phrase, or private key in clear text!*
 
 ```jsx
-import { Charged } from '@charged-particles/sdk'
+import Charged from '@charged-particles/sdk'
 
 /*
 Create your array with the providers you wish to use. It's best to provide at
