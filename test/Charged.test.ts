@@ -169,7 +169,6 @@ describe('Charged class', () => {
   });
 
   it.only('Should fetch from Kovan Infura using rpc url', async () => {
-
     const kovanRpcUrlProvider = [
       {
         network: 42,
@@ -180,13 +179,10 @@ describe('Charged class', () => {
     const charged = new Charged({ providers: kovanRpcUrlProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
-    expect(allStateAddresses).toHaveProperty('42');
-
-    // console.log(allStateAddresses);
+    expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
   });
 
   it.only('Should fetch from Mainnet Alchemy using rpc url', async () => {
-
     const mainnetRpcUrlProvider = [
       {
         network: 1,
@@ -197,9 +193,7 @@ describe('Charged class', () => {
     const charged = new Charged({ providers: mainnetRpcUrlProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
-    expect(allStateAddresses).toHaveProperty('1');
-
-    // console.log(allStateAddresses);
+    expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
   });
 
   it.only('Should fetch from both Kovan Infura and Mainnet Alchemy using rpc urls', async () => {
@@ -218,10 +212,8 @@ describe('Charged class', () => {
     const charged = new Charged({ providers })
     const allStateAddresses = await charged.utils.getStateAddress();
 
-    expect(allStateAddresses).toHaveProperty('1');
-    expect(allStateAddresses).toHaveProperty('42');
-
-    // console.log(allStateAddresses);
+    expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
+    expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
   });
 
   it.skip('Throws when writing with no signer', async() => {
