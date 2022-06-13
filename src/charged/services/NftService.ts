@@ -438,4 +438,91 @@ export default class NftService extends BaseService {
     const receipt = await tx.wait();
     return receipt;
   }
+
+  /// @notice Sets a Timelock on the ability to Release the Assets of a Particle
+  /// @param contractAddress  The Address to the NFT to Timelock
+  /// @param tokenId          The token ID of the NFT to Timelock
+  /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+  public async releaseTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ) {
+
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedState',
+      'setReleaseTimelock',
+      signerNetwork,
+      parameters
+    );
+
+    const receipt = await tx.wait();
+    return receipt;
+  }
+
+  /// @notice Sets a Timelock on the ability to Discharge the Interest of a Particle
+  /// @param contractAddress  The Address to the NFT to Timelock
+  /// @param tokenId          The token ID of the NFT to Timelock
+  /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+  public async dischargeTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ) {
+
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedState',
+      'setDischargeTimelock',
+      signerNetwork,
+      parameters
+    );
+
+    const receipt = await tx.wait();
+    return receipt;
+  }
+
+  /// @notice Sets a Timelock on the ability to Break the Covalent Bond of a Particle
+  /// @param contractAddress  The Address to the NFT to Timelock
+  /// @param tokenId          The token ID of the NFT to Timelock
+  /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+  public async bondsTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ) {
+
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedState',
+      'setBreakBondTimelock',
+      signerNetwork,
+      parameters
+    );
+
+    const receipt = await tx.wait();
+    return receipt;
+  }
 }
