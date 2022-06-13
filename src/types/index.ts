@@ -18,20 +18,21 @@ export type NetworkProvider = {
 export type ChargedState = {
   providers?: any;
   signer?: Signer;
+  configuration: ConfigurationParameters;
 };
 
 export type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
-export type SettingsParam = {
-  sdk?: SdkSettings,
-  contractCallOverrides?: OverrideSettings
+export type ConfigurationParameters = {
+  sdk?: SdkConfiguration,
+  contractCallOverrides?: OverrideConfiguration
 }
 
-export type SdkSettings = {
+export type SdkConfiguration = {
   NftBridgeCheck: boolean
 }
 
-export type OverrideSettings = {
+export type OverrideConfiguration = {
   from?: string,
   value?: any,
   gasPrice?: any,
