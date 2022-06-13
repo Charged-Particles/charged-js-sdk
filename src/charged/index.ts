@@ -51,7 +51,7 @@ export default class Charged {
 
     const defaultConfig: ConfigurationParameters = {
       sdk: { NftBridgeCheck: false },
-      contractCallOverrides: {} 
+      transactionOverride: {},
     }
     
     this.state = {

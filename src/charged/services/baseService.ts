@@ -110,9 +110,11 @@ export default class BaseService {
     params: any[] = [],
     contractAddress?: string
   ) {
+    const { transactionOverride } = this.state.configuration;
+    
     const action = 'write';
     const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
-    return requestedContract[methodName](...params);
+    return requestedContract[methodName](...params, transactionOverride);
   }
 
   public async readContract(
@@ -122,9 +124,11 @@ export default class BaseService {
     params: any[] = [],
     contractAddress?: string
   ) {
+    const { transactionOverride } = this.state.configuration;
+
     const action = 'read';
     const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
-    return requestedContract.callStatic[methodName](...params);
+    return requestedContract.callStatic[methodName](...params, transactionOverride);
   }
 
   public async getSignerAddress() {

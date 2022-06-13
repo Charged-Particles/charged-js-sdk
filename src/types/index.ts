@@ -25,14 +25,14 @@ export type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
 export type ConfigurationParameters = {
   sdk?: SdkConfiguration,
-  contractCallOverrides?: OverrideTransactionConfiguration
+  transactionOverride?: TransactionOverride
 }
 
 export type SdkConfiguration = {
   NftBridgeCheck: boolean
 }
 
-export type OverrideTransactionConfiguration = {
+export type TransactionOverride = {
   from?: string,
   value?: any,
   gasPrice?: any,
