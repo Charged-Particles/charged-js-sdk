@@ -58,6 +58,9 @@ export const getRpcUrl = (network: number, service: any): string => {
       rpcUrl = rpcUrlEtherscan;
       apiKey = service.etherscan;
       break;
+
+    case 'rpc': return service.rpc;
+
   }
 
   return rpcUrl.replace('{chainName}', chainName).replace('{apiKey}', apiKey);
@@ -66,8 +69,6 @@ export const getRpcUrl = (network: number, service: any): string => {
 export const getDefaultProviderByNetwork = (network: number, service: any): ethers.providers.BaseProvider => {
   const rpcUrl = getRpcUrl(network, service);
   const defaultProvider: ethers.providers.BaseProvider = ethers.getDefaultProvider(getRpcNetwork(network, rpcUrl));
-  // should we reintroduce ethers.getDefaultProvider(network, service) for the !connectedToPolygon case???
-
   return defaultProvider;
 }
 
