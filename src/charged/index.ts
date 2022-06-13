@@ -1,6 +1,6 @@
 import { ethers, providers, Signer } from "ethers";
 import { SUPPORTED_NETWORKS, getDefaultProviderByNetwork } from "../utils/networkUtilities";
-import { NetworkProvider, ChargedState } from "../types";
+import { NetworkProvider, ChargedState, ConfigurationParameters } from "../types";
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
@@ -8,6 +8,7 @@ import NftService from "./services/NftService";
 type ChargedConstructor = {
   providers?: NetworkProvider[] | providers.Provider | providers.ExternalProvider,
   signer?: Signer,
+  config?: ConfigurationParameters
 };
 
 export default class Charged {
@@ -18,7 +19,7 @@ export default class Charged {
 
   constructor(params: ChargedConstructor = {}) {
 
-    const { providers, signer } = this.getValidatedParams(params);
+    const { providers, signer, config: userConfig } = this.getValidatedParams(params);
 
     let initializedProviders: { [network: string]: providers.Provider } = {};
 
@@ -48,9 +49,15 @@ export default class Charged {
       );
     }
 
+    const defaultConfig: ConfigurationParameters = {
+      sdk: { NftBridgeCheck: false },
+      contractCallOverrides: {} 
+    }
+    
     this.state = {
       signer,
       providers: initializedProviders,
+      configuration: {...defaultConfig, ...userConfig}
     };
 
     this.utils = new UtilsService(this.state);

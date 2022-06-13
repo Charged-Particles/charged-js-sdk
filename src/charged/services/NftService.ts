@@ -49,6 +49,10 @@ export default class NftService extends BaseService {
   }
 
   public async bridgeNFTCheck(signerNetwork: number) {
+    const { configuration } = this.state;
+
+    if (! configuration.sdk?.NftBridgeCheck) { return };
+
     const tokenChainIds = await this.getChainIdsForBridgedNFTs();
 
     if (signerNetwork === void(0)) { throw new Error("Could not retrieve signers network.") };
