@@ -202,4 +202,5 @@ describe('Charged class', () => {
     const charged = new Charged({providers, config: userSetting});
     expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', true);
   });
+
 });
