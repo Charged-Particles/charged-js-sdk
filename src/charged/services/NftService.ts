@@ -128,6 +128,45 @@ export default class NftService extends BaseService {
     );
   }
 
+  public async getDischargeState(sender: string) {
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      sender
+    ];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getDischargeState',
+      parameters
+    );
+  }
+
+  public async getReleaseState(sender: string) {
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      sender
+    ];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getReleaseState',
+      parameters
+    );
+  }
+
+  public async getBreakBondState(sender: string) {
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      sender
+    ];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getBreakBondState',
+      parameters
+    );
+  }
+
   /***********************************|
  |        Write Functions             |
  |__________________________________*/
