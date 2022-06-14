@@ -154,7 +154,7 @@ export default class NftService extends BaseService {
     );
   }
 
-  public async getBreakBondState(sender: string) {
+  public async getBondsState(sender: string) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
