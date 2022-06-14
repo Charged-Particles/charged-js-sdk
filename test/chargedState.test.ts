@@ -62,7 +62,7 @@ describe('chargedState contract test', () => {
         // expect(releaseState).toHaveProperty('confirmations');
     });
 
-    it.only ('should set discharge timelock', async () => {
+    it('should set discharge timelock', async () => {
         // ignoring .env type checking
         // @ts-ignore
         const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
@@ -76,7 +76,7 @@ describe('chargedState contract test', () => {
         // expect(result).toHaveProperty('confirmations');
     });
 
-    it.only ('should get discharge timelock', async () => {
+    it('should get discharge timelock', async () => {
         // ignoring .env type checking
         // @ts-ignore
         const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
@@ -85,6 +85,34 @@ describe('chargedState contract test', () => {
         const dischargeState = await nft.getDischargeState(walletAddress);
 
         console.log({'arr': dischargeState['42'].value})
+  
+        // TODO: Expect something with the response?
+        // expect(releaseState).toHaveProperty('confirmations');
+    });
+
+    it.only('should set bonds timelock', async () => {
+        // ignoring .env type checking
+        // @ts-ignore
+        const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+        
+        const nft = charged.NFT(address, tokenId);
+        const result = await nft.bondsTimelock(32174859);
+
+        console.log({result})
+  
+        // TODO: Expect something with the response?
+        // expect(result).toHaveProperty('confirmations');
+    });
+
+    it.only('should get bonds timelock', async () => {
+        // ignoring .env type checking
+        // @ts-ignore
+        const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+        
+        const nft = charged.NFT(address, tokenId);
+        const bondsState = await nft.getBondsState(walletAddress);
+
+        console.log({'arr': bondsState['42'].value})
   
         // TODO: Expect something with the response?
         // expect(releaseState).toHaveProperty('confirmations');
