@@ -28,8 +28,6 @@ describe('Charged class', () => {
 
     expect(allStateAddresses).toHaveProperty('1');
     expect(allStateAddresses).toHaveProperty('42');
-
-    console.log(allStateAddresses);
   });
 
   it('Initializes NFT service', async () => {
@@ -80,7 +78,7 @@ describe('Charged class', () => {
       network
     );
 
-    console.log({ receipt }); // TODO: expect !
+    expect(receipt).toHaveProperty('status', 1)
   });
 
   it('Initializes with ether.js external provider', async () => {
