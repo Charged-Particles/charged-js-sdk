@@ -1,4 +1,12 @@
-import { rpcUrlMainnet } from '../src/utils/config';
+import { 
+  rpcUrlMainnet, 
+  infuraProjectId, 
+  alchemyMainnetKey, 
+  alchemyMumbaiKey,
+  alchemyKovanKey,
+  alchemyPolygonKey
+} from '../src/utils/config';
+
 import { getWallet } from '../src/utils/testUtilities';
 import { BigNumber, ethers } from 'ethers';
 const Web3HttpProvider = require('web3-providers-http');
@@ -10,7 +18,7 @@ describe('Charged class', () => {
   const providers = [
     {
       network: 1,
-      service: { 'alchemy': process.env.ALCHEMY_MAINNET_KEY }
+      service: { 'alchemy': alchemyMainnetKey }
     },
     {
       network: 42,
@@ -105,7 +113,7 @@ describe('Charged class', () => {
   });
 
   it('Should fetch from Mumbai Alchemy using API key', async () => {
-    const mumbaiProvider = [{ network: 80001, service: { alchemy: process.env.ALCHEMY_MUMBAI_KEY } }];
+    const mumbaiProvider = [{ network: 80001, service: { alchemy: alchemyMumbaiKey } }];
     const charged = new Charged({ providers: mumbaiProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
@@ -113,7 +121,7 @@ describe('Charged class', () => {
   });
 
   it('Should fetch from Polygon Alchemy using API key', async () => {
-    const polygonProvider = [{ network: 137, service: { alchemy: process.env.ALCHEMY_POLYGON_KEY } }];
+    const polygonProvider = [{ network: 137, service: { alchemy: alchemyPolygonKey } }];
     const charged = new Charged({ providers: polygonProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
@@ -122,7 +130,7 @@ describe('Charged class', () => {
 
   // KOVAN is deprecated via alchemy !!! whoops
   it('Should fetch from Kovan Alchemy using API key', async () => {
-    const kovanProvider = [{ network: 42, service: { alchemy: process.env.ALCHEMY_KOVAN_KEY } }];
+    const kovanProvider = [{ network: 42, service: { alchemy: alchemyKovanKey } }];
     const charged = new Charged({ providers: kovanProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
@@ -130,7 +138,7 @@ describe('Charged class', () => {
   });
 
   it('Should fetch from Mainnet Alchemy using API key', async () => {
-    const mainnetProvider = [{ network: 1, service: { alchemy: process.env.ALCHEMY_MAINNET_KEY } }];
+    const mainnetProvider = [{ network: 1, service: { alchemy: alchemyMainnetKey } }];
     const charged = new Charged({ providers: mainnetProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
@@ -139,7 +147,7 @@ describe('Charged class', () => {
 
   // INFURA_PROJECT_ID used for all four network tests below:
   it.skip('Should fetch from Mumbai Infura using project secret', async () => {
-    const mumbaiProvider = [{ network: 80001, service: { infura: process.env.INFURA_PROJECT_ID } }];
+    const mumbaiProvider = [{ network: 80001, service: { infura: infuraProjectId } }];
     const charged = new Charged({ providers: mumbaiProvider });
     const allStateAddresses = await charged.utils.getStateAddress();
 
@@ -147,7 +155,7 @@ describe('Charged class', () => {
   });
 
   it.skip('Should fetch from Polygon Infura using project secret', async () => {
-    const polygonProvider = [{ network: 137, service: { infura: process.env.INFURA_PROJECT_ID } }];
+    const polygonProvider = [{ network: 137, service: { infura: infuraProjectId } }];
     const charged = new Charged({ providers: polygonProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
@@ -155,7 +163,7 @@ describe('Charged class', () => {
   });
 
   it('Should fetch from Kovan Infura using project secret', async () => {
-    const kovanProvider = [{ network: 42, service: { infura: process.env.INFURA_PROJECT_ID } }];
+    const kovanProvider = [{ network: 42, service: { infura: infuraProjectId } }];
     const charged = new Charged({ providers: kovanProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
@@ -163,7 +171,7 @@ describe('Charged class', () => {
   });
 
   it('Should fetch from Mainnet Infura using project secret', async () => {
-    const mainnetProvider = [{ network: 1, service: { infura: process.env.INFURA_PROJECT_ID } }];
+    const mainnetProvider = [{ network: 1, service: { infura: infuraProjectId } }];
     const charged = new Charged({ providers: mainnetProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
@@ -174,7 +182,7 @@ describe('Charged class', () => {
     const kovanRpcUrlProvider = [
       {
         network: 42,
-        service: { 'rpc': `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}` }
+        service: { 'rpc': `https://kovan.infura.io/v3/${infuraProjectId}` }
       }
     ];
 
@@ -188,7 +196,7 @@ describe('Charged class', () => {
     const mainnetRpcUrlProvider = [
       {
         network: 1,
-        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}` }
+        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${alchemyMainnetKey}` }
       }
     ];
 
@@ -203,11 +211,11 @@ describe('Charged class', () => {
     const providers = [
       {
         network: 1,
-        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}` }
+        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${alchemyMainnetKey}` }
       },
       {
         network: 42,
-        service: { 'rpc': `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_ID}` }
+        service: { 'rpc': `https://kovan.infura.io/v3/${infuraProjectId}` }
       }
     ];
 
