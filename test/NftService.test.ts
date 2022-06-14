@@ -85,4 +85,25 @@ describe('NFT service class', () => {
     }).rejects.toThrow();
   })
 
+  it ('Sets nonce to 1 for transaction', async() => {
+    const userSetting = {transactionOverride: { nonce: 1 } }
+    const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+    const tokenId = 43;
+    const network = 42;
+
+    const charged = new Charged({providers, signer, config: userSetting});
+    expect(charged).toHaveProperty('state.configuration.transactionOverride.nonce', 1);
+    
+    const nft = charged.NFT(particleBAddress, tokenId);
+
+    await expect(async () => {
+      return await nft.energize(
+        'aave.B',
+        '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
+        BigNumber.from(10),
+        network
+      );
+    }).rejects.toThrow('nonce has already been used'); 
+
+  });
 });

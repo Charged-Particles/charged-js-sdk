@@ -18,6 +18,10 @@ describe('Charged class', () => {
     }
   ]
 
+  const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+  const tokenId = 43;
+  const network = 42;
+
   it('Initializes charged SDK', async () => {
     const charged = new Charged({ providers })
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -218,11 +222,6 @@ describe('Charged class', () => {
 
   it.skip('Throws when writing with no signer', async() => {
     const charged = new Charged({ providers });
-
-    const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-    const tokenId = 43;
-    const network = 42;
-
     const nft = charged.NFT(particleBAddress, tokenId);
 
     await expect(async() => {
@@ -233,6 +232,21 @@ describe('Charged class', () => {
         network
       );
     }).rejects.toThrow('Trying to write with no signer');
+  });
+
+  it('Default setting turns bridge nft check off', async() => {
+    const charged = new Charged({providers});
+    const nft = charged.NFT(particleBAddress, tokenId);
+
+    expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', false);
+    const NoNftBridgeCheck = await nft.bridgeNFTCheck(42);
+    expect(NoNftBridgeCheck).toBeUndefined();
+  });
+
+  it('Bridge NFT check setting to true', async() => {
+    const userSetting = {sdk: {NftBridgeCheck: true}}
+    const charged = new Charged({providers, config: userSetting});
+    expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', true);
   });
 
 });
