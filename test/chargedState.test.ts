@@ -12,7 +12,7 @@ describe('chargedState contract test', () => {
     const ENJCoin = '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2';
     const walletAddress = '0x277bfc4a8dc79a9f194ad4a83468484046fafd3a';
 
-    const expectedTimelockedBlockNumber = 32174859;
+    const expectedUnlockBlockNumber = 32174859;
 
     const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
     const tokenId = 78;
@@ -34,7 +34,7 @@ describe('chargedState contract test', () => {
         const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
         
         const nft = charged.NFT(address, tokenId);
-        const result = await nft.releaseTimelock(expectedTimelockedBlockNumber);
+        const result = await nft.releaseTimelock(expectedUnlockBlockNumber);
 
         console.log({result});
     });
@@ -63,7 +63,7 @@ describe('chargedState contract test', () => {
         const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
         
         const nft = charged.NFT(address, tokenId);
-        const result = await nft.dischargeTimelock(expectedTimelockedBlockNumber);
+        const result = await nft.dischargeTimelock(expectedUnlockBlockNumber);
 
         console.log({result});
     });
@@ -86,7 +86,7 @@ describe('chargedState contract test', () => {
         console.log({allowFromAll, isApproved, timelock, tmpTimelockExpiry});
 
         expect(isApproved).toEqual(true);
-        expect(timelock).toEqual(expectedTimelockedBlockNumber);
+        expect(timelock).toEqual(expectedUnlockBlockNumber);
     });
 
     it('should set bonds timelock', async () => {
@@ -95,7 +95,7 @@ describe('chargedState contract test', () => {
         const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
         
         const nft = charged.NFT(address, tokenId);
-        const result = await nft.bondsTimelock(expectedTimelockedBlockNumber);
+        const result = await nft.bondsTimelock(expectedUnlockBlockNumber);
 
         console.log({result})
     });
@@ -118,7 +118,7 @@ describe('chargedState contract test', () => {
         console.log({allowFromAll, isApproved, timelock, tmpTimelockExpiry});
 
         expect(isApproved).toEqual(true);
-        expect(timelock).toEqual(expectedTimelockedBlockNumber);
+        expect(timelock).toEqual(expectedUnlockBlockNumber);
     });
 
 });
