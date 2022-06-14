@@ -22,7 +22,7 @@ describe('chargedState contract test', () => {
     const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
     const tokenId = 78;
 
-    it ('should energize', async () => {
+    it('should energize', async () => {
       // ignoring .env type checking
       // @ts-ignore
       const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
@@ -34,7 +34,7 @@ describe('chargedState contract test', () => {
       expect(result).toHaveProperty('confirmations');
     });
 
-    it.only ('should set release timelock', async () => {
+    it ('should set release timelock', async () => {
         // ignoring .env type checking
         // @ts-ignore
         const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
@@ -48,7 +48,7 @@ describe('chargedState contract test', () => {
         // expect(result).toHaveProperty('confirmations');
     });
 
-    it.only ('should get release timelock', async () => {
+    it('should get release timelock', async () => {
         // ignoring .env type checking
         // @ts-ignore
         const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
@@ -62,5 +62,32 @@ describe('chargedState contract test', () => {
         // expect(releaseState).toHaveProperty('confirmations');
     });
 
+    it.only ('should set discharge timelock', async () => {
+        // ignoring .env type checking
+        // @ts-ignore
+        const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+        
+        const nft = charged.NFT(address, tokenId);
+        const result = await nft.dischargeTimelock(32174859);
+
+        console.log({result})
+  
+        // TODO: Expect something with the response?
+        // expect(result).toHaveProperty('confirmations');
+    });
+
+    it.only ('should get discharge timelock', async () => {
+        // ignoring .env type checking
+        // @ts-ignore
+        const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+        
+        const nft = charged.NFT(address, tokenId);
+        const dischargeState = await nft.getDischargeState(walletAddress);
+
+        console.log({'arr': dischargeState['42'].value})
+  
+        // TODO: Expect something with the response?
+        // expect(releaseState).toHaveProperty('confirmations');
+    });
 
 });
