@@ -138,15 +138,15 @@ describe('Charged class', () => {
   });
 
   // INFURA_PROJECT_SECRET used for all four network tests below:
-  it('Should fetch from Mumbai Infura using project secret', async () => {
+  it.skip('Should fetch from Mumbai Infura using project secret', async () => {
     const mumbaiProvider = [{ network: 80001, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
-    const charged = new Charged({providers: mumbaiProvider})
+    const charged = new Charged({providers: mumbaiProvider});
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
   });
 
-  it('Should fetch from Polygon Infura using project secret', async () => {
+  it.skip('Should fetch from Polygon Infura using project secret', async () => {
     const polygonProvider = [{ network: 137, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
     const charged = new Charged({providers: polygonProvider})
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -218,7 +218,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
   });
 
-  it.skip('Throws when writing with no signer', async() => {
+  it('Throws when writing with no signer', async() => {
     const charged = new Charged({ providers });
     const nft = charged.NFT(particleBAddress, tokenId);
 
@@ -246,5 +246,4 @@ describe('Charged class', () => {
     const charged = new Charged({providers, config: userSetting});
     expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', true);
   });
-
 });
