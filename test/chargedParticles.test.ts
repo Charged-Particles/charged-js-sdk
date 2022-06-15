@@ -76,7 +76,7 @@ describe('chargedParticles contract test', () => {
     const charge = ethers.utils.formatUnits(chargeBN['42'].value);
     const bonds = bondsBN['42'].value.toNumber();
 
-    expect(Number(mass)).toBeCloseTo(1235, 1);
+    expect(Number(mass)).toBeCloseTo(1188, 1);
     // This value could be out of date. Check https://staging.app.charged.fi/go/energize/0xd1bce91a13089b1f3178487ab8d0d2ae191c1963/18
     expect(Number(charge)).toBeCloseTo(0);
     expect(Number(bonds)).toEqual(3);
