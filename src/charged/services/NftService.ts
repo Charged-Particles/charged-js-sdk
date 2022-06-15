@@ -485,7 +485,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /// @notice Sets the Custom Configuration for Creators of Proton-based NFTs
+  /// @notice Sets a Custom Receiver Address for the Creator Annuities
   /// @param receiver         The receiver of the Creator interest-annuities
   public async setCreatorAnnuitiesRedirect(receiver:string, chainId?:number) {
     
