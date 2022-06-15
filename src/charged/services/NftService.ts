@@ -117,18 +117,56 @@ export default class NftService extends BaseService {
 
   /// @notice Gets the total amount of ERC721 Tokens that the Particle holds
   /// @param basketManagerId  The ID of the BasketManager to check the token balance of
-  /// @return The total amount of ERC721 tokens that are held  within the Particle as a BigNumber
+  /// @return The total amount of ERC721 tokens that are held within the Particle as a BigNumber
   public async getBonds(basketManagerId: string) {
     const parameters = [this.contractAddress, this.tokenId, basketManagerId];
     return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters);
   }
 
+  /// @notice Gets the tokenUri using the tokenId and contractAddress of the Particle
+  /// @return The tokenUri in string format for the Particle in question
   public async tokenURI() {
     return await this.fetchAllNetworks(
       'erc721',
       'tokenURI',
       [this.tokenId],
       this.contractAddress,
+    );
+  }
+
+  /// @notice Gets the Discharge Timelock state of the Particle
+  /// @param sender  The address approved for Discharging assets from the Particle
+  /// @return [ allowFromAll: bool, isApproved: bool, timelock: BN, tempLockExpiry: BN ]
+  public async getDischargeState(sender: string) {
+    const parameters = [this.contractAddress, this.tokenId, sender];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getDischargeState',
+      parameters
+    );
+  }
+
+  /// @notice Gets the Release Timelock state of the Particle
+  /// @param sender  The address approved for Releasing assets from the Particle
+  /// @return [ allowFromAll: bool, isApproved: bool, timelock: BN, tempLockExpiry: BN ]
+  public async getReleaseState(sender: string) {
+    const parameters = [this.contractAddress, this.tokenId, sender];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getReleaseState',
+      parameters
+    );
+  }
+
+  /// @notice Gets the Bonds Timelock state of the Particle
+  /// @param sender  The address approved for removing Bond assets from the Particle
+  /// @return [ allowFromAll: bool, isApproved: bool, timelock: BN, tempLockExpiry: BN ]
+  public async getBondsState(sender: string) {
+    const parameters = [this.contractAddress, this.tokenId, sender];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getBreakBondState',
+      parameters
     );
   }
 
@@ -435,6 +473,93 @@ export default class NftService extends BaseService {
     const tx: ContractTransaction = await this.writeContract(
       'chargedParticles',
       'breakCovalentBond',
+      signerNetwork,
+      parameters
+    );
+
+    const receipt = await tx.wait();
+    return receipt;
+  }
+
+  /// @notice Sets a Timelock on the ability to Release the Assets of a Particle
+  /// @param contractAddress  The Address to the NFT to Timelock
+  /// @param tokenId          The token ID of the NFT to Timelock
+  /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+  public async releaseTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ) {
+
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedState',
+      'setReleaseTimelock',
+      signerNetwork,
+      parameters
+    );
+
+    const receipt = await tx.wait();
+    return receipt;
+  }
+
+  /// @notice Sets a Timelock on the ability to Discharge the Interest of a Particle
+  /// @param contractAddress  The Address to the NFT to Timelock
+  /// @param tokenId          The token ID of the NFT to Timelock
+  /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+  public async dischargeTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ) {
+
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedState',
+      'setDischargeTimelock',
+      signerNetwork,
+      parameters
+    );
+
+    const receipt = await tx.wait();
+    return receipt;
+  }
+
+  /// @notice Sets a Timelock on the ability to Break the Covalent Bond of a Particle
+  /// @param contractAddress  The Address to the NFT to Timelock
+  /// @param tokenId          The token ID of the NFT to Timelock
+  /// @param unlockBlock      The Ethereum Block-number to Timelock until (~15 seconds per block)
+  public async bondsTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ) {
+
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedState',
+      'setBreakBondTimelock',
       signerNetwork,
       parameters
     );
