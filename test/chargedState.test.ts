@@ -1,4 +1,3 @@
-// import { ethers } from 'ethers';
 import 'dotenv/config';
 import Charged from '../src/charged/index';
 import { getWallet } from '../src/utils/testUtilities';
