@@ -39,7 +39,7 @@ describe('chargedSettings contract test', () => {
       expect(result2).toHaveProperty('confirmations');
     })
     
-    it.only  ('should get creator annuities', async () => {
+    it ('should get creator annuities', async () => {
       // ignoring .env type checking
       // @ts-ignore
       const charged = new Charged({providers: providersKovan})
