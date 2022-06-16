@@ -1,19 +1,20 @@
-import { 
-  rpcUrlMainnet, 
-  infuraProjectId, 
-  alchemyMainnetKey, 
+import {
+  rpcUrlMainnet,
+  infuraProjectId,
+  alchemyMainnetKey,
   alchemyMumbaiKey,
   alchemyKovanKey,
   alchemyPolygonKey
-} from '../src/utils/config';
+} from '../../src/utils/config';
 
-import { getWallet } from '../src/utils/testUtilities';
+import { getWallet } from '../../src/utils/testUtilities';
 import { BigNumber, ethers } from 'ethers';
 const Web3HttpProvider = require('web3-providers-http');
 
-import Charged from '../src/charged/index';
+import Charged from '../../src/charged/index';
 
 describe('Charged class', () => {
+  const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
   const myWallet = getWallet();
   const providers = [
     {
@@ -24,7 +25,13 @@ describe('Charged class', () => {
       network: 42,
       service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
     }
-  ]
+  ];
+  const localProvider = [
+    {
+      network: 42,
+      service: { 'rpc': localTestNetRpcUrl}
+    }
+  ];
 
   const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
   const tokenId = 43;
@@ -72,7 +79,7 @@ describe('Charged class', () => {
   });
 
   it('energize a test particle', async () => {
-    const charged = new Charged({ providers, signer: myWallet });
+    const charged = new Charged({ providers: localProvider, signer: myWallet });
 
     const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
     const tokenId = 43;
@@ -227,7 +234,7 @@ describe('Charged class', () => {
   });
 
   it('Throws when writing with no signer', async () => {
-    const charged = new Charged({ providers });
+    const charged = new Charged({ providers: localProvider });
     const nft = charged.NFT(particleBAddress, tokenId);
 
     await expect(async () => {
@@ -241,7 +248,7 @@ describe('Charged class', () => {
   });
 
   it('Default setting turns bridge nft check off', async () => {
-    const charged = new Charged({ providers });
+    const charged = new Charged({ providers: localProvider });
     const nft = charged.NFT(particleBAddress, tokenId);
 
     expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', false);
@@ -251,7 +258,7 @@ describe('Charged class', () => {
 
   it('Bridge NFT check setting to true', async () => {
     const userSetting = { sdk: { NftBridgeCheck: true } }
-    const charged = new Charged({ providers, config: userSetting });
+    const charged = new Charged({ providers: localProvider, config: userSetting });
     expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', true);
   });
 });

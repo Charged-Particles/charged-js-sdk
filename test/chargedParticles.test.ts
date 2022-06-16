@@ -112,6 +112,6 @@ describe('chargedParticles contract test', () => {
     )
 
     expect(await contract.getStateAddress()).toEqual(mainnetAddresses.chargedState.address);
-  })
+  });
 
 });
