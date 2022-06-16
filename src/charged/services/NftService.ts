@@ -584,7 +584,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /// @notice Sets the Custom Configuration for Creators of Proton-based NFTs
+  /// @notice Sets the custom configuration for creators of proton-based NFTs
   /// @param creator          The creator of the Proton-based NFT
   /// @param annuityPercent   The percentage of interest-annuities to reserve for the creator
   public async setCreatorAnnuities(creator: string, annuityPercent:BigNumberish, chainId?:number) {
@@ -610,7 +610,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /// @notice Sets a Custom Receiver Address for the Creator Annuities
+  /// @notice Sets a custom receiver address for the creator annuities
   /// @param receiver         The receiver of the Creator interest-annuities
   public async setCreatorAnnuitiesRedirect(receiver:string, chainId?:number) {
     

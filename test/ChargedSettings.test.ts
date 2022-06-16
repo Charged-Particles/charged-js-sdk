@@ -6,6 +6,7 @@ get/setCreatorAnnuitiesRedirect
 import { ethers } from 'ethers';
 import 'dotenv/config';
 import Charged from '../src/index';
+import { getWallet } from '../src/utils/testUtilities';
 
 /*
 This test uses the team test wallet's mnemonic
@@ -19,15 +20,15 @@ describe('chargedSettings contract test', () => {
       }
     ]
 
+    const signer = getWallet();
+
     const creatorAddy = '0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A';
     const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
     const tokenId = 85;
 
     
     it ('should change annuity pct', async () => {
-      // ignoring .env type checking
-      // @ts-ignore
-      const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
+      const charged = new Charged({providers: providersKovan, signer})
       
       const receiver = '0xFD424D0E0CD49D6AD8f08893CE0D53F8EAEB4213';
       const nft = charged.NFT(address, tokenId);
@@ -40,8 +41,6 @@ describe('chargedSettings contract test', () => {
     })
     
     it ('should get creator annuities', async () => {
-      // ignoring .env type checking
-      // @ts-ignore
       const charged = new Charged({providers: providersKovan})
       
       const nft = charged.NFT(address, tokenId);
