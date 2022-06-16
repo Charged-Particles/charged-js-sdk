@@ -123,6 +123,22 @@ export default class NftService extends BaseService {
     return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters);
   }
 
+  /// @dev Gets the amount of creator annuities reserved for the creator for the specified NFT
+  /// @return creator           The address of the creator
+  /// @return annuityPct        The percentage amount of annuities reserved for the creator
+  public async getCreatorAnnuities() {
+    const parameters = [this.contractAddress, this.tokenId];
+    return await this.fetchAllNetworks('chargedSettings', 'getCreatorAnnuities', parameters);
+  }
+
+  /// @dev Gets the amount of creator annuities reserved for the creator for the specified NFT
+  /// @return creator           The address of the creator
+  /// @return annuityPct        The percentage amount of annuities reserved for the creator
+  public async getCreatorAnnuitiesRedirect() {
+    const parameters = [this.contractAddress, this.tokenId];
+    return await this.fetchAllNetworks('chargedSettings', 'getCreatorAnnuitiesRedirect', parameters);
+  }
+
   /// @notice Gets the tokenUri using the tokenId and contractAddress of the Particle
   /// @return The tokenUri in string format for the Particle in question
   public async tokenURI() {
@@ -412,7 +428,7 @@ export default class NftService extends BaseService {
     basketManagerId: string,
     nftTokenAddress: string,
     nftTokenId: string,
-    nftTokenAmount: string,
+    nftTokenAmount: BigNumberish,
     chainId?: number
   ) {
 
@@ -453,7 +469,7 @@ export default class NftService extends BaseService {
     basketManagerId: string,
     nftTokenAddress: string,
     nftTokenId: string,
-    nftTokenAmount: string,
+    nftTokenAmount: BigNumberish,
     chainId?: number
   ) {
 
@@ -567,4 +583,55 @@ export default class NftService extends BaseService {
     const receipt = await tx.wait();
     return receipt;
   }
+
+  /// @notice Sets the custom configuration for creators of proton-based NFTs
+  /// @param creator          The creator of the Proton-based NFT
+  /// @param annuityPercent   The percentage of interest-annuities to reserve for the creator
+  public async setCreatorAnnuities(creator: string, annuityPercent:BigNumberish, chainId?:number) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      creator,
+      annuityPercent,
+    ];
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedSettings',
+      'setCreatorAnnuities',
+      signerNetwork,
+      parameters
+    )
+
+    const receipt = await tx.wait();
+    return receipt;
+  }
+
+  /// @notice Sets a custom receiver address for the creator annuities
+  /// @param receiver         The receiver of the Creator interest-annuities
+  public async setCreatorAnnuitiesRedirect(receiver:string, chainId?:number) {
+    
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      receiver,
+    ];
+
+    const tx: ContractTransaction = await this.writeContract(
+      'chargedSettings',
+      'setCreatorAnnuitiesRedirect',
+      signerNetwork,
+      parameters
+    )
+
+    const receipt = await tx.wait();
+    return receipt;
+  }  
+
 }
