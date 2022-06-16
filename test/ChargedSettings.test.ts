@@ -1,9 +1,3 @@
-/*
-METHODS:
-get/setCreatorAnnuities
-get/setCreatorAnnuitiesRedirect
-*/
-import { ethers } from 'ethers';
 import 'dotenv/config';
 import Charged from '../src/index';
 import { getWallet } from '../src/utils/testUtilities';
