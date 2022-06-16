@@ -48,7 +48,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.182",
     "dotenv": "^16.0.1",
-    "hardhat": "^2.9.9",
+    "ganache-cli": "^6.12.2",
     "husky": "^8.0.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
