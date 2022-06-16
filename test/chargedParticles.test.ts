@@ -14,21 +14,10 @@ Also the alchemy keys as seen below
 describe('chargedParticles contract test', () => {
   const writeContractMock = jest
     .spyOn(BaseService.prototype, 'writeContract')
-    .mockImplementation((
-      contractName,
-      methodName,
-      network,
-    ) => {
-      if (!contractName || !methodName || !network) {
-        Promise.reject('missing required parameters');
-      }
-
-      return (Promise.resolve({
-        wait: () => {
-          console.log('mocked function');
-          return true;
-        }
-      }))
+    .mockImplementation((contractName, methodName, network) => {
+      if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
+      
+      return (Promise.resolve({ wait: () => true }));
     });
 
   const providersKovan = [
