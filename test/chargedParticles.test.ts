@@ -2,12 +2,35 @@ import { ethers } from 'ethers';
 import 'dotenv/config';
 import Charged from '../src/index';
 import { chargedParticlesAbi, mainnetAddresses, kovanAddresses } from '../src/index';
+import BaseService from '../src/charged/services/baseService';
+
+
+
 
 /*
 This test uses the team test wallet's mnemonic
 Also the alchemy keys as seen below
 */
 describe('chargedParticles contract test', () => {
+  const writeContractMock = jest
+    .spyOn(BaseService.prototype, 'writeContract')
+    .mockImplementation((
+      contractName,
+      methodName,
+      network,
+    ) => {
+      if (!contractName || !methodName || !network) {
+        Promise.reject('missing required parameters');
+      }
+
+      return (Promise.resolve({
+        wait: () => {
+          console.log('mocked function');
+          return true;
+        }
+      }))
+    });
+
   const providersKovan = [
     {
       network: 42,
@@ -61,7 +84,7 @@ describe('chargedParticles contract test', () => {
     expect(result).toHaveProperty('confirmations');
   })
 
-  it.only('should get mass, charge, and # of bonds of a proton', async () => {
+  it('should get mass, charge, and # of bonds of a proton', async () => {
     // ignoring .env type checking
     // @ts-ignore
     const charged = new Charged({ providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC) })
@@ -92,7 +115,7 @@ describe('chargedParticles contract test', () => {
     expect(result).toHaveProperty('confirmations');
   });
 
-  it('should release 47 ENJ tokens', async () => {
+  it.only('should release 47 ENJ tokens', async () => {
     // ignoring .env type checking
     // @ts-ignore
     const charged = new Charged({ providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC) })
@@ -100,8 +123,8 @@ describe('chargedParticles contract test', () => {
     const nft = charged.NFT(address, tokenId);
     const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
-    // TODO: Expect something with the response?
-    expect(result).toHaveProperty('confirmations');
+    expect(result).toBe(true);
+    expect(writeContractMock).toHaveBeenCalled();
   })
 
   it('should create a contract from exported abis', async () => {
