@@ -35,3 +35,8 @@ export const sendTx = (
 export const signText = (text: string) => {
   return getSigner().signMessage(text);
 };
+
+export const fakeReadContract = (contractName: string, methodName: string, network: number) => {
+  if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
+  return (Promise.resolve('success'));
+}
