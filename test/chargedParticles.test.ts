@@ -77,33 +77,24 @@ describe('chargedParticles contract test', () => {
 
   it('should release 47 ENJ tokens', async () => {
     // ignoring .env type checking
-    // @ts-ignore
     const charged = new Charged({ providers: providersKovan, signer })
 
     const nft = charged.NFT(address, tokenId);
-    // @ts-ignore
     const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
     expect(result).toBe(true);
     expect(writeContractMock).toHaveBeenCalled();
   })
 
-  // test discharge here so we can expect 0 interest on next test 
   it.only('should discharge', async () => {
-    // ignoring .env type checking
-    // @ts-ignore
     const charged = new Charged({ providers: providersKovan, signer })
-
     const nft = charged.NFT(address, tokenId);
     const result = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
 
-    // TODO: Expect something with the response?
-    expect(result).toHaveProperty('confirmations');
+    expect(result).toBe(true);
   })
 
   it('should get mass, charge, and # of bonds of a proton', async () => {
-    // ignoring .env type checking
-    // @ts-ignore
     const charged = new Charged({ providers: providersKovan, signer })
 
     const nft = charged.NFT(address, tokenId);
