@@ -15,7 +15,6 @@ const readContractMock = jest
   .spyOn(BaseService.prototype, 'readContract')
   .mockImplementation((contractName, methodName, network) => {
     if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
-
     return (Promise.resolve('success'));
   });
 
@@ -70,6 +69,12 @@ describe('chargedParticles contract test', () => {
     expect(settingsAddys).toHaveProperty('1.value', 'success');
 
     expect(readContractMock).toHaveBeenCalledTimes(6);
+
+    expect(readContractMock.mock.calls[0][0]).toBe('chargedParticles');
+    expect(readContractMock.mock.calls[0][1]).toBe('getStateAddress');
+    expect(readContractMock.mock.calls[0][2]).toBe(1);
+    expect(readContractMock.mock.calls[1][2]).toBe(42);
+    expect(readContractMock.mock.calls[0][3]).toEqual([]);
   });
 
   it('should release 47 ENJ tokens', async () => {
@@ -100,6 +105,17 @@ describe('chargedParticles contract test', () => {
     const result = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
 
     expect(result).toBe(true);
+
+    expect(writeContractMock.mock.calls[0][0]).toBe('chargedParticles');
+    expect(writeContractMock.mock.calls[0][1]).toBe('dischargeParticle');
+    expect(writeContractMock.mock.calls[0][2]).toBe(42);
+    expect(writeContractMock.mock.calls[0][3]).toEqual([
+      walletAddress, 
+      tokenAddress, 
+      tokenId,
+      'aave.B', 
+      ENJCoin, 
+    ]);
   })
 
   it('should get mass, charge, and # of bonds of a proton', async () => {
@@ -115,14 +131,49 @@ describe('chargedParticles contract test', () => {
     expect(bonds).toHaveProperty('42.value', 'success');
 
     expect(readContractMock).toHaveBeenCalledTimes(3);
+
+    expect(readContractMock.mock.calls[0][1]).toBe('baseParticleMass');
+    expect(readContractMock.mock.calls[0][0]).toBe('chargedParticles');
+    expect(readContractMock.mock.calls[0][2]).toBe(42);
+    expect(readContractMock.mock.calls[0][3]).toEqual([
+      tokenAddress,
+      tokenId,
+      'aave.B',
+      '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2' 
+    ]);
+   
+    expect(readContractMock.mock.calls[1][1]).toBe('currentParticleCharge');
+    expect(readContractMock.mock.calls[1][3]).toEqual([
+      tokenAddress,
+      tokenId,
+      'aave.B',
+      '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2' 
+    ]);
+
+    expect(readContractMock.mock.calls[2][1]).toBe('currentParticleCovalentBonds');
+    expect(readContractMock.mock.calls[2][3]).toEqual([
+      tokenAddress,
+      tokenId,
+      'generic.B'
+    ]);
   });
 
-  it('should energize', async () => {
+  it('Should energize', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(tokenAddress, tokenId);
-
     const result = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
     expect(result).toBe(true);
+    expect(writeContractMock.mock.calls[0][0]).toBe('chargedParticles');
+    expect(writeContractMock.mock.calls[0][1]).toBe('energizeParticle');
+    expect(writeContractMock.mock.calls[0][2]).toBe(42);
+    expect(writeContractMock.mock.calls[0][3]).toEqual([
+      tokenAddress,
+      tokenId,
+      'aave.B',
+      '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2',
+      ethers.utils.parseEther("47"),
+      '0x0000000000000000000000000000000000000000'
+    ]);
   });
 });
