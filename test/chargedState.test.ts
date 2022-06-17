@@ -1,97 +1,59 @@
 import 'dotenv/config';
 import Charged from '../src/charged/index';
 import { getWallet } from '../src/utils/testUtilities';
+import { contractMocks } from '../src/utils/testUtilities';
 
-describe('chargedState contract test', () => {
-  const signer = getWallet();
-  const providersKovan = [
-    {
-      network: 42,
-      service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
-    }
-  ]
-  const expectedUnlockBlockNumber = 32174859;
-  const walletAddress = '0x277bfc4a8dc79a9f194ad4a83468484046fafd3a';
-  const tokenAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-  const tokenId = 78;
+const { readContractMock, writeContractMock } = contractMocks(jest);
 
-  it('should set release timelock', async () => {
-    const charged = new Charged({ providers: providersKovan, signer })
+const signer = getWallet();
+const providersKovan = [
+  {
+    network: 42,
+    service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
+  }
+]
+const expectedUnlockBlockNumber = 32174859;
+const walletAddress = '0x277bfc4a8dc79a9f194ad4a83468484046fafd3a';
+const tokenAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+const tokenId = 78;
 
-    const nft = charged.NFT(tokenAddress, tokenId);
+beforeEach(() => {
+  // Clear all instances and calls to constructor and all methods:
+  writeContractMock.mockClear();
+  readContractMock.mockClear();
+});
+
+describe('ChargedState contract test', () => {
+  const charged = new Charged({ providers: providersKovan, signer });
+  const nft = charged.NFT(tokenAddress, tokenId);
+
+  it('Set release timelock', async () => {
     const result = await nft.releaseTimelock(expectedUnlockBlockNumber);
-    const successResponse = result.status;
-
-    expect(successResponse).toEqual(1);
+    expect(result).toEqual(true);
   });
 
-  it('should get release timelock', async () => {
-    const charged = new Charged({ providers: providersKovan, signer })
-
-    const nft = charged.NFT(tokenAddress, tokenId);
+  it('Get release timelock', async () => {
     const releaseState = await nft.getReleaseState(walletAddress);
-    const response = releaseState['42'].value;
-
-    // const allowFromAll = response[0];
-    const isApproved = response[1];
-    const timelock = response[2].toNumber();
-    // const tmpTimelockExpiry = response[3].toNumber();
-
-    expect(isApproved).toEqual(true);
-    expect(timelock).toEqual(expectedUnlockBlockNumber);
-
+    expect(releaseState['42'].value).toEqual('success');
   });
 
-  it('should set discharge timelock', async () => {
-    const charged = new Charged({ providers: providersKovan, signer })
-
-    const nft = charged.NFT(tokenAddress, tokenId);
+  it('Set discharge timelock', async () => {
     const result = await nft.dischargeTimelock(expectedUnlockBlockNumber);
-    const successResponse = result.status;
-
-    expect(successResponse).toEqual(1);
+    expect(result).toEqual(true);
   });
 
-  it('should get discharge timelock', async () => {
-    const charged = new Charged({ providers: providersKovan, signer })
-
-    const nft = charged.NFT(tokenAddress, tokenId);
+  it('Set get discharge timelock', async () => {
     const dischargeState = await nft.getDischargeState(walletAddress);
-    const response = dischargeState['42'].value;
-
-    // const allowFromAll = response[0];
-    const isApproved = response[1];
-    const timelock = response[2].toNumber();
-    // const tmpTimelockExpiry = response[3].toNumber();
-
-    expect(isApproved).toEqual(true);
-    expect(timelock).toEqual(expectedUnlockBlockNumber);
+    expect(dischargeState['42'].value).toEqual('success');
   });
 
-  it('should set bonds timelock', async () => {
-    const charged = new Charged({ providers: providersKovan, signer })
-
-    const nft = charged.NFT(tokenAddress, tokenId);
+  it('Set bonds timelock', async () => {
     const result = await nft.bondsTimelock(expectedUnlockBlockNumber);
-    const successResponse = result.status;
-
-    expect(successResponse).toEqual(1);
+    expect(result).toEqual(true);
   });
 
-  it('should get bonds timelock', async () => {
-    const charged = new Charged({ providers: providersKovan, signer })
-
-    const nft = charged.NFT(tokenAddress, tokenId);
+  it('Get bonds timelock', async () => {
     const bondsState = await nft.getBondsState(walletAddress);
-    const response = bondsState['42'].value;
-
-    // const allowFromAll = response[0];
-    const isApproved = response[1];
-    const timelock = response[2].toNumber();
-    // const tmpTimelockExpiry = response[3].toNumber();
-
-    expect(isApproved).toEqual(true);
-    expect(timelock).toEqual(expectedUnlockBlockNumber);
+    expect(bondsState['42'].value).toEqual('success');
   });
-
 });
