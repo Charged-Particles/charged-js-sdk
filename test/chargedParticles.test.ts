@@ -2,7 +2,6 @@ import 'dotenv/config';
 import Charged from '../src/index';
 import BaseService from '../src/charged/services/baseService';
 import { ethers } from 'ethers';
-import { chargedParticlesAbi, mainnetAddresses } from '../src/index';
 import { getWallet }  from '../src/utils/testUtilities';
 
 const writeContractMock = jest
@@ -94,7 +93,7 @@ describe('chargedParticles contract test', () => {
     expect(result).toBe(true);
   })
 
-  it.only('should get mass, charge, and # of bonds of a proton', async () => {
+  it('should get mass, charge, and # of bonds of a proton', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(address, tokenId);
 
@@ -110,24 +109,13 @@ describe('chargedParticles contract test', () => {
   });
 
   it('should energize', async () => {
-    // ignoring .env type checking
-    // @ts-ignore
     const charged = new Charged({ providers: providersKovan, signer })
-
     const nft = charged.NFT(address, tokenId);
+
     const result = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
-    // TODO: Expect something with the response?
-    expect(result).toHaveProperty('confirmations');
+    expect(result).toBe(true);
   });
 
-  it('should create a contract from exported abis', async () => {
-    const contract = new ethers.Contract(
-      mainnetAddresses.chargedParticles.address,
-      chargedParticlesAbi,
-      ethers.getDefaultProvider()
-    )
-    expect(await contract.getStateAddress()).toEqual(mainnetAddresses.chargedState.address);
-  });
 
 });

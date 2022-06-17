@@ -7,35 +7,37 @@ import {
   alchemyPolygonKey
 } from '../../src/utils/config';
 
+import Charged from '../../src/charged/index';
 import { getWallet } from '../../src/utils/testUtilities';
 import { BigNumber, ethers } from 'ethers';
+import { chargedParticlesAbi, kovanAddresses } from '../../src/index';
 const Web3HttpProvider = require('web3-providers-http');
 
-import Charged from '../../src/charged/index';
+const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
+const myWallet = getWallet();
+const providers = [
+  {
+    network: 1,
+    service: { 'alchemy': alchemyMainnetKey }
+  },
+  {
+    network: 42,
+    service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
+  }
+];
+const localProvider = [
+  {
+    network: 42,
+    service: { 'rpc': localTestNetRpcUrl}
+  }
+];
+
+const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+const tokenId = 43;
+const network = 42;
+const ganacheChainId = 1337;
 
 describe('Charged class', () => {
-  const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
-  const myWallet = getWallet();
-  const providers = [
-    {
-      network: 1,
-      service: { 'alchemy': alchemyMainnetKey }
-    },
-    {
-      network: 42,
-      service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
-    }
-  ];
-  const localProvider = [
-    {
-      network: 42,
-      service: { 'rpc': localTestNetRpcUrl}
-    }
-  ];
-
-  const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-  const tokenId = 43;
-  const network = 42;
 
   it('Initializes charged SDK', async () => {
     const charged = new Charged({ providers })
@@ -50,7 +52,6 @@ describe('Charged class', () => {
 
     const particleBAddress = '0x04d572734006788B646ce35b133Bdf7160f79995';
     const tokenId = 4;
-    // const network = 1;
 
     const nft = charged.NFT(particleBAddress, tokenId);
 
@@ -260,5 +261,15 @@ describe('Charged class', () => {
     const userSetting = { sdk: { NftBridgeCheck: true } }
     const charged = new Charged({ providers: localProvider, config: userSetting });
     expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', true);
+  });
+
+  it('should create a contract from exported abis', async () => {
+    const provider = new ethers.providers.JsonRpcProvider(localTestNetRpcUrl, ganacheChainId);
+    const contract = new ethers.Contract(
+      kovanAddresses.chargedParticles.address,
+      chargedParticlesAbi,
+      provider
+    )
+    expect(await contract.getStateAddress()).toEqual(kovanAddresses.chargedState.address);
   });
 });
