@@ -1,22 +1,10 @@
 import 'dotenv/config';
 import Charged from '../src/index';
-import BaseService from '../src/charged/services/baseService';
 import { ethers } from 'ethers';
 import { getWallet } from '../src/utils/testUtilities';
+import { contractMocks } from '../src/utils/testUtilities';
 
-const writeContractMock = jest
-  .spyOn(BaseService.prototype, 'writeContract')
-  .mockImplementation((contractName, methodName, network) => {
-    if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
-    return (Promise.resolve({ wait: () => true }));
-  });
-
-const readContractMock = jest
-  .spyOn(BaseService.prototype, 'readContract')
-  .mockImplementation((contractName, methodName, network) => {
-    if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
-    return (Promise.resolve('success'));
-  });
+const { writeContractMock, readContractMock } = contractMocks(jest);
 
 const providersKovan = [
   {
@@ -79,7 +67,6 @@ describe('chargedParticles contract test', () => {
 
   it('should release 47 ENJ tokens', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
-
     const nft = charged.NFT(tokenAddress, tokenId);
     const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
@@ -90,11 +77,11 @@ describe('chargedParticles contract test', () => {
     expect(writeContractMock.mock.calls[0][1]).toBe('releaseParticleAmount');
     expect(writeContractMock.mock.calls[0][2]).toBe(42);
     expect(writeContractMock.mock.calls[0][3]).toEqual([
-      walletAddress, 
-      tokenAddress, 
+      walletAddress,
+      tokenAddress,
       tokenId,
-      'aave.B', 
-      ENJCoin, 
+      'aave.B',
+      ENJCoin,
       ethers.utils.parseEther("47")
     ]);
   })
@@ -110,11 +97,11 @@ describe('chargedParticles contract test', () => {
     expect(writeContractMock.mock.calls[0][1]).toBe('dischargeParticle');
     expect(writeContractMock.mock.calls[0][2]).toBe(42);
     expect(writeContractMock.mock.calls[0][3]).toEqual([
-      walletAddress, 
-      tokenAddress, 
+      walletAddress,
+      tokenAddress,
       tokenId,
-      'aave.B', 
-      ENJCoin, 
+      'aave.B',
+      ENJCoin,
     ]);
   })
 
@@ -139,15 +126,15 @@ describe('chargedParticles contract test', () => {
       tokenAddress,
       tokenId,
       'aave.B',
-      '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2' 
+      '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2'
     ]);
-   
+
     expect(readContractMock.mock.calls[1][1]).toBe('currentParticleCharge');
     expect(readContractMock.mock.calls[1][3]).toEqual([
       tokenAddress,
       tokenId,
       'aave.B',
-      '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2' 
+      '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2'
     ]);
 
     expect(readContractMock.mock.calls[2][1]).toBe('currentParticleCovalentBonds');

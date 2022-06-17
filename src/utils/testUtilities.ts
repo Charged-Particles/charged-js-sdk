@@ -1,5 +1,6 @@
 import { ethers, providers, utils } from 'ethers';
 import { MNEMONIC, rpcUrlKovan } from './config';
+import BaseService from '../charged/services/baseService';
 
 export const ethersProvider = new ethers.providers.JsonRpcProvider(rpcUrlKovan);
 
@@ -39,4 +40,23 @@ export const signText = (text: string) => {
 export const fakeReadContract = (contractName: string, methodName: string, network: number) => {
   if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
   return (Promise.resolve('success'));
+}
+
+export const contractMocks = (jest: any) => {
+
+  const writeContractMock = jest
+    .spyOn(BaseService.prototype, 'writeContract')
+    .mockImplementation((contractName:string, methodName:string, network:string) => {
+      if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
+      return (Promise.resolve({ wait: () => true }));
+    });
+
+  const readContractMock = jest
+    .spyOn(BaseService.prototype, 'readContract')
+    .mockImplementation((contractName:string, methodName:string, network:string) => {
+      if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
+      return (Promise.resolve('success'));
+    });
+
+  return {writeContractMock, readContractMock};
 }
