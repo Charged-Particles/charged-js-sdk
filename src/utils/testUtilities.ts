@@ -37,13 +37,7 @@ export const signText = (text: string) => {
   return getSigner().signMessage(text);
 };
 
-export const fakeReadContract = (contractName: string, methodName: string, network: number) => {
-  if (!contractName || !methodName || !network) { Promise.reject('missing required parameters') }
-  return (Promise.resolve('success'));
-}
-
 export const contractMocks = (jest: any) => {
-
   const writeContractMock = jest
     .spyOn(BaseService.prototype, 'writeContract')
     .mockImplementation((contractName:string, methodName:string, network:string) => {
