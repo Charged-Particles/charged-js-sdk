@@ -2,7 +2,7 @@ import 'dotenv/config';
 import Charged from '../src/index';
 import BaseService from '../src/charged/services/baseService';
 import { ethers } from 'ethers';
-import { getWallet }  from '../src/utils/testUtilities';
+import { getWallet } from '../src/utils/testUtilities';
 
 const writeContractMock = jest
   .spyOn(BaseService.prototype, 'writeContract')
@@ -25,7 +25,7 @@ const providersKovan = [
     service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
   }
 ];
-const providers = [
+const multipleProviders = [
   {
     network: 1,
     service: { 'alchemy': process.env.ALCHEMY_MAINNET_KEY }
@@ -39,10 +39,11 @@ const providers = [
 const ENJCoin = '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2';
 const walletAddress = '0x277bfc4a8dc79a9f194ad4a83468484046fafd3a';
 
-const address = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+const tokenAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
 const tokenId = 18;
 
 const signer = getWallet();
+
 /*
 This test uses the team test wallet's mnemonic
 Also the alchemy keys as seen below
@@ -55,39 +56,47 @@ beforeEach(() => {
 });
 
 describe('chargedParticles contract test', () => {
-  
+
   it('get state, managers, and settings addresses correctly on multiple chains', async () => {
 
-    const charged = new Charged({ providers });
+    const charged = new Charged({ providers: multipleProviders });
 
     const stateAddys = await charged.utils.getStateAddress();
     const managersAddys = await charged.utils.getManagersAddress();
     const settingsAddys = await charged.utils.getSettingsAddress();
 
     expect(stateAddys).toHaveProperty('1.value', 'success');
-    expect(managersAddys).toHaveProperty('1.value', 'success');
-    expect(settingsAddys).toHaveProperty('1.value', 'success');
-    expect(stateAddys).toHaveProperty('42.value', 'success');
     expect(managersAddys).toHaveProperty('42.value', 'success');
-    expect(settingsAddys).toHaveProperty('42.value', 'success');
+    expect(settingsAddys).toHaveProperty('1.value', 'success');
 
     expect(readContractMock).toHaveBeenCalledTimes(6);
   });
 
   it('should release 47 ENJ tokens', async () => {
-    // ignoring .env type checking
     const charged = new Charged({ providers: providersKovan, signer })
 
-    const nft = charged.NFT(address, tokenId);
+    const nft = charged.NFT(tokenAddress, tokenId);
     const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
     expect(result).toBe(true);
     expect(writeContractMock).toHaveBeenCalled();
+
+    expect(writeContractMock.mock.calls[0][0]).toBe('chargedParticles');
+    expect(writeContractMock.mock.calls[0][1]).toBe('releaseParticleAmount');
+    expect(writeContractMock.mock.calls[0][2]).toBe(42);
+    expect(writeContractMock.mock.calls[0][3]).toEqual([
+      walletAddress, 
+      tokenAddress, 
+      tokenId,
+      'aave.B', 
+      ENJCoin, 
+      ethers.utils.parseEther("47")
+    ]);
   })
 
   it('should discharge', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
-    const nft = charged.NFT(address, tokenId);
+    const nft = charged.NFT(tokenAddress, tokenId);
     const result = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
 
     expect(result).toBe(true);
@@ -95,7 +104,7 @@ describe('chargedParticles contract test', () => {
 
   it('should get mass, charge, and # of bonds of a proton', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
-    const nft = charged.NFT(address, tokenId);
+    const nft = charged.NFT(tokenAddress, tokenId);
 
     const mass = await nft.getMass('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
     const charge = await nft.getCharge('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
@@ -110,12 +119,10 @@ describe('chargedParticles contract test', () => {
 
   it('should energize', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
-    const nft = charged.NFT(address, tokenId);
+    const nft = charged.NFT(tokenAddress, tokenId);
 
     const result = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
     expect(result).toBe(true);
   });
-
-
 });
