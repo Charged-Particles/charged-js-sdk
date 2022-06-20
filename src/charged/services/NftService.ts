@@ -210,9 +210,7 @@ export default class NftService extends BaseService {
     chainId?: number,
     referrer?: string
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -330,9 +328,7 @@ export default class NftService extends BaseService {
     assetAmount: BigNumberish,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -354,7 +350,7 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Releases the full amount of asset + interest held within the particle by LP of the assets
+  * Releases the full amount of asset + interest held within the particle by LP of the assets.
   * 
   * @param {string} receiver            - The address to receive the released asset tokens
   * @param {managerId} walletManagerId  - The wallet manager of the assets to release from the token
@@ -368,9 +364,7 @@ export default class NftService extends BaseService {
     assetToken: string,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -391,7 +385,7 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Releases a partial amount of asset + interest held within the particle by LP of the assets
+  * Releases a partial amount of asset + interest held within the particle by LP of the assets.
   * 
   * @param {string} receiver            - The address to receive the released asset tokens
   * @param {managerId} walletManagerId  - The wallet manager of the assets to release from the token
@@ -407,9 +401,7 @@ export default class NftService extends BaseService {
     assetAmount: BigNumberish,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -431,8 +423,8 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Deposit other NFT assets into the particle
-  * Must be called by the account providing the asset. Account must approve THIS contract as operator of asset
+  * Deposit other NFT assets into the particle.
+  * Must be called by the account providing the asset. Account must approve THIS contract as operator of asset.
   * 
   * @param {string} basketManagerId       - The basket to deposit the NFT into
   * @param {string} nftTokenAddress       - The address of the NFT token being deposited
@@ -448,9 +440,7 @@ export default class NftService extends BaseService {
     nftTokenAmount: BigNumberish,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -473,7 +463,7 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Release NFT assets from the particle
+  * Release NFT assets from the particle.
   * 
   * @param {string} receiver              - The address to receive the released asset tokens
   * @param {string} basketManagerId       - The basket to release the NFT from
@@ -491,7 +481,6 @@ export default class NftService extends BaseService {
     nftTokenAmount: BigNumberish,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -517,7 +506,7 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Sets a timelock on the ability to release the assets of a particle
+  * Sets a timelock on the ability to release the assets of a particle.
   *
   * @param {number} unlockBlock        - The Ethereum block number to timelock until (~15 seconds per block)
   * @param {number} [chainId]          - Optional parameter that allows for the user to specify which network to write to
@@ -527,7 +516,6 @@ export default class NftService extends BaseService {
     unlockBlock: number,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -559,7 +547,6 @@ export default class NftService extends BaseService {
     unlockBlock: number,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -591,7 +578,6 @@ export default class NftService extends BaseService {
     unlockBlock: number,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -622,7 +608,6 @@ export default class NftService extends BaseService {
   * @return {Promise<ContractReceipt>}    - A receipt from the transaction
   */
   public async setCreatorAnnuities(creator: string, annuityPercent:BigNumberish, chainId?:number) {
-    
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -653,7 +638,6 @@ export default class NftService extends BaseService {
   * @return {Promise<ContractReceipt>}   - A receipt from the transaction
   */
   public async setCreatorAnnuitiesRedirect(receiver:string, chainId?:number) {
-    
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -673,5 +657,4 @@ export default class NftService extends BaseService {
     const receipt = await tx.wait();
     return receipt;
   }  
-
 }
