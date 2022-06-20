@@ -7,30 +7,42 @@ export default class UtilsService extends BaseService {
     super(state);
   }
 
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  // ChargedParticles utility functions
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ // ChargedParticles utility functions
+ //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  /// @notice returns the state adress from the ChargedParticles contract
-  /// @returns string of state address
+ /**
+ *  Get the state address from the ChargedParticles contract.
+ *
+ * @return {string} state contract address
+ */
   public async getStateAddress() {
     return await this.fetchAllNetworks('chargedParticles', 'getStateAddress');
   }
 
-  /// @notice returns the settings adress from the ChargedParticles contract
-  /// @returns string of settings address
+/**
+ *  Get settings address from the ChargedParticles contract.
+ *
+ * @return {string} settings contract address
+ */
   public async getSettingsAddress() {
     return await this.fetchAllNetworks('chargedParticles', 'getSettingsAddress');
   }
 
-  /// @notice returns the managers adress from the ChargedParticles contract
-  /// @returns string of settings address
+/**
+ *  Get managers address from the Settings contract
+ *
+ * @return {string} manager contract address
+ */
   public async getManagersAddress() {
     return await this.fetchAllNetworks('chargedParticles', 'getManagersAddress');
   }
 
-  /// @notice returns the deposit fee of the protocol
-  /// @returns protocol fee
+/**
+ *  Get the deposit fee of the protocol.
+ *
+ * @return {string} fee amount. 
+ */
   public async getFeesForDeposit() {
     return await this.fetchAllNetworks('chargedParticles', 'getFeesForDeposit');
   }

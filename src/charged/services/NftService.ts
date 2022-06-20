@@ -1,4 +1,4 @@
-import { BigNumberish, ContractTransaction } from 'ethers';
+import { BigNumber, BigNumberish, ContractTransaction } from 'ethers';
 import { ChargedState, managerId } from '../../types';
 import BaseService from './baseService';
 
@@ -26,7 +26,7 @@ export default class NftService extends BaseService {
       for (const chainId in providers) {
         let provider = providers[chainId];
 
-        if (provider === void(0)) { continue };
+        if (provider === void (0)) { continue };
 
         const contractExists = await provider.getCode(this.contractAddress);
 
@@ -51,11 +51,11 @@ export default class NftService extends BaseService {
   public async bridgeNFTCheck(signerNetwork: number) {
     const { sdk } = this.state.configuration;
 
-    if (! sdk?.NftBridgeCheck) { return };
+    if (!sdk?.NftBridgeCheck) { return };
 
     const tokenChainIds = await this.getChainIdsForBridgedNFTs();
 
-    if (signerNetwork === void(0)) { throw new Error("Could not retrieve signers network.") };
+    if (signerNetwork === void (0)) { throw new Error("Could not retrieve signers network.") };
 
     if (tokenChainIds.includes(signerNetwork)) { return true }; // TODO: store this in class and retrieve to avoid expensive calls.
 
@@ -70,11 +70,14 @@ export default class NftService extends BaseService {
  |        Read Functions              |
  |__________________________________*/
 
-  /// @notice Gets the Amount of Asset Tokens that have been Deposited into the Particle
-  /// representing the Mass of the Particle.
-  /// @param walletManagerId      The Liquidity-Provider ID to check the Asset balance of
-  /// @param assetToken           The Address of the Asset Token to check
-  /// @return The Amount of underlying Assets held within the Token as a BigNumber
+  /**
+   * Gets the amount of asset tokens that have been deposited into the Particle.
+   *
+   * @param {managerId} walletManagerId - The ID of the wallet manager to check.
+   * @param {string} assetToken - The address of the asset token to check.
+   * @return {BigNumber} The Amount of underlying assets held within the token.
+   *
+   */
   public async getMass(walletManagerId: managerId, assetToken: string) {
     const parameters = [
       this.contractAddress,
@@ -85,11 +88,14 @@ export default class NftService extends BaseService {
     return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters);
   }
 
-  /// @notice Gets the amount of Interest that the Particle has generated representing
-  /// the Charge of the Particle
-  /// @param walletManagerId  The Liquidity-Provider ID to check the Interest balance of
-  /// @param assetToken           The Address of the Asset Token to check
-  /// @return The amount of interest the Token has generated (in Asset Token) as a BigNumber
+  /**
+   * Gets the amount of interest that the particle has generated.
+   *
+   * @param {managerId} walletManagerId - The ID of the Wallet Manager.
+   * @param {string} assetToken - The address of the asset Token to check.
+   * @return {BigNumber} The amount of interest generated.
+   *
+   */
   public async getCharge(walletManagerId: managerId, assetToken: string) {
     const parameters = [
       this.contractAddress,
@@ -100,11 +106,14 @@ export default class NftService extends BaseService {
     return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters);
   }
 
-  /// @notice Gets the amount of LP Tokens that the Particle has generated representing
-  /// the Kinetics of the Particle
-  /// @param walletManagerId  The Liquidity-Provider ID to check the Kinetics balance of
-  /// @param assetToken           The Address of the Asset Token to check
-  /// @return The amount of LP tokens that have been generated as a BigNumber
+  /**
+   * Gets the amount of LP Tokens that the Particle has generated.
+   *
+   * @param {managerId} walletManagerId - The ID of the Wallet Manager.
+   * @param {string} assetToken - The Address of the Asset Token to check.
+   * @return {BigNumber} The amount of LP tokens that have been generated.
+   *
+   */
   public async getKinectics(walletManagerId: managerId, assetToken: string) {
     const parameters = [
       this.contractAddress,
@@ -115,32 +124,48 @@ export default class NftService extends BaseService {
     return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters);
   }
 
-  /// @notice Gets the total amount of ERC721 Tokens that the Particle holds
-  /// @param basketManagerId  The ID of the BasketManager to check the token balance of
-  /// @return The total amount of ERC721 tokens that are held within the Particle as a BigNumber
+  /**
+   * Gets the total amount of ERC721 tokens that the Particle holds.
+   *
+   * @param {string} basketManagerId - The ID of the BasketManager to check.
+   * @return {BigNumber} The total amount of ERC721 tokens that are held within the Particle.
+   *
+   */
   public async getBonds(basketManagerId: string) {
     const parameters = [this.contractAddress, this.tokenId, basketManagerId];
     return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters);
   }
 
-  /// @dev Gets the amount of creator annuities reserved for the creator for the specified NFT
-  /// @return creator           The address of the creator
-  /// @return annuityPct        The percentage amount of annuities reserved for the creator
+  /**
+   * Gets the amount of creator annuities reserved for the creator for the specified NFT.
+   *
+   * @return {address} The address of the creator.
+   * @return {number} The percentage amount of annuities reserved for the creator.
+   *
+   */
   public async getCreatorAnnuities() {
     const parameters = [this.contractAddress, this.tokenId];
     return await this.fetchAllNetworks('chargedSettings', 'getCreatorAnnuities', parameters);
   }
 
-  /// @dev Gets the amount of creator annuities reserved for the creator for the specified NFT
-  /// @return creator           The address of the creator
-  /// @return annuityPct        The percentage amount of annuities reserved for the creator
+  /**
+   * Get the address that receives creator annuities for a given Particle/ Defaults to creator address if it has not been redirected.
+   *
+   * @return {address} The address of the creator.
+   * @return {number} The percentage amount of annuities reserved for the creator.
+   *
+   */
   public async getCreatorAnnuitiesRedirect() {
     const parameters = [this.contractAddress, this.tokenId];
     return await this.fetchAllNetworks('chargedSettings', 'getCreatorAnnuitiesRedirect', parameters);
   }
 
-  /// @notice Gets the tokenUri using the tokenId and contractAddress of the Particle
-  /// @return The tokenUri in string format for the Particle in question
+  /**
+   * Gets the tokenUri using the tokenId and contractAddress of the Particle.
+   *
+   * @return {string} Token metadata URI.
+   *
+   */
   public async tokenURI() {
     return await this.fetchAllNetworks(
       'erc721',
@@ -150,9 +175,12 @@ export default class NftService extends BaseService {
     );
   }
 
-  /// @notice Gets the Discharge Timelock state of the Particle
-  /// @param sender  The address approved for Discharging assets from the Particle
-  /// @return [ allowFromAll: bool, isApproved: bool, timelock: BN, tempLockExpiry: BN ]
+  /**
+   * Gets the Discharge timelock state of the Particle.
+   *
+   * @param {string} sender - The address approved for Discharging assets from the Particle.
+   * @return {[boolean, boolean, BigNumber, BigNumber]} [allowFromAll, isApproved, timelock, empLockExpiry]
+   */
   public async getDischargeState(sender: string) {
     const parameters = [this.contractAddress, this.tokenId, sender];
     return await this.fetchAllNetworks(
@@ -162,9 +190,13 @@ export default class NftService extends BaseService {
     );
   }
 
-  /// @notice Gets the Release Timelock state of the Particle
-  /// @param sender  The address approved for Releasing assets from the Particle
-  /// @return [ allowFromAll: bool, isApproved: bool, timelock: BN, tempLockExpiry: BN ]
+  /**
+   * Gets the Discharge timelock state of the Particle.
+   *
+   * @param {string} sender - The address approved for Releasing assets from the Particle.
+   * @return {[boolean, boolean, BigNumber, BigNumber]} [allowFromAll, isApproved, timelock, empLockExpiry]
+   *
+   */
   public async getReleaseState(sender: string) {
     const parameters = [this.contractAddress, this.tokenId, sender];
     return await this.fetchAllNetworks(
@@ -174,9 +206,16 @@ export default class NftService extends BaseService {
     );
   }
 
-  /// @notice Gets the Bonds Timelock state of the Particle
-  /// @param sender  The address approved for removing Bond assets from the Particle
-  /// @return [ allowFromAll: bool, isApproved: bool, timelock: BN, tempLockExpiry: BN ]
+  /**
+   * Gets the Bonds Timelock state of the Particle.
+   *
+   * @param {string} sender - The address approved for removing Bond assets from the Particle.
+   * @return {boolean} allowFromAll
+   * @return {boolean} isApproved
+   * @return {BigNumber} timelock
+   * @return {BigNumber} empLockExpiry
+   *
+   */
   public async getBondsState(sender: string) {
     const parameters = [this.contractAddress, this.tokenId, sender];
     return await this.fetchAllNetworks(
@@ -587,8 +626,8 @@ export default class NftService extends BaseService {
   /// @notice Sets the custom configuration for creators of proton-based NFTs
   /// @param creator          The creator of the Proton-based NFT
   /// @param annuityPercent   The percentage of interest-annuities to reserve for the creator
-  public async setCreatorAnnuities(creator: string, annuityPercent:BigNumberish, chainId?:number) {
-    
+  public async setCreatorAnnuities(creator: string, annuityPercent: BigNumberish, chainId?: number) {
+
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -612,8 +651,8 @@ export default class NftService extends BaseService {
 
   /// @notice Sets a custom receiver address for the creator annuities
   /// @param receiver         The receiver of the Creator interest-annuities
-  public async setCreatorAnnuitiesRedirect(receiver:string, chainId?:number) {
-    
+  public async setCreatorAnnuitiesRedirect(receiver: string, chainId?: number) {
+
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -632,6 +671,6 @@ export default class NftService extends BaseService {
 
     const receipt = await tx.wait();
     return receipt;
-  }  
+  }
 
 }
