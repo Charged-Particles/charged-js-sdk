@@ -190,7 +190,7 @@ export default class NftService extends BaseService {
  |        Write Functions             |
  |__________________________________*/
 
-  /*
+  /**
   * Fund particle with asset token
   * Must be called by the account providing the asset. Account must also approve THIS contract as operator as asset.
   * 
@@ -233,7 +233,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Allows the owner or operator of the token to collect or transfer the interest generated from the token
   * without removing the underlying asset that is held within the token.
   * 
@@ -271,7 +271,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Allows the owner or operator of the Token to collect or transfer a specific amount of the interest
   * generated from the token without removing the underlying Asset that is held within the token.
   * 
@@ -312,7 +312,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Allows the Creator of the Token to collect or transfer a their portion of the interest (if any)
   * generated from the token without removing the underlying Asset that is held within the token.
   * 
@@ -353,7 +353,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Releases the full amount of asset + interest held within the particle by LP of the assets
   * 
   * @param {string} receiver            The address to receive the released asset tokens
@@ -390,7 +390,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Releases a partial amount of asset + interest held within the particle by LP of the assets
   * 
   * @param {string} receiver            The address to receive the released asset tokens
@@ -430,7 +430,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Deposit other NFT assets into the particle
   * Must be called by the account providing the asset. Account must approve THIS contract as operator of asset
   * 
@@ -472,7 +472,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Release NFT assets from the particle
   * 
   * @param {string} receiver              The address to receive the released asset tokens
@@ -516,7 +516,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Sets a timelock on the ability to release the assets of a particle
   *
   * @param {number} unlockBlock   The Ethereum block number to timelock until (~15 seconds per block)
@@ -548,7 +548,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Sets a timelock on the ability to discharge the assets of a particle
   *
   * @param {number} unlockBlock   The Ethereum block number to timelock until (~15 seconds per block)
@@ -580,7 +580,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Sets a timelock on the ability to break the covalent bond of a particle
   *
   * @param {number} unlockBlock   The Ethereum block number to timelock until (~15 seconds per block)
@@ -612,7 +612,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Sets the custom configuration for creators of proton-based NFTs
   * Must be called by account that created and owns the particle
   * 
@@ -644,7 +644,7 @@ export default class NftService extends BaseService {
     return receipt;
   }
 
-  /*
+  /**
   * Sets a custom receiver address for the creator annuities
   * Must be called by account that created and owns the particle
   * 
