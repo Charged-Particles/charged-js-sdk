@@ -196,12 +196,12 @@ export default class NftService extends BaseService {
   * 
   * If you are getting gas limit errors this may be because you forgot to approve the contract as operator of asset
   * 
-  * @param {managerId} walletManagerId  The Asset-Pair to Energize the Token with
-  * @param {string} assetToken          The Address of the Asset Token being used
-  * @param {BigNumberish} assetAmount   The Amount of Asset Token to Energize the Token with
-  * @param {number} [chainId]           Optional parameter that allows for the user to specify which network to write to
+  * @param {managerId} walletManagerId - The Asset-Pair to Energize the Token with
+  * @param {string} assetToken - The Address of the Asset Token being used
+  * @param {BigNumberish} assetAmount - The Amount of Asset Token to Energize the Token with
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
   * @param {string} [referrer]
-  * @return {Promise<ContractReceipt>}  A contract receipt from the transaction.
+  * @return {Promise<ContractReceipt>} A contract receipt from the transaction.
   */
   public async energize(
     walletManagerId: managerId,
@@ -210,9 +210,7 @@ export default class NftService extends BaseService {
     chainId?: number,
     referrer?: string
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -237,11 +235,11 @@ export default class NftService extends BaseService {
   * Allows the owner or operator of the token to collect or transfer the interest generated from the token
   * without removing the underlying asset that is held within the token.
   * 
-  * @param {string} receiver            The address to receive the discharged asset tokens
-  * @param {managerId} walletManagerId  The wallet manager of that assets to discharge from the token
-  * @param {string} assetToken          The address of the asset token being discharged
-  * @param {number} [chainId]           Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}  A receipt from the contract transaction
+  * @param {string} receiver - The address to receive the discharged asset tokens.
+  * @param {managerId} walletManagerId - The wallet manager of that assets to discharge from the token.
+  * @param {string} assetToken - The address of the asset token being discharged.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.j
+  * @return {Promise<ContractReceipt>}  A receipt from the contract transaction.
   */
   public async discharge(
     receiver: string,
@@ -275,12 +273,12 @@ export default class NftService extends BaseService {
   * Allows the owner or operator of the Token to collect or transfer a specific amount of the interest
   * generated from the token without removing the underlying Asset that is held within the token.
   * 
-  * @param {string} receiver            The address to receive the discharged asset tokens
-  * @param {managerId} walletManagerId  The wallet manager of the assets to discharge from the token
-  * @param {string} assetToken          The address of the asset token being discharged
-  * @param {BigNumberish} assetAmount   The specific amount of asset token to discharge from the particle
-  * @param {number} [chainId]           Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}  A receipt from the transaction
+  * @param {string} receiver - The address to receive the discharged asset tokens.
+  * @param {managerId} walletManagerId - The wallet manager of the assets to discharge from the token.
+  * @param {string} assetToken - The address of the asset token being discharged.
+  * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async dischargeAmount(
     receiver: string,
@@ -316,11 +314,11 @@ export default class NftService extends BaseService {
   * Allows the Creator of the Token to collect or transfer a their portion of the interest (if any)
   * generated from the token without removing the underlying Asset that is held within the token.
   * 
-  * @param {string} receiver            The address to receive the discharged asset tokens
-  * @param {managerId} walletManagerId  The wallet manager of the assets to discharge from the token
-  * @param {string} assetToken          The address of the asset token being discharged
-  * @param {BigNumberish} assetAmount   The specific amount of asset token to discharge from the particle
-  * @param {number} [chainId]           Optional parameter that allows for the user to specify which network to write to
+  * @param {string} receiver - The address to receive the discharged asset tokens
+  * @param {managerId} walletManagerId - The wallet manager of the assets to discharge from the token
+  * @param {string} assetToken - The address of the asset token being discharged
+  * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
   * @return {Promise<ContractReceipt>}  A receipt from the transaction
   */
   public async dischargeForCreator(
@@ -330,9 +328,7 @@ export default class NftService extends BaseService {
     assetAmount: BigNumberish,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -354,13 +350,13 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Releases the full amount of asset + interest held within the particle by LP of the assets
+  * Releases the full amount of asset + interest held within the particle by LP of the assets.
   * 
-  * @param {string} receiver            The address to receive the released asset tokens
-  * @param {managerId} walletManagerId  The wallet manager of the assets to release from the token
-  * @param {string} assetToken          The address of the asset token being released
-  * @param {number} [chainId]           Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}  A receipt from the transaction
+  * @param {string} receiver - The address to receive the released asset tokens.
+  * @param {managerId} walletManagerId - The wallet manager of the assets to release from the token.
+  * @param {string} assetToken - The address of the asset token being released.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async release(
     receiver: string,
@@ -368,9 +364,7 @@ export default class NftService extends BaseService {
     assetToken: string,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -391,13 +385,13 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Releases a partial amount of asset + interest held within the particle by LP of the assets
+  * Releases a partial amount of asset + interest held within the particle by LP of the assets.
   * 
-  * @param {string} receiver            The address to receive the released asset tokens
-  * @param {managerId} walletManagerId  The wallet manager of the assets to release from the token
-  * @param {string} assetToken          The address of the asset token being released
-  * @param {BigNumberish} assetAmount   The specific amount of asset token to release from the particle
-  * @param {number} [chainId]           Optional parameter that allows for the user to specify which network to write to
+  * @param {string} receiver - The address to receive the released asset tokens
+  * @param {managerId} walletManagerId - The wallet manager of the assets to release from the token
+  * @param {string} assetToken - The address of the asset token being released
+  * @param {BigNumberish} assetAmount - The specific amount of asset token to release from the particle
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
   * @return {Promise<ContractReceipt>}  A receipt from the transaction
   */
   public async releaseAmount(
@@ -407,9 +401,7 @@ export default class NftService extends BaseService {
     assetAmount: BigNumberish,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -431,15 +423,15 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Deposit other NFT assets into the particle
-  * Must be called by the account providing the asset. Account must approve THIS contract as operator of asset
+  * Deposit other NFT assets into the particle.
+  * Must be called by the account providing the asset. Account must approve THIS contract as operator of asset.
   * 
-  * @param {string} basketManagerId       The basket to deposit the NFT into
-  * @param {string} nftTokenAddress       The address of the NFT token being deposited
-  * @param {string} nftTokenId            The ID of the NFT token being deposited
-  * @param {BigNumberish} nftTokenAmount  The amount of tokens to deposit (ERC1155-specific)
-  * @param {number} [chainId]             Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}    A receipt from the transaction
+  * @param {string} basketManagerId - The basket to deposit the NFT into.
+  * @param {string} nftTokenAddress - The address of the NFT token being deposited.
+  * @param {string} nftTokenId - The ID of the NFT token being deposited.
+  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async bond(
     basketManagerId: string,
@@ -448,9 +440,7 @@ export default class NftService extends BaseService {
     nftTokenAmount: BigNumberish,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -473,15 +463,15 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Release NFT assets from the particle
+  * Release NFT assets from the particle.
   * 
-  * @param {string} receiver              The address to receive the released asset tokens
-  * @param {string} basketManagerId       The basket to release the NFT from
-  * @param {string} nftTokenAddress       The address of the NFT token being released
-  * @param {string} nftTokenId            The ID of the NFT token being released
-  * @param {BigNumberish} nftTokenAmount  The amount of tokens to deposit (ERC1155-specific)
-  * @param {number} [chainId]             Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}    A receipt from the transaction
+  * @param {string} receiver - The address to receive the released asset tokens.
+  * @param {string} basketManagerId - The basket to release the NFT from.
+  * @param {string} nftTokenAddress - The address of the NFT token being released.
+  * @param {string} nftTokenId - The ID of the NFT token being released.
+  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async breakBond(
     receiver: string,
@@ -491,7 +481,6 @@ export default class NftService extends BaseService {
     nftTokenAmount: BigNumberish,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -517,17 +506,16 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Sets a timelock on the ability to release the assets of a particle
+  * Sets a timelock on the ability to release the assets of a particle.
   *
-  * @param {number} unlockBlock   The Ethereum block number to timelock until (~15 seconds per block)
-  * @param {number} [chainId]     Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}    A receipt from the transaction
+  * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} - A receipt from the transaction.
   */
   public async releaseTimelock(
     unlockBlock: number,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -551,15 +539,14 @@ export default class NftService extends BaseService {
   /**
   * Sets a timelock on the ability to discharge the assets of a particle
   *
-  * @param {number} unlockBlock   The Ethereum block number to timelock until (~15 seconds per block)
-  * @param {number} [chainId]     Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}    A receipt from the transaction
+  * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async dischargeTimelock(
     unlockBlock: number,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -583,15 +570,14 @@ export default class NftService extends BaseService {
   /**
   * Sets a timelock on the ability to break the covalent bond of a particle
   *
-  * @param {number} unlockBlock   The Ethereum block number to timelock until (~15 seconds per block)
-  * @param {number} [chainId]     Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}    A receipt from the transaction
+  * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async bondsTimelock(
     unlockBlock: number,
     chainId?: number
   ) {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -616,13 +602,12 @@ export default class NftService extends BaseService {
   * Sets the custom configuration for creators of proton-based NFTs
   * Must be called by account that created and owns the particle
   * 
-  * @param {string} creator               The creator's address of the proton-based NFT
-  * @param {BigNumberish} annuityPercent  The percentage of interest-annuities to reserve for the creator. In decimal this can range from 0 - 10000. 5712 would be 57.12%.
-  * @param {number} [chainId]     Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}    A receipt from the transaction
+  * @param {string} creator - The creator's address of the proton-based NFT.
+  * @param {BigNumberish} annuityPercent - The percentage of interest-annuities to reserve for the creator. In decimal this can range from 0 - 10000. 5712 would be 57.12%..
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async setCreatorAnnuities(creator: string, annuityPercent:BigNumberish, chainId?:number) {
-    
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -648,12 +633,11 @@ export default class NftService extends BaseService {
   * Sets a custom receiver address for the creator annuities
   * Must be called by account that created and owns the particle
   * 
-  * @param {string} receiver              The receiver of the creator interest annuities
-  * @param {number} [chainId]             Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractReceipt>}    A receipt from the transaction
+  * @param {string} receiver - The receiver of the creator interest annuities.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractReceipt>} - A receipt from the transaction.
   */
   public async setCreatorAnnuitiesRedirect(receiver:string, chainId?:number) {
-    
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -673,5 +657,4 @@ export default class NftService extends BaseService {
     const receipt = await tx.wait();
     return receipt;
   }  
-
 }
