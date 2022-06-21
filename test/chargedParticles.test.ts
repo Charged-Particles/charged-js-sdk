@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { ContractTransaction, ethers } from 'ethers';
 import 'dotenv/config';
 import Charged from '../src/index';
 import { chargedParticlesAbi, mainnetAddresses, kovanAddresses } from '../src/index';
@@ -55,10 +55,11 @@ describe('chargedParticles contract test', () => {
       const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
       
       const nft = charged.NFT(address, tokenId);
-      const result = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
+      const result: ContractTransaction = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
 
       // TODO: Expect something with the response?
       expect(result).toHaveProperty('confirmations');
+      result.wait();
     })
 
     it ('should get mass, charge, and # of bonds of a proton', async () => {
@@ -86,10 +87,11 @@ describe('chargedParticles contract test', () => {
       const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
       
       const nft = charged.NFT(address, tokenId);
-      const result = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
+      const result: ContractTransaction = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
       // TODO: Expect something with the response?
       expect(result).toHaveProperty('confirmations');
+      result.wait();
     });
 
     it ('should release 47 ENJ tokens', async () => {
@@ -98,10 +100,11 @@ describe('chargedParticles contract test', () => {
       const charged = new Charged({providers: providersKovan, signer: ethers.Wallet.fromMnemonic(process.env.MNEMONIC)})
       
       const nft = charged.NFT(address, tokenId);
-      const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
+      const result: ContractTransaction = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
 
       // TODO: Expect something with the response?
       expect(result).toHaveProperty('confirmations');
+      result.wait();
     })
   
     it ('should create a contract from exported abis', async () => {

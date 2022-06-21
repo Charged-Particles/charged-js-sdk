@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { ContractTransaction } from 'ethers';
 import Charged from '../src/index';
 import { getWallet } from '../src/utils/testUtilities';
 
@@ -26,12 +27,14 @@ describe('chargedSettings contract test', () => {
       
       const receiver = '0xFD424D0E0CD49D6AD8f08893CE0D53F8EAEB4213';
       const nft = charged.NFT(address, tokenId);
-      const result = await nft.setCreatorAnnuities(creatorAddy, '9700');
-      const result2 = await nft.setCreatorAnnuitiesRedirect(receiver);
+      const result: ContractTransaction = await nft.setCreatorAnnuities(creatorAddy, '9700');
+      const result2: ContractTransaction = await nft.setCreatorAnnuitiesRedirect(receiver);
       
       // TODO: Expect something with the response?
       expect(result).toHaveProperty('confirmations');
       expect(result2).toHaveProperty('confirmations');
+      result.wait();
+      result2.wait();
     })
     
     it ('should get creator annuities', async () => {

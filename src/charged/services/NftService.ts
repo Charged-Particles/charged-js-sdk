@@ -1,4 +1,4 @@
-import { BigNumberish, ContractTransaction } from 'ethers';
+import { BigNumberish } from 'ethers';
 import { ChargedState, ManagerId } from '../../types';
 import BaseService from './baseService';
 
@@ -322,14 +322,12 @@ export default class NftService extends BaseService {
       assetAmount,
       referrer ?? '0x0000000000000000000000000000000000000000'
     ];
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedParticles',
       'energizeParticle',
       signerNetwork,
       parameters
     );
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -364,14 +362,12 @@ export default class NftService extends BaseService {
       walletManagerId,
       assetToken
     ];
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedParticles',
       'dischargeParticle',
       signerNetwork,
       parameters
     );
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -409,14 +405,12 @@ export default class NftService extends BaseService {
       assetToken,
       assetAmount
     ];
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedParticles',
       'dischargeParticleAmount',
       signerNetwork,
       parameters
     );
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -452,14 +446,12 @@ export default class NftService extends BaseService {
       assetToken,
       assetAmount
     ];
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedParticles',
       'dischargeParticleForCreator',
       signerNetwork,
       parameters
     );
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -491,14 +483,12 @@ export default class NftService extends BaseService {
       walletManagerId,
       assetToken
     ];
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedParticles',
       'releaseParticle',
       signerNetwork,
       parameters
     );
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -533,14 +523,12 @@ export default class NftService extends BaseService {
       assetToken,
       assetAmount
     ];
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedParticles',
       'releaseParticleAmount',
       signerNetwork,
       parameters
     );
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -576,15 +564,13 @@ export default class NftService extends BaseService {
       nftTokenId,
       nftTokenAmount
     ];
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedParticles',
       'covalentBond',
       signerNetwork,
       parameters
     );
 
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -623,15 +609,13 @@ export default class NftService extends BaseService {
       nftTokenAmount
     ];
 
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedParticles',
       'breakCovalentBond',
       signerNetwork,
       parameters
     );
 
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -658,15 +642,13 @@ export default class NftService extends BaseService {
       unlockBlock,
     ];
 
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedState',
       'setReleaseTimelock',
       signerNetwork,
       parameters
     );
 
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -693,15 +675,13 @@ export default class NftService extends BaseService {
       unlockBlock,
     ];
 
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedState',
       'setDischargeTimelock',
       signerNetwork,
       parameters
     );
 
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -728,15 +708,13 @@ export default class NftService extends BaseService {
       unlockBlock,
     ];
 
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedState',
       'setBreakBondTimelock',
       signerNetwork,
       parameters
     );
 
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -763,15 +741,13 @@ export default class NftService extends BaseService {
       annuityPercent,
     ];
 
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedSettings',
       'setCreatorAnnuities',
       signerNetwork,
       parameters
     )
 
-    const receipt = await tx.wait();
-    return receipt;
   }
 
   /**
@@ -796,14 +772,12 @@ export default class NftService extends BaseService {
       receiver,
     ];
 
-    const tx: ContractTransaction = await this.writeContract(
+    return await this.writeContract(
       'chargedSettings',
       'setCreatorAnnuitiesRedirect',
       signerNetwork,
       parameters
     )
 
-    const receipt = await tx.wait();
-    return receipt;
   }
 }
