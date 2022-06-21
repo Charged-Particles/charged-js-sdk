@@ -18,7 +18,21 @@ type ChargedConstructor = {
   config?: ConfigurationParameters
 };
 
-/** Charged particle class */
+/** 
+ * @example  
+ * const charged = new Charged({providers: window.ethereum});
+ * const allStateAddresses = await charged.utils.getStateAddress();
+ * 
+ * const polygonProvider = [
+ *  { 
+ *    network: 137, 
+ *    service: {alchemy: process.env.ALCHEMY_POLYGON_KEY}
+ *  }
+ * ];
+ * const charged = new Charged({providers: polygonProvider})
+ * 
+*/
+
 export default class Charged {
 
   public utils: UtilsService;
@@ -76,6 +90,19 @@ export default class Charged {
     this.utils = new UtilsService(this.state);
   }
 
+  /**
+  * Returns a wrapped token with charged particle methods.
+  * @param {string} contractAddress
+  * @param {number} tokenId
+  * @return {NftService}  Instance of the NFT connected to the charged particle protocol
+  * 
+  * @example
+  * const charged = new Charged({providers: window.ethereum});
+  * 
+  * const nft = charged.NFT( '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 43);
+  * 
+  * const creatorAnnuities = await nft.getCreatorAnnuities();
+  */
   public NFT(contractAddress: string, tokenId: number) {
     return new NftService(this.state, contractAddress, tokenId);
   }
