@@ -1,6 +1,16 @@
 import { ChargedState } from '../../types';
 import BaseService from './baseService';
 
+/** 
+* @class UtilsService
+* 
+* Returns an object with a  set of charged particles utilities methods
+* @return {UtilsService} 
+* @memberof Charged 
+* @example
+* const charged = new Charged({providers: window.ethereum});
+* const creatorAnnuities = await charged.utils.getStateAddress();
+*/
 export default class UtilsService extends BaseService {
 
   constructor(state: ChargedState) {
@@ -13,7 +23,7 @@ export default class UtilsService extends BaseService {
 
  /**
  *  Get the state address from the ChargedParticles contract.
- *
+ * @memberof UtilsService
  * @return {string} state contract address
  */
   public async getStateAddress() {
