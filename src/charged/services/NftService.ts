@@ -1,7 +1,24 @@
-import { BigNumber, BigNumberish, ContractTransaction } from 'ethers';
+import { BigNumberish, ContractTransaction } from 'ethers';
 import { ChargedState, managerId } from '../../types';
 import BaseService from './baseService';
 
+/** 
+* @class NFT
+* 
+* Returns a wrapped token with charged particle methods.
+* @param {string} contractAddress
+* @param {number} tokenId
+* @return {NftService}  Instance of the NFT connected to the charged particle protocol
+* @memberof Charged
+* 
+* @example
+* const charged = new Charged({providers: window.ethereum});
+* 
+* const nft = charged.NFT( '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 43);
+* 
+* const creatorAnnuities = await nft.getCreatorAnnuities();
+* 
+*/
 export default class NftService extends BaseService {
   public contractAddress: string;
 
@@ -76,7 +93,6 @@ export default class NftService extends BaseService {
    * @param {managerId} walletManagerId - The ID of the wallet manager to check.
    * @param {string} assetToken         - The address of the asset token to check.
    * @return {BigNumber}                - The Amount of underlying assets held within the token.
-   *
    */
   public async getMass(walletManagerId: managerId, assetToken: string) {
     const parameters = [
@@ -646,7 +662,7 @@ export default class NftService extends BaseService {
   * @param {number} [chainId]             - Optional parameter that allows for the user to specify which network to write to
   * @return {Promise<ContractReceipt>}    - A receipt from the transaction
   */
-  public async setCreatorAnnuities(creator: string, annuityPercent:BigNumberish, chainId?:number) {
+  public async setCreatorAnnuities(creator: string, annuityPercent: BigNumberish, chainId?: number) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -676,7 +692,7 @@ export default class NftService extends BaseService {
   * @param {number} [chainId]            - Optional parameter that allows for the user to specify which network to write to
   * @return {Promise<ContractReceipt>}   - A receipt from the transaction
   */
-  public async setCreatorAnnuitiesRedirect(receiver:string, chainId?:number) {
+  public async setCreatorAnnuitiesRedirect(receiver: string, chainId?: number) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -695,5 +711,5 @@ export default class NftService extends BaseService {
 
     const receipt = await tx.wait();
     return receipt;
-  }  
+  }
 }

@@ -47,6 +47,7 @@ export type ChargedState = {
   configuration: ConfigurationParameters;
 };
 
+/**  @typedef {managerId} */
 export type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
 /**

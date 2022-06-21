@@ -19,6 +19,10 @@ type ChargedConstructor = {
 };
 
 /** 
+ * @class Charged
+ * Create a Charged instance.
+ * @constructs ChargedConstructor
+ * @param {ChargedConstructor} params - Charged parameter object.
  * @example  
  * const charged = new Charged({providers: window.ethereum});
  * const allStateAddresses = await charged.utils.getStateAddress();
@@ -39,11 +43,7 @@ export default class Charged {
 
   readonly state: ChargedState;
 
-  /**
-  * Create a Charged instance.
-  * @constructs ChargedConstructor
-  * @param {ChargedConstructor} params - Charged parameter object.
-  */
+
   constructor(params: ChargedConstructor = {}) {
 
     const { providers, signer, config: userConfig } = this.getValidatedParams(params);
@@ -90,19 +90,6 @@ export default class Charged {
     this.utils = new UtilsService(this.state);
   }
 
-  /**
-  * Returns a wrapped token with charged particle methods.
-  * @param {string} contractAddress
-  * @param {number} tokenId
-  * @return {NftService}  Instance of the NFT connected to the charged particle protocol
-  * 
-  * @example
-  * const charged = new Charged({providers: window.ethereum});
-  * 
-  * const nft = charged.NFT( '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 43);
-  * 
-  * const creatorAnnuities = await nft.getCreatorAnnuities();
-  */
   public NFT(contractAddress: string, tokenId: number) {
     return new NftService(this.state, contractAddress, tokenId);
   }
