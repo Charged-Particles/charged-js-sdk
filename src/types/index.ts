@@ -50,10 +50,10 @@ export type ChargedState = {
 
 /**  
  * A string enum that identifies which wallet manager to use. Used in functions like `release` and `discharge`
- * @typedef {managerId}
- * @property {string} managerId - possible values: `aave`, `aave.B`, `generic`, `generic.B`
+ * @typedef {ManagerId}
+ * @property {string} ManagerId - possible values: `aave`, `aave.B`, `generic`, `generic.B`
  */
-export type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
+export type ManagerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
 /**
 * Charged class constructor object parameter.

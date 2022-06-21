@@ -1,5 +1,5 @@
 import { BigNumberish, ContractTransaction } from 'ethers';
-import { ChargedState, managerId } from '../../types';
+import { ChargedState, ManagerId } from '../../types';
 import BaseService from './baseService';
 
 /** 
@@ -94,11 +94,11 @@ export default class NftService extends BaseService {
    * @instance
    * @async
    *
-   * @param {managerId} walletManagerId - The ID of the wallet manager to check.
+   * @param {ManagerId} walletManagerId - The ID of the wallet manager to check.
    * @param {string} assetToken         - The address of the asset token to check.
    * @return {BigNumber}                - The Amount of underlying assets held within the token.
    */
-  public async getMass(walletManagerId: managerId, assetToken: string) {
+  public async getMass(walletManagerId: ManagerId, assetToken: string) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -115,12 +115,12 @@ export default class NftService extends BaseService {
    * @instance
    * @async
    *
-   * @param {managerId} walletManagerId - The ID of the Wallet Manager.
+   * @param {ManagerId} walletManagerId - The ID of the Wallet Manager.
    * @param {string} assetToken         - The address of the asset Token to check.
    * @return {BigNumber}                - The amount of interest generated.
    *
    */
-  public async getCharge(walletManagerId: managerId, assetToken: string) {
+  public async getCharge(walletManagerId: ManagerId, assetToken: string) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -137,12 +137,12 @@ export default class NftService extends BaseService {
    * @instance
    * @async
    *
-   * @param {managerId} walletManagerId - The ID of the Wallet Manager.
+   * @param {ManagerId} walletManagerId - The ID of the Wallet Manager.
    * @param {string} assetToken         - The Address of the Asset Token to check.
    * @return {BigNumber}                - The amount of LP tokens that have been generated.
    *
    */
-  public async getKinectics(walletManagerId: managerId, assetToken: string) {
+  public async getKinectics(walletManagerId: ManagerId, assetToken: string) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -295,7 +295,7 @@ export default class NftService extends BaseService {
   * @instance
   * @async
   * 
-  * @param {managerId} walletManagerId - The Asset-Pair to Energize the Token with
+  * @param {ManagerId} walletManagerId - The Asset-Pair to Energize the Token with
   * @param {string} assetToken - The Address of the Asset Token being used
   * @param {BigNumberish} assetAmount - The Amount of Asset Token to Energize the Token with
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
@@ -305,7 +305,7 @@ export default class NftService extends BaseService {
   * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L267 Solidity Contract Method}
   */
   public async energize(
-    walletManagerId: managerId,
+    walletManagerId: ManagerId,
     assetToken: string,
     assetAmount: BigNumberish,
     chainId?: number,
@@ -341,14 +341,14 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens.
-  * @param {managerId} walletManagerId - The wallet manager of that assets to discharge from the token.
+  * @param {ManagerId} walletManagerId - The wallet manager of that assets to discharge from the token.
   * @param {string} assetToken - The address of the asset token being discharged.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.j
   * @return {Promise<ContractReceipt>}  A receipt from the contract transaction.
   */
   public async discharge(
     receiver: string,
-    walletManagerId: managerId,
+    walletManagerId: ManagerId,
     assetToken: string,
     chainId?: number
   ) {
@@ -383,7 +383,7 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens.
-  * @param {managerId} walletManagerId - The wallet manager of the assets to discharge from the token.
+  * @param {ManagerId} walletManagerId - The wallet manager of the assets to discharge from the token.
   * @param {string} assetToken - The address of the asset token being discharged.
   * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
@@ -391,7 +391,7 @@ export default class NftService extends BaseService {
   */
   public async dischargeAmount(
     receiver: string,
-    walletManagerId: managerId,
+    walletManagerId: ManagerId,
     assetToken: string,
     assetAmount: BigNumberish,
     chainId?: number
@@ -428,7 +428,7 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens
-  * @param {managerId} walletManagerId - The wallet manager of the assets to discharge from the token
+  * @param {ManagerId} walletManagerId - The wallet manager of the assets to discharge from the token
   * @param {string} assetToken - The address of the asset token being discharged
   * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
@@ -436,7 +436,7 @@ export default class NftService extends BaseService {
   */
   public async dischargeForCreator(
     receiver: string,
-    walletManagerId: managerId,
+    walletManagerId: ManagerId,
     assetToken: string,
     assetAmount: BigNumberish,
     chainId?: number
@@ -470,14 +470,14 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the released asset tokens.
-  * @param {managerId} walletManagerId - The wallet manager of the assets to release from the token.
+  * @param {ManagerId} walletManagerId - The wallet manager of the assets to release from the token.
   * @param {string} assetToken - The address of the asset token being released.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async release(
     receiver: string,
-    walletManagerId: managerId,
+    walletManagerId: ManagerId,
     assetToken: string,
     chainId?: number
   ) {
@@ -509,7 +509,7 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the released asset tokens
-  * @param {managerId} walletManagerId - The wallet manager of the assets to release from the token
+  * @param {ManagerId} walletManagerId - The wallet manager of the assets to release from the token
   * @param {string} assetToken - The address of the asset token being released
   * @param {BigNumberish} assetAmount - The specific amount of asset token to release from the particle
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
@@ -517,7 +517,7 @@ export default class NftService extends BaseService {
   */
   public async releaseAmount(
     receiver: string,
-    walletManagerId: managerId,
+    walletManagerId: ManagerId,
     assetToken: string,
     assetAmount: BigNumberish,
     chainId?: number
