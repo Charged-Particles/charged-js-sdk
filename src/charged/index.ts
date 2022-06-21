@@ -5,18 +5,31 @@ import { NetworkProvider, ChargedState, ConfigurationParameters } from "../types
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
 
+/**
+ * Charged class constructor object parameter.
+ * @typedef {Object} ChargedConstructor
+ * @property {NetworkProvider[] | providers.Provider | providers.ExternalProvider} [providers=defaultProvider] -  Provider for connection to the Ethereum network.
+ * @property {Signer} [signer] - Needed to send signed transactions to the Ethereum Network to execute state changing operations.
+ * @property {ConfigurationParameters} config
+ */
 type ChargedConstructor = {
   providers?: NetworkProvider[] | providers.Provider | providers.ExternalProvider,
   signer?: Signer,
   config?: ConfigurationParameters
 };
 
+/** Charged particle class */
 export default class Charged {
 
   public utils: UtilsService;
 
   readonly state: ChargedState;
 
+  /**
+  * Create a Charged instance.
+  * @constructs ChargedConstructor
+  * @param {ChargedConstructor} params - Charged parameter object.
+  */
   constructor(params: ChargedConstructor = {}) {
 
     const { providers, signer, config: userConfig } = this.getValidatedParams(params);
@@ -53,11 +66,11 @@ export default class Charged {
       sdk: { NftBridgeCheck: false },
       transactionOverride: {},
     }
-    
+
     this.state = {
       signer,
       providers: initializedProviders,
-      configuration: {...defaultConfig, ...userConfig}
+      configuration: { ...defaultConfig, ...userConfig }
     };
 
     this.utils = new UtilsService(this.state);
