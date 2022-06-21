@@ -12,6 +12,7 @@ export type DefaultProviderKeys = {
 
 /**
 * User specified custom network provider.
+*
 * @typedef {Object} NetworkProvider
 * @property {number} [network] - Configure the SDK.
 * @property { [index: string]: string | undefined} [service] - Service provider name and keys or specify a RPC URL.
@@ -47,7 +48,11 @@ export type ChargedState = {
   configuration: ConfigurationParameters;
 };
 
-/**  @typedef {managerId} */
+/**  
+ * A string enum that identifies which wallet manager to use. Used in functions like `release` and `discharge`
+ * @typedef {managerId}
+ * @property {string} managerId - possible values: `aave`, `aave.B`, `generic`, `generic.B`
+ */
 export type managerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
 /**

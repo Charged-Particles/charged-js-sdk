@@ -2,11 +2,11 @@ import { ChargedState } from '../../types';
 import BaseService from './baseService';
 
 /** 
+* @name Utilities
 * @class UtilsService
 * 
 * Returns an object with a  set of charged particles utilities methods
 * @return {UtilsService} 
-* @memberof Charged 
 * @example
 * const charged = new Charged({providers: window.ethereum});
 * const creatorAnnuities = await charged.utils.getStateAddress();
@@ -22,8 +22,10 @@ export default class UtilsService extends BaseService {
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  /**
- *  Get the state address from the ChargedParticles contract.
- * @memberof UtilsService
+ * Get the address of the chargedState contract.
+ * 
+ * @memberof Utilities
+ * 
  * @return {string} state contract address
  */
   public async getStateAddress() {
@@ -31,8 +33,10 @@ export default class UtilsService extends BaseService {
   }
 
 /**
- *  Get settings address from the ChargedParticles contract.
+ * Get the address of the chargedSettings contract.
  *
+ * @memberof Utilities
+ * 
  * @return {string} settings contract address
  */
   public async getSettingsAddress() {
@@ -40,8 +44,10 @@ export default class UtilsService extends BaseService {
   }
 
 /**
- *  Get managers address from the Settings contract
+ * Get the address of the chargedManagers contract.
  *
+ * @memberof Utilities
+ * 
  * @return {string} manager contract address
  */
   public async getManagersAddress() {
@@ -49,9 +55,11 @@ export default class UtilsService extends BaseService {
   }
 
 /**
- *  Get the deposit fee of the protocol.
+ * Get the deposit fee of the protocol.
  *
- * @return {string} fee amount. 
+ * @memberof Utilities
+ * 
+ * @return {string} protocol fee amount. 
  */
   public async getFeesForDeposit() {
     return await this.fetchAllNetworks('chargedParticles', 'getFeesForDeposit');

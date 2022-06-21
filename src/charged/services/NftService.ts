@@ -3,13 +3,13 @@ import { ChargedState, managerId } from '../../types';
 import BaseService from './baseService';
 
 /** 
+* @name NFT
 * @class NFT
 * 
 * Returns a wrapped token with charged particle methods.
 * @param {string} contractAddress
 * @param {number} tokenId
 * @return {NftService}  Instance of the NFT connected to the charged particle protocol
-* @memberof Charged
 * 
 * @example
 * const charged = new Charged({providers: window.ethereum});
@@ -89,6 +89,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the amount of asset tokens that have been deposited into the Particle.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @param {managerId} walletManagerId - The ID of the wallet manager to check.
    * @param {string} assetToken         - The address of the asset token to check.
@@ -106,6 +110,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the amount of interest that the particle has generated.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @param {managerId} walletManagerId - The ID of the Wallet Manager.
    * @param {string} assetToken         - The address of the asset Token to check.
@@ -124,6 +132,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the amount of LP Tokens that the Particle has generated.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @param {managerId} walletManagerId - The ID of the Wallet Manager.
    * @param {string} assetToken         - The Address of the Asset Token to check.
@@ -142,6 +154,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the total amount of ERC721 tokens that the Particle holds.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @param {string} basketManagerId    - The ID of the BasketManager to check.
    * @return {BigNumber}                - The total amount of ERC721 tokens that are held within the Particle.
@@ -154,6 +170,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the amount of creator annuities reserved for the creator for the specified NFT.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @return {address}                  - The address of the creator.
    * @return {number}                   - The percentage amount of annuities reserved for the creator.
@@ -166,6 +186,10 @@ export default class NftService extends BaseService {
 
   /**
    * Get the address that receives creator annuities for a given Particle/ Defaults to creator address if it has not been redirected.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @return {address}                  - The address of the creator.
    * @return {number}                   - The percentage amount of annuities reserved for the creator.
@@ -178,6 +202,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the tokenUri using the tokenId and contractAddress of the Particle.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @return {string}                   - Token metadata URI.
    *
@@ -193,6 +221,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the Discharge timelock state of the Particle.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @param {string} sender             - The address approved for Discharging assets from the Particle.
    * @return {[boolean, boolean, BigNumber, BigNumber]} - [allowFromAll, isApproved, timelock, empLockExpiry]
@@ -208,6 +240,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the Discharge timelock state of the Particle.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @param {string} sender             - The address approved for Releasing assets from the Particle.
    * @return {[boolean, boolean, BigNumber, BigNumber]} - [allowFromAll, isApproved, timelock, empLockExpiry]
@@ -224,6 +260,10 @@ export default class NftService extends BaseService {
 
   /**
    * Gets the Bonds Timelock state of the Particle.
+   * 
+   * @memberof NFT
+   * @instance
+   * @async
    *
    * @param {string} sender             - The address approved for removing Bond assets from the Particle.
    * @return {boolean} allowFromAll
@@ -252,6 +292,8 @@ export default class NftService extends BaseService {
   * If you are getting gas limit errors this may be because you forgot to approve the contract as operator of asset
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {managerId} walletManagerId - The Asset-Pair to Energize the Token with
   * @param {string} assetToken - The Address of the Asset Token being used
@@ -295,6 +337,8 @@ export default class NftService extends BaseService {
   * without removing the underlying asset that is held within the token.
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens.
   * @param {managerId} walletManagerId - The wallet manager of that assets to discharge from the token.
@@ -335,6 +379,8 @@ export default class NftService extends BaseService {
   * generated from the token without removing the underlying Asset that is held within the token.
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens.
   * @param {managerId} walletManagerId - The wallet manager of the assets to discharge from the token.
@@ -378,6 +424,8 @@ export default class NftService extends BaseService {
   * generated from the token without removing the underlying Asset that is held within the token.
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens
   * @param {managerId} walletManagerId - The wallet manager of the assets to discharge from the token
@@ -418,6 +466,8 @@ export default class NftService extends BaseService {
   * Releases the full amount of asset + interest held within the particle by LP of the assets.
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} receiver - The address to receive the released asset tokens.
   * @param {managerId} walletManagerId - The wallet manager of the assets to release from the token.
@@ -455,6 +505,8 @@ export default class NftService extends BaseService {
   * Releases a partial amount of asset + interest held within the particle by LP of the assets.
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} receiver - The address to receive the released asset tokens
   * @param {managerId} walletManagerId - The wallet manager of the assets to release from the token
@@ -496,6 +548,8 @@ export default class NftService extends BaseService {
   * Must be called by the account providing the asset. Account must approve THIS contract as operator of asset.
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} basketManagerId - The basket to deposit the NFT into.
   * @param {string} nftTokenAddress - The address of the NFT token being deposited.
@@ -537,6 +591,8 @@ export default class NftService extends BaseService {
   * Release NFT assets from the particle.
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} receiver - The address to receive the released asset tokens.
   * @param {string} basketManagerId - The basket to release the NFT from.
@@ -582,6 +638,8 @@ export default class NftService extends BaseService {
   * Sets a timelock on the ability to release the assets of a particle.
   *
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
@@ -615,6 +673,8 @@ export default class NftService extends BaseService {
   * Sets a timelock on the ability to discharge the assets of a particle
   *
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
@@ -648,6 +708,8 @@ export default class NftService extends BaseService {
   * Sets a timelock on the ability to break the covalent bond of a particle
   *
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
@@ -682,6 +744,8 @@ export default class NftService extends BaseService {
   * Must be called by account that created and owns the particle
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} creator - The creator's address of the proton-based NFT.
   * @param {BigNumberish} annuityPercent - The percentage of interest-annuities to reserve for the creator. In decimal this can range from 0 - 10000. 5712 would be 57.12%..
@@ -715,6 +779,8 @@ export default class NftService extends BaseService {
   * Must be called by account that created and owns the particle
   * 
   * @memberof NFT
+  * @instance
+  * @async
   * 
   * @param {string} receiver - The receiver of the creator interest annuities.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
