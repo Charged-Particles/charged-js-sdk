@@ -74,8 +74,8 @@ export default class NftService extends BaseService {
    * Gets the amount of asset tokens that have been deposited into the Particle.
    *
    * @param {managerId} walletManagerId - The ID of the wallet manager to check.
-   * @param {string} assetToken - The address of the asset token to check.
-   * @return {BigNumber} The Amount of underlying assets held within the token.
+   * @param {string} assetToken         - The address of the asset token to check.
+   * @return {BigNumber}                - The Amount of underlying assets held within the token.
    *
    */
   public async getMass(walletManagerId: managerId, assetToken: string) {
@@ -92,8 +92,8 @@ export default class NftService extends BaseService {
    * Gets the amount of interest that the particle has generated.
    *
    * @param {managerId} walletManagerId - The ID of the Wallet Manager.
-   * @param {string} assetToken - The address of the asset Token to check.
-   * @return {BigNumber} The amount of interest generated.
+   * @param {string} assetToken         - The address of the asset Token to check.
+   * @return {BigNumber}                - The amount of interest generated.
    *
    */
   public async getCharge(walletManagerId: managerId, assetToken: string) {
@@ -110,8 +110,8 @@ export default class NftService extends BaseService {
    * Gets the amount of LP Tokens that the Particle has generated.
    *
    * @param {managerId} walletManagerId - The ID of the Wallet Manager.
-   * @param {string} assetToken - The Address of the Asset Token to check.
-   * @return {BigNumber} The amount of LP tokens that have been generated.
+   * @param {string} assetToken         - The Address of the Asset Token to check.
+   * @return {BigNumber}                - The amount of LP tokens that have been generated.
    *
    */
   public async getKinectics(walletManagerId: managerId, assetToken: string) {
@@ -127,8 +127,8 @@ export default class NftService extends BaseService {
   /**
    * Gets the total amount of ERC721 tokens that the Particle holds.
    *
-   * @param {string} basketManagerId - The ID of the BasketManager to check.
-   * @return {BigNumber} The total amount of ERC721 tokens that are held within the Particle.
+   * @param {string} basketManagerId    - The ID of the BasketManager to check.
+   * @return {BigNumber}                - The total amount of ERC721 tokens that are held within the Particle.
    *
    */
   public async getBonds(basketManagerId: string) {
@@ -139,8 +139,8 @@ export default class NftService extends BaseService {
   /**
    * Gets the amount of creator annuities reserved for the creator for the specified NFT.
    *
-   * @return {address} The address of the creator.
-   * @return {number} The percentage amount of annuities reserved for the creator.
+   * @return {address}                  - The address of the creator.
+   * @return {number}                   - The percentage amount of annuities reserved for the creator.
    *
    */
   public async getCreatorAnnuities() {
@@ -151,8 +151,8 @@ export default class NftService extends BaseService {
   /**
    * Get the address that receives creator annuities for a given Particle/ Defaults to creator address if it has not been redirected.
    *
-   * @return {address} The address of the creator.
-   * @return {number} The percentage amount of annuities reserved for the creator.
+   * @return {address}                  - The address of the creator.
+   * @return {number}                   - The percentage amount of annuities reserved for the creator.
    *
    */
   public async getCreatorAnnuitiesRedirect() {
@@ -163,7 +163,7 @@ export default class NftService extends BaseService {
   /**
    * Gets the tokenUri using the tokenId and contractAddress of the Particle.
    *
-   * @return {string} Token metadata URI.
+   * @return {string}                   - Token metadata URI.
    *
    */
   public async tokenURI() {
@@ -178,8 +178,8 @@ export default class NftService extends BaseService {
   /**
    * Gets the Discharge timelock state of the Particle.
    *
-   * @param {string} sender - The address approved for Discharging assets from the Particle.
-   * @return {[boolean, boolean, BigNumber, BigNumber]} [allowFromAll, isApproved, timelock, empLockExpiry]
+   * @param {string} sender             - The address approved for Discharging assets from the Particle.
+   * @return {[boolean, boolean, BigNumber, BigNumber]} - [allowFromAll, isApproved, timelock, empLockExpiry]
    */
   public async getDischargeState(sender: string) {
     const parameters = [this.contractAddress, this.tokenId, sender];
@@ -193,8 +193,8 @@ export default class NftService extends BaseService {
   /**
    * Gets the Discharge timelock state of the Particle.
    *
-   * @param {string} sender - The address approved for Releasing assets from the Particle.
-   * @return {[boolean, boolean, BigNumber, BigNumber]} [allowFromAll, isApproved, timelock, empLockExpiry]
+   * @param {string} sender             - The address approved for Releasing assets from the Particle.
+   * @return {[boolean, boolean, BigNumber, BigNumber]} - [allowFromAll, isApproved, timelock, empLockExpiry]
    *
    */
   public async getReleaseState(sender: string) {
@@ -209,7 +209,7 @@ export default class NftService extends BaseService {
   /**
    * Gets the Bonds Timelock state of the Particle.
    *
-   * @param {string} sender - The address approved for removing Bond assets from the Particle.
+   * @param {string} sender             - The address approved for removing Bond assets from the Particle.
    * @return {boolean} allowFromAll
    * @return {boolean} isApproved
    * @return {BigNumber} timelock
