@@ -1,26 +1,43 @@
-import { rpcUrlMainnet } from '../src/utils/config';
-import { getWallet } from '../src/utils/testUtilities';
+import {
+  rpcUrlMainnet,
+  infuraProjectId,
+  alchemyMainnetKey,
+  alchemyMumbaiKey,
+  alchemyKovanKey,
+  alchemyPolygonKey
+} from '../../src/utils/config';
+
+import Charged from '../../src/charged/index';
+import { getWallet } from '../../src/utils/testUtilities';
 import { BigNumber, ethers } from 'ethers';
+import { chargedParticlesAbi, mainnetAddresses } from '../../src/index';
 const Web3HttpProvider = require('web3-providers-http');
 
-import Charged from '../src/charged/index';
+const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
+const myWallet = getWallet();
+const providers = [
+  {
+    network: 1,
+    service: { 'alchemy': alchemyMainnetKey }
+  },
+  {
+    network: 42,
+    service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
+  }
+];
+const localProvider = [
+  {
+    network: 1,
+    service: { 'rpc': localTestNetRpcUrl}
+  }
+];
+
+const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+const tokenId = 43;
+const network = 42;
+const ganacheChainId = 1337;
 
 describe('Charged class', () => {
-  const myWallet = getWallet();
-  const providers = [
-    {
-      network: 1,
-      service: { 'alchemy': process.env.ALCHEMY_MAINNET_KEY }
-    },
-    {
-      network: 42,
-      service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
-    }
-  ]
-
-  const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-  const tokenId = 43;
-  const network = 42;
 
   it('Initializes charged SDK', async () => {
     const charged = new Charged({ providers })
@@ -28,8 +45,6 @@ describe('Charged class', () => {
 
     expect(allStateAddresses).toHaveProperty('1');
     expect(allStateAddresses).toHaveProperty('42');
-
-    console.log(allStateAddresses);
   });
 
   it('Initializes NFT service', async () => {
@@ -37,7 +52,6 @@ describe('Charged class', () => {
 
     const particleBAddress = '0x04d572734006788B646ce35b133Bdf7160f79995';
     const tokenId = 4;
-    // const network = 1;
 
     const nft = charged.NFT(particleBAddress, tokenId);
 
@@ -66,9 +80,9 @@ describe('Charged class', () => {
   });
 
   it('energize a test particle', async () => {
-    const charged = new Charged({ providers, signer: myWallet });
+    const charged = new Charged({ providers: localProvider, signer: myWallet });
 
-    const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+    const particleBAddress = mainnetAddresses.protonB.address;
     const tokenId = 43;
     const network = 42;
 
@@ -80,7 +94,7 @@ describe('Charged class', () => {
       network
     );
 
-    console.log({ receipt }); // TODO: expect !
+    expect(receipt).toHaveProperty('status', 1)
   });
 
   it('Initializes with ether.js external provider', async () => {
@@ -102,21 +116,21 @@ describe('Charged class', () => {
   it('Throws when Charged class is passed a not supported parameter', () => {
     expect(() => {
       //@ts-ignore
-      new Charged({externalProvider: providers});
+      new Charged({ externalProvider: providers });
     }).toThrow('externalProvider is not a valid parameter');
   });
 
   it('Should fetch from Mumbai Alchemy using API key', async () => {
-    const mumbaiProvider = [{ network: 80001, service: {alchemy: process.env.ALCHEMY_MUMBAI_KEY}}];
-    const charged = new Charged({providers: mumbaiProvider})
+    const mumbaiProvider = [{ network: 80001, service: { alchemy: alchemyMumbaiKey } }];
+    const charged = new Charged({ providers: mumbaiProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
   });
 
   it('Should fetch from Polygon Alchemy using API key', async () => {
-    const polygonProvider = [{ network: 137, service: {alchemy: process.env.ALCHEMY_POLYGON_KEY}}];
-    const charged = new Charged({providers: polygonProvider})
+    const polygonProvider = [{ network: 137, service: { alchemy: alchemyPolygonKey } }];
+    const charged = new Charged({ providers: polygonProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('137', { "status": "fulfilled", "value": "0x9c00b8CF03f58c0420CDb6DE72E27Bf11964025b" });
@@ -124,49 +138,49 @@ describe('Charged class', () => {
 
   // KOVAN is deprecated via alchemy !!! whoops
   it('Should fetch from Kovan Alchemy using API key', async () => {
-    const kovanProvider = [{ network: 42, service: {alchemy: process.env.ALCHEMY_KOVAN_KEY}}];
-    const charged = new Charged({providers: kovanProvider})
+    const kovanProvider = [{ network: 42, service: { alchemy: alchemyKovanKey } }];
+    const charged = new Charged({ providers: kovanProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
   });
 
   it('Should fetch from Mainnet Alchemy using API key', async () => {
-    const mainnetProvider = [{ network: 1, service: {alchemy: process.env.ALCHEMY_MAINNET_KEY}}];
-    const charged = new Charged({providers: mainnetProvider})
+    const mainnetProvider = [{ network: 1, service: { alchemy: alchemyMainnetKey } }];
+    const charged = new Charged({ providers: mainnetProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
   });
 
-  // INFURA_PROJECT_SECRET used for all four network tests below:
-  it('Should fetch from Mumbai Infura using project secret', async () => {
-    const mumbaiProvider = [{ network: 80001, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
-    const charged = new Charged({providers: mumbaiProvider})
+  // INFURA_PROJECT_ID used for all four network tests below:
+  it.skip('Should fetch from Mumbai Infura using project secret', async () => {
+    const mumbaiProvider = [{ network: 80001, service: { infura: infuraProjectId } }];
+    const charged = new Charged({ providers: mumbaiProvider });
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
   });
 
-  it('Should fetch from Polygon Infura using project secret', async () => {
-    const polygonProvider = [{ network: 137, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
-    const charged = new Charged({providers: polygonProvider})
+  it.skip('Should fetch from Polygon Infura using project secret', async () => {
+    const polygonProvider = [{ network: 137, service: { infura: infuraProjectId } }];
+    const charged = new Charged({ providers: polygonProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('137', { "status": "fulfilled", "value": "0x9c00b8CF03f58c0420CDb6DE72E27Bf11964025b" });
   });
 
   it('Should fetch from Kovan Infura using project secret', async () => {
-    const kovanProvider = [{ network: 42, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
-    const charged = new Charged({providers: kovanProvider})
+    const kovanProvider = [{ network: 42, service: { infura: infuraProjectId } }];
+    const charged = new Charged({ providers: kovanProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
   });
 
   it('Should fetch from Mainnet Infura using project secret', async () => {
-    const mainnetProvider = [{ network: 1, service: {infura: process.env.INFURA_PROJECT_SECRET}}];
-    const charged = new Charged({providers: mainnetProvider})
+    const mainnetProvider = [{ network: 1, service: { infura: infuraProjectId } }];
+    const charged = new Charged({ providers: mainnetProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
 
     expect(allStateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
@@ -176,7 +190,7 @@ describe('Charged class', () => {
     const kovanRpcUrlProvider = [
       {
         network: 42,
-        service: { 'rpc': `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_SECRET}`}
+        service: { 'rpc': `https://kovan.infura.io/v3/${infuraProjectId}` }
       }
     ];
 
@@ -190,7 +204,7 @@ describe('Charged class', () => {
     const mainnetRpcUrlProvider = [
       {
         network: 1,
-        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`}
+        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${alchemyMainnetKey}` }
       }
     ];
 
@@ -205,11 +219,11 @@ describe('Charged class', () => {
     const providers = [
       {
         network: 1,
-        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_MAINNET_KEY}`}
+        service: { 'rpc': `https://eth-mainnet.alchemyapi.io/v2/${alchemyMainnetKey}` }
       },
       {
         network: 42,
-        service: { 'rpc': `https://kovan.infura.io/v3/${process.env.INFURA_PROJECT_SECRET}`}
+        service: { 'rpc': `https://kovan.infura.io/v3/${infuraProjectId}` }
       }
     ];
 
@@ -220,11 +234,11 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
   });
 
-  it.skip('Throws when writing with no signer', async() => {
-    const charged = new Charged({ providers });
+  it('Throws when writing with no signer', async () => {
+    const charged = new Charged({ providers: localProvider });
     const nft = charged.NFT(particleBAddress, tokenId);
 
-    await expect(async() => {
+    await expect(async () => {
       await nft.energize(
         'aave.B',
         '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
@@ -234,8 +248,8 @@ describe('Charged class', () => {
     }).rejects.toThrow('Trying to write with no signer');
   });
 
-  it('Default setting turns bridge nft check off', async() => {
-    const charged = new Charged({providers});
+  it('Default setting turns bridge nft check off', async () => {
+    const charged = new Charged({ providers: localProvider });
     const nft = charged.NFT(particleBAddress, tokenId);
 
     expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', false);
@@ -243,10 +257,19 @@ describe('Charged class', () => {
     expect(NoNftBridgeCheck).toBeUndefined();
   });
 
-  it('Bridge NFT check setting to true', async() => {
-    const userSetting = {sdk: {NftBridgeCheck: true}}
-    const charged = new Charged({providers, config: userSetting});
+  it('Bridge NFT check setting to true', async () => {
+    const userSetting = { sdk: { NftBridgeCheck: true } }
+    const charged = new Charged({ providers: localProvider, config: userSetting });
     expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', true);
   });
 
+  it('should create a contract from exported abis', async () => {
+    const provider = new ethers.providers.JsonRpcProvider(localTestNetRpcUrl, ganacheChainId);
+    const contract = new ethers.Contract(
+      mainnetAddresses.chargedParticles.address,
+      chargedParticlesAbi,
+      provider
+    );
+    expect(await contract.getStateAddress()).toEqual(mainnetAddresses.chargedState.address);
+  });
 });
