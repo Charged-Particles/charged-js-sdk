@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import Charged from '../src/index';
-import { getWallet } from '../src/utils/testUtilities';
-import { contractMocks } from '../src/utils/testUtilities';
+import { getWallet, contractMocks } from '../src/utils/testUtilities';
 
 /*
 This test uses the team test wallet's mnemonic
