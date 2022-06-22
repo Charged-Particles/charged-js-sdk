@@ -22,12 +22,12 @@ const providers = [
   },
   {
     network: 42,
-    service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
+    service: { 'alchemy': alchemyMumbaiKey }
   }
 ];
 const localProvider = [
   {
-    network: 1,
+    network: 42,
     service: { 'rpc': localTestNetRpcUrl}
   }
 ];
@@ -67,7 +67,6 @@ describe('Charged class', () => {
 
   it('Initializes charged with default providers', async () => {
     const charged = new Charged();
-
     const providers = charged.state.providers;
 
     expect(providers).toHaveProperty('1');
@@ -271,5 +270,29 @@ describe('Charged class', () => {
       provider
     );
     expect(await contract.getStateAddress()).toEqual(kovanAddresses.chargedState.address);
+  });
+
+  it.only('Bonds an erc721 into protonB and then breaks the bond.', async() => {
+    const charged = new Charged({ providers: localProvider, signer: myWallet });
+
+    const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 1);
+
+    const bondCountBeforeDeposit = await nft.getBonds('generic.B');
+    const bondCountBeforeDepositValue = bondCountBeforeDeposit[42].value;
+    expect(bondCountBeforeDepositValue.toNumber()).toEqual(0);
+
+    const bondTrx = await nft.bond(
+      'generic.B',
+      '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
+      '43',
+      '1',
+      42 
+    );
+    
+    expect(bondTrx).toHaveProperty('transactionHash');
+
+    const bondCountAfterDeposit = await nft.getBonds('generic.B');
+    const bondCountAfterDepositValue = bondCountAfterDeposit[42].value;
+    expect(bondCountAfterDepositValue.toNumber()).toEqual(1); 
   });
 });
