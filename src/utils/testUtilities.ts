@@ -53,4 +53,4 @@ export const contractMocks = (jest: any) => {
     });
 
   return {writeContractMock, readContractMock};
-}
+};

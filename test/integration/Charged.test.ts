@@ -10,7 +10,7 @@ import {
 import Charged from '../../src/charged/index';
 import { getWallet } from '../../src/utils/testUtilities';
 import { BigNumber, ethers } from 'ethers';
-import { chargedParticlesAbi, kovanAddresses } from '../../src/index';
+import { chargedParticlesAbi, mainnetAddresses } from '../../src/index';
 const Web3HttpProvider = require('web3-providers-http');
 
 const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
@@ -27,7 +27,7 @@ const providers = [
 ];
 const localProvider = [
   {
-    network: 42,
+    network: 1,
     service: { 'rpc': localTestNetRpcUrl}
   }
 ];
@@ -82,7 +82,7 @@ describe('Charged class', () => {
   it('energize a test particle', async () => {
     const charged = new Charged({ providers: localProvider, signer: myWallet });
 
-    const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+    const particleBAddress = mainnetAddresses.protonB.address;
     const tokenId = 43;
     const network = 42;
 
@@ -266,10 +266,10 @@ describe('Charged class', () => {
   it('should create a contract from exported abis', async () => {
     const provider = new ethers.providers.JsonRpcProvider(localTestNetRpcUrl, ganacheChainId);
     const contract = new ethers.Contract(
-      kovanAddresses.chargedParticles.address,
+      mainnetAddresses.chargedParticles.address,
       chargedParticlesAbi,
       provider
-    )
-    expect(await contract.getStateAddress()).toEqual(kovanAddresses.chargedState.address);
+    );
+    expect(await contract.getStateAddress()).toEqual(mainnetAddresses.chargedState.address);
   });
 });
