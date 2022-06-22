@@ -28,7 +28,7 @@ const providers = [
 const localProvider = [
   {
     network: 42,
-    service: { 'rpc': localTestNetRpcUrl}
+    service: { 'rpc': localTestNetRpcUrl }
   }
 ];
 
@@ -272,7 +272,7 @@ describe('Charged class', () => {
     expect(await contract.getStateAddress()).toEqual(kovanAddresses.chargedState.address);
   });
 
-  it.only('Bonds an erc721 into protonB and then breaks the bond.', async() => {
+  it('Bonds an erc721 into protonB.', async () => {
     const charged = new Charged({ providers: localProvider, signer: myWallet });
 
     const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 1);
@@ -286,13 +286,34 @@ describe('Charged class', () => {
       '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
       '43',
       '1',
-      42 
     );
-    
+
     expect(bondTrx).toHaveProperty('transactionHash');
 
     const bondCountAfterDeposit = await nft.getBonds('generic.B');
     const bondCountAfterDepositValue = bondCountAfterDeposit[42].value;
-    expect(bondCountAfterDepositValue.toNumber()).toEqual(1); 
+    expect(bondCountAfterDepositValue.toNumber()).toEqual(1);
+  });
+
+  it('Breaks a protonB bond', async () => {
+    const charged = new Charged({ providers: localProvider, signer: myWallet });
+    const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 18);
+
+    const bondCountBeforeBreak = await nft.getBonds('generic.B');
+    const bondCountBeforeBreakValue = bondCountBeforeBreak[42].value;
+    expect(bondCountBeforeBreakValue.toNumber()).toEqual(4);
+
+    const breakBondTrx = await nft.breakBond(
+      myWallet.address,
+      'generic.B',
+      '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
+      '87',
+      '1',
+    );
+
+    expect(breakBondTrx).toHaveProperty('transactionHash');
+    const bondCountAfterBreak = await nft.getBonds('generic.B');
+    const bondCountAfterBreakValue = bondCountAfterBreak[42].value;
+    expect(bondCountAfterBreakValue).toEqual(bondCountBeforeBreakValue.sub(1));
   });
 });
