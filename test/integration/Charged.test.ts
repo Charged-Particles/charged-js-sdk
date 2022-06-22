@@ -285,7 +285,7 @@ describe('Charged class', () => {
       'generic.B',
       '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
       '43',
-      '1',
+      1,
     );
 
     expect(bondTrx).toHaveProperty('transactionHash');
@@ -308,7 +308,7 @@ describe('Charged class', () => {
       'generic.B',
       '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
       '87',
-      '1',
+      1,
     );
 
     expect(breakBondTrx).toHaveProperty('transactionHash');
@@ -317,7 +317,7 @@ describe('Charged class', () => {
     expect(bondCountAfterBreakValue).toEqual(bondCountBeforeBreakValue.sub(1));
   });
 
-  it.only('Breaks an 1155 bond from protonB and bond back', async () => {
+  it('Breaks an 1155 bond from protonB and bond back', async () => {
     const amountToRemove = 2;
     const charged = new Charged({ providers: localProvider, signer: myWallet });
     const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 49);
@@ -346,7 +346,7 @@ describe('Charged class', () => {
       'generic.B',
       '0x8bcbeea783c9291f0d5949143bbefc8bf235300c',
       '4',
-      '1',
+      1,
     );
 
     expect(bondTrx).toHaveProperty('transactionHash');

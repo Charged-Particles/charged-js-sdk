@@ -21,7 +21,7 @@ describe('NFT service class', () => {
 
   const localProvider = [
     {
-      network: 1,
+      network: 42,
       service: { 'rpc': localTestNetRpcUrl}
     }
   ]
@@ -41,9 +41,9 @@ describe('NFT service class', () => {
 
   it('Gets bridged NFT chains using providers array', async () => {
     const charged = new Charged({ providers: localProvider, signer });
-    const nft = charged.NFT(particleBAddressMainnet, tokenId);
+    const nft = charged.NFT(particleBAddressKovan, tokenId);
     const NftBridgedChains = await nft.getChainIdsForBridgedNFTs();
-    expect(NftBridgedChains).toEqual([1]);
+    expect(NftBridgedChains).toEqual([42]);
   });
 
   it('Get bridge NFT chain ids using injected provider', async () => {
