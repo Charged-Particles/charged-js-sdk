@@ -555,7 +555,7 @@ export default class NftService extends BaseService {
   * @param {string} basketManagerId - The basket to deposit the NFT into.
   * @param {string} nftTokenAddress - The address of the NFT token being deposited.
   * @param {string} nftTokenId - The ID of the NFT token being deposited.
-  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {number} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
@@ -563,7 +563,7 @@ export default class NftService extends BaseService {
     basketManagerId: string,
     nftTokenAddress: string,
     nftTokenId: string,
-    nftTokenAmount: BigNumberish,
+    nftTokenAmount: number,
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -599,7 +599,7 @@ export default class NftService extends BaseService {
   * @param {string} basketManagerId - The basket to release the NFT from.
   * @param {string} nftTokenAddress - The address of the NFT token being released.
   * @param {string} nftTokenId - The ID of the NFT token being released.
-  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {Number} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
@@ -608,7 +608,7 @@ export default class NftService extends BaseService {
     basketManagerId: string,
     nftTokenAddress: string,
     nftTokenId: string,
-    nftTokenAmount: BigNumberish,
+    nftTokenAmount: number,
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
