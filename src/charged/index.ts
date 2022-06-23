@@ -8,6 +8,7 @@ import NftService from "./services/NftService";
 /**
  * Charged class constructor object parameter.
  * @typedef {Object} ChargedConstructor
+ * @memberof Charged
  * @property {NetworkProvider[] | providers.Provider | providers.ExternalProvider} [providers=defaultProvider] -  Provider for connection to the Ethereum network.
  * @property {Signer} [signer] - Needed to send signed transactions to the Ethereum Network to execute state changing operations.
  * @property {ConfigurationParameters} config
@@ -19,6 +20,7 @@ type ChargedConstructor = {
 };
 
 /** 
+ * @module Charged
  * @class Charged
  * Create a Charged instance.
  * @constructs ChargedConstructor

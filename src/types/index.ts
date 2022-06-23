@@ -1,5 +1,9 @@
 import { ethers, providers, Signer } from 'ethers';
 
+/**
+ * @name Types
+ */
+
 export type MultiProvider = providers.JsonRpcProvider | providers.Provider;
 
 export type MultiSigner = ethers.Signer | ethers.VoidSigner | ethers.Wallet | providers.JsonRpcSigner;
@@ -14,6 +18,7 @@ export type DefaultProviderKeys = {
 * User specified custom network provider.
 *
 * @typedef {Object} NetworkProvider
+* @memberof Types
 * @property {number} [network] - Configure the SDK.
 * @property { [index: string]: string | undefined} [service] - Service provider name and keys or specify a RPC URL.
 *
@@ -51,6 +56,7 @@ export type ChargedState = {
 /**  
  * A string enum that identifies which wallet manager to use. Used in functions like `release` and `discharge`
  * @typedef {ManagerId}
+ * @memberof Types
  * @property {string} ManagerId - possible values: `aave`, `aave.B`, `generic`, `generic.B`
  */
 export type ManagerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
@@ -58,6 +64,7 @@ export type ManagerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 /**
 * Charged class constructor object parameter.
 * @typedef {Object} ConfigurationParameters
+* @memberof Types
 * @property {SdkConfiguration} [sdk] - Configure the SDK.
 * @property {TransactionOverride} [transactionOverride] - Override transaction default values.
 */
@@ -69,6 +76,7 @@ export type ConfigurationParameters = {
 /**
 * SDK configuration.
 * @typedef {Object} SdkConfiguration
+* @memberof Types
 * @property {boolean} [NftBridgeCheck=false] - Verifies that the signer network matches the chainId of the contract interaction.
 */
 export type SdkConfiguration = {
@@ -78,6 +86,7 @@ export type SdkConfiguration = {
 /**
 * Overrides {@link https://docs.ethers.io/v5/api/contract/contract/#Contract--metaclass ethers transaction} default parameters.
 * @typedef {Object} TransactionOverride
+* @memberof Types
 * @property {boolean} [from] 
 * @property {boolean} [value] 
 * @property {boolean} [gasPrice] 
