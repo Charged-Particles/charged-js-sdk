@@ -94,11 +94,11 @@ export default class NftService extends BaseService {
    * @instance
    * @async
    *
-   * @param {ManagerId} walletManagerId - The ID of the wallet manager to check.
    * @param {string} assetToken         - The address of the asset token to check.
+   * @param {ManagerId} [walletManagerId] - The ID of the wallet manager to check.
    * @return {BigNumber}                - The Amount of underlying assets held within the token.
    */
-  public async getMass(walletManagerId: ManagerId, assetToken: string) {
+  public async getMass(assetToken: string, walletManagerId: ManagerId = 'generic.B' ) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -115,12 +115,12 @@ export default class NftService extends BaseService {
    * @instance
    * @async
    *
-   * @param {ManagerId} walletManagerId - The ID of the Wallet Manager.
    * @param {string} assetToken         - The address of the asset Token to check.
+   * @param {ManagerId} [walletManagerId] - The ID of the Wallet Manager.
    * @return {BigNumber}                - The amount of interest generated.
    *
    */
-  public async getCharge(walletManagerId: ManagerId, assetToken: string) {
+  public async getCharge( assetToken: string, walletManagerId: ManagerId = 'generic.B' ) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -137,12 +137,12 @@ export default class NftService extends BaseService {
    * @instance
    * @async
    *
-   * @param {ManagerId} walletManagerId - The ID of the Wallet Manager.
    * @param {string} assetToken         - The Address of the Asset Token to check.
+   * @param {ManagerId} [walletManagerId] - The ID of the Wallet Manager.
    * @return {BigNumber}                - The amount of LP tokens that have been generated.
    *
    */
-  public async getKinectics(walletManagerId: ManagerId, assetToken: string) {
+  public async getKinectics( assetToken: string, walletManagerId: ManagerId = 'generic.B') {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -159,11 +159,11 @@ export default class NftService extends BaseService {
    * @instance
    * @async
    *
-   * @param {string} basketManagerId    - The ID of the BasketManager to check.
    * @return {BigNumber}                - The total amount of ERC721 tokens that are held within the Particle.
+   * @param {string} [basketManagerId]  - The ID of the BasketManager to check.
    *
    */
-  public async getBonds(basketManagerId: string) {
+  public async getBonds(basketManagerId: string = 'generic.B') {
     const parameters = [this.contractAddress, this.tokenId, basketManagerId];
     return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters);
   }
@@ -295,19 +295,18 @@ export default class NftService extends BaseService {
   * @instance
   * @async
   * 
-  * @param {ManagerId} walletManagerId - The Asset-Pair to Energize the Token with
-  * @param {string} assetToken - The Address of the Asset Token being used
-  * @param {BigNumberish} assetAmount - The Amount of Asset Token to Energize the Token with
-  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
+  * @param {string} assetToken           - The Address of the Asset Token being used
+  * @param {BigNumberish} assetAmount    - The Amount of Asset Token to Energize the Token with
+  * @param {ManagerId} [walletManagerId] - The Asset-Pair to Energize the Token with
+  * @param {number} [chainId]            - Optional parameter that allows for the user to specify which network to write to
   * @param {string} [referrer]
-  * @return {Promise<ContractReceipt>} A contract receipt from the transaction.
+  * @return {Promise<ContractReceipt>}   - A contract receipt from the transaction.
   * 
-  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L267 Solidity Contract Method}
   */
   public async energize(
-    walletManagerId: ManagerId,
     assetToken: string,
     assetAmount: BigNumberish,
+    walletManagerId: ManagerId = 'generic.B',
     chainId?: number,
     referrer?: string
   ) {
@@ -341,15 +340,15 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens.
-  * @param {ManagerId} walletManagerId - The wallet manager of that assets to discharge from the token.
   * @param {string} assetToken - The address of the asset token being discharged.
+  * @param {ManagerId} [walletManagerId] - The wallet manager of that assets to discharge from the token.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.j
   * @return {Promise<ContractReceipt>}  A receipt from the contract transaction.
   */
   public async discharge(
     receiver: string,
-    walletManagerId: ManagerId,
     assetToken: string,
+    walletManagerId: ManagerId = 'generic.B',
     chainId?: number
   ) {
 
@@ -383,17 +382,17 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens.
-  * @param {ManagerId} walletManagerId - The wallet manager of the assets to discharge from the token.
   * @param {string} assetToken - The address of the asset token being discharged.
   * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle.
+  * @param {ManagerId} [walletManagerId] - The wallet manager of the assets to discharge from the token.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async dischargeAmount(
     receiver: string,
-    walletManagerId: ManagerId,
     assetToken: string,
     assetAmount: BigNumberish,
+    walletManagerId: ManagerId = 'generic.B',
     chainId?: number
   ) {
 
@@ -428,17 +427,17 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens
-  * @param {ManagerId} walletManagerId - The wallet manager of the assets to discharge from the token
   * @param {string} assetToken - The address of the asset token being discharged
   * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle
+  * @param {ManagerId} [walletManagerId] - The wallet manager of the assets to discharge from the token
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
   * @return {Promise<ContractReceipt>}  A receipt from the transaction
   */
   public async dischargeForCreator(
     receiver: string,
-    walletManagerId: ManagerId,
     assetToken: string,
     assetAmount: BigNumberish,
+    walletManagerId: ManagerId = 'generic.B',
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -470,15 +469,15 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the released asset tokens.
-  * @param {ManagerId} walletManagerId - The wallet manager of the assets to release from the token.
   * @param {string} assetToken - The address of the asset token being released.
+  * @param {ManagerId} [walletManagerId] - The wallet manager of the assets to release from the token.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async release(
     receiver: string,
-    walletManagerId: ManagerId,
     assetToken: string,
+    walletManagerId: ManagerId = 'generic.B',
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -509,17 +508,17 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the released asset tokens
-  * @param {ManagerId} walletManagerId - The wallet manager of the assets to release from the token
   * @param {string} assetToken - The address of the asset token being released
   * @param {BigNumberish} assetAmount - The specific amount of asset token to release from the particle
+  * @param {ManagerId} [walletManagerId] - The wallet manager of the assets to release from the token
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
   * @return {Promise<ContractReceipt>}  A receipt from the transaction
   */
   public async releaseAmount(
     receiver: string,
-    walletManagerId: ManagerId,
     assetToken: string,
     assetAmount: BigNumberish,
+    walletManagerId: ManagerId = 'generic.B',
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -552,18 +551,18 @@ export default class NftService extends BaseService {
   * @instance
   * @async
   * 
-  * @param {string} basketManagerId - The basket to deposit the NFT into.
   * @param {string} nftTokenAddress - The address of the NFT token being deposited.
   * @param {string} nftTokenId - The ID of the NFT token being deposited.
   * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {string} [basketManagerId] - The basket to deposit the NFT into.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async bond(
-    basketManagerId: string,
     nftTokenAddress: string,
     nftTokenId: string,
     nftTokenAmount: BigNumberish,
+    basketManagerId: string = 'generic.B',
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -596,19 +595,19 @@ export default class NftService extends BaseService {
   * @async
   * 
   * @param {string} receiver - The address to receive the released asset tokens.
-  * @param {string} basketManagerId - The basket to release the NFT from.
   * @param {string} nftTokenAddress - The address of the NFT token being released.
   * @param {string} nftTokenId - The ID of the NFT token being released.
   * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {string} [basketManagerId] - The basket to release the NFT from.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractReceipt>} A receipt from the transaction.
   */
   public async breakBond(
     receiver: string,
-    basketManagerId: string,
     nftTokenAddress: string,
     nftTokenId: string,
     nftTokenAmount: BigNumberish,
+    basketManagerId: string = 'generic.B',
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
