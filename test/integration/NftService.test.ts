@@ -21,7 +21,7 @@ describe('NFT service class', () => {
 
   const localProvider = [
     {
-      network: 1,
+      network: 42,
       service: { 'rpc': localTestNetRpcUrl}
     }
   ]
@@ -43,7 +43,7 @@ describe('NFT service class', () => {
     const charged = new Charged({ providers: localProvider, signer });
     const nft = charged.NFT(particleBAddressKovan, tokenId);
     const NftBridgedChains = await nft.getChainIdsForBridgedNFTs();
-    expect(NftBridgedChains).toEqual([1]);
+    expect(NftBridgedChains).toEqual([42]);
   });
 
   it('Get bridge NFT chain ids using injected provider', async () => {
@@ -87,7 +87,7 @@ describe('NFT service class', () => {
     }).rejects.toThrow();
   })
 
-  it.only('Sets nonce to 1 for transaction', async () => {
+  it('Sets nonce to 1 for transaction', async () => {
     const userSetting = { transactionOverride: { nonce: 1 }, sdk: {NftBridgeCheck: true} }
     const particleBAddress = '0x1CeFb0E1EC36c7971bed1D64291fc16a145F35DC';
     const tokenId = 2;
