@@ -2,14 +2,9 @@ import { BigNumberish } from 'ethers';
 import { ChargedState, ManagerId } from '../../types';
 import BaseService from './baseService';
 
-/**
- * @module Charged
- */
-
 /** 
 * @name NFT
-* @memberof Charged
-* @section
+* @class NFT
 *
 * Returns a wrapped token with charged particle methods.
 * @param {string} contractAddress

@@ -21,67 +21,61 @@
     *   [getManagersAddress][17]
     *   [getFeesForDeposit][18]
 *   [Charged][19]
-    *   [ChargedConstructor][20]
-        *   [Properties][21]
-    *   [NFT][22]
-        *   [Parameters][23]
-        *   [Examples][24]
-*   [Charged][25]
-    *   [Parameters][26]
-    *   [Examples][27]
-    *   [ChargedConstructor][28]
-        *   [Properties][29]
-    *   [NFT][30]
+    *   [Parameters][20]
+    *   [Examples][21]
+    *   [ChargedConstructor][22]
+        *   [Properties][23]
+*   [NFT][24]
+    *   [Parameters][25]
+    *   [Examples][26]
+    *   [energize][27]
+        *   [Parameters][28]
+        *   [Examples][29]
+    *   [discharge][30]
         *   [Parameters][31]
         *   [Examples][32]
-*   [energize][33]
-    *   [Parameters][34]
-    *   [Examples][35]
-*   [discharge][36]
-    *   [Parameters][37]
-    *   [Examples][38]
-*   [dischargeAmount][39]
-    *   [Parameters][40]
-*   [dischargeForCreator][41]
-    *   [Parameters][42]
-*   [release][43]
-    *   [Parameters][44]
-    *   [Examples][45]
-*   [releaseAmount][46]
-    *   [Parameters][47]
-*   [bond][48]
-    *   [Parameters][49]
-    *   [Examples][50]
-*   [breakBond][51]
-    *   [Parameters][52]
-    *   [Examples][53]
-*   [releaseTimelock][54]
-    *   [Parameters][55]
-*   [dischargeTimelock][56]
-    *   [Parameters][57]
-*   [bondsTimelock][58]
-    *   [Parameters][59]
-*   [setCreatorAnnuities][60]
-    *   [Parameters][61]
-*   [setCreatorAnnuitiesRedirect][62]
-    *   [Parameters][63]
-*   [getMass][64]
-    *   [Parameters][65]
-*   [getCharge][66]
-    *   [Parameters][67]
-*   [getKinectics][68]
-    *   [Parameters][69]
-*   [getBonds][70]
-    *   [Parameters][71]
-*   [getCreatorAnnuities][72]
-*   [getCreatorAnnuitiesRedirect][73]
-*   [tokenURI][74]
-*   [getDischargeState][75]
-    *   [Parameters][76]
-*   [getReleaseState][77]
-    *   [Parameters][78]
-*   [getBondsState][79]
-    *   [Parameters][80]
+    *   [dischargeAmount][33]
+        *   [Parameters][34]
+    *   [dischargeForCreator][35]
+        *   [Parameters][36]
+    *   [release][37]
+        *   [Parameters][38]
+        *   [Examples][39]
+    *   [releaseAmount][40]
+        *   [Parameters][41]
+    *   [bond][42]
+        *   [Parameters][43]
+        *   [Examples][44]
+    *   [breakBond][45]
+        *   [Parameters][46]
+        *   [Examples][47]
+    *   [releaseTimelock][48]
+        *   [Parameters][49]
+    *   [dischargeTimelock][50]
+        *   [Parameters][51]
+    *   [bondsTimelock][52]
+        *   [Parameters][53]
+    *   [setCreatorAnnuities][54]
+        *   [Parameters][55]
+    *   [setCreatorAnnuitiesRedirect][56]
+        *   [Parameters][57]
+    *   [getMass][58]
+        *   [Parameters][59]
+    *   [getCharge][60]
+        *   [Parameters][61]
+    *   [getKinectics][62]
+        *   [Parameters][63]
+    *   [getBonds][64]
+        *   [Parameters][65]
+    *   [getCreatorAnnuities][66]
+    *   [getCreatorAnnuitiesRedirect][67]
+    *   [tokenURI][68]
+    *   [getDischargeState][69]
+        *   [Parameters][70]
+    *   [getReleaseState][71]
+        *   [Parameters][72]
+    *   [getBondsState][73]
+        *   [Parameters][74]
 
 ## Types
 
@@ -89,11 +83,11 @@
 
 User specified custom network provider.
 
-Type: [Object][81]
+Type: [Object][75]
 
 #### Properties
 
-*   `network` **[number][82]?** Configure the SDK.
+*   `network` **[number][76]?** Configure the SDK.
 
 #### Examples
 
@@ -125,13 +119,13 @@ Type: ManagerId
 
 #### Properties
 
-*   `ManagerId` **[string][83]** possible values: `aave`, `aave.B`, `generic`, `generic.B`
+*   `ManagerId` **[string][77]** possible values: `aave`, `aave.B`, `generic`, `generic.B`
 
 ### ConfigurationParameters
 
 Charged class constructor object parameter.
 
-Type: [Object][81]
+Type: [Object][75]
 
 #### Properties
 
@@ -142,26 +136,26 @@ Type: [Object][81]
 
 SDK configuration.
 
-Type: [Object][81]
+Type: [Object][75]
 
 #### Properties
 
-*   `NftBridgeCheck` **[boolean][84]?** Verifies that the signer network matches the chainId of the contract interaction.
+*   `NftBridgeCheck` **[boolean][78]?** Verifies that the signer network matches the chainId of the contract interaction.
 
 ### TransactionOverride
 
-Overrides [ethers transaction][85] default parameters.
+Overrides [ethers transaction][79] default parameters.
 
-Type: [Object][81]
+Type: [Object][75]
 
 #### Properties
 
-*   `from` **[boolean][84]?** 
-*   `value` **[boolean][84]?** 
-*   `gasPrice` **[boolean][84]?** 
-*   `gasLimit` **[boolean][84]?** 
-*   `blockTag` **[boolean][84]?** 
-*   `nonce` **[boolean][84]?** 
+*   `from` **[boolean][78]?** 
+*   `value` **[boolean][78]?** 
+*   `gasPrice` **[boolean][78]?** 
+*   `gasLimit` **[boolean][78]?** 
+*   `blockTag` **[boolean][78]?** 
+*   `nonce` **[boolean][78]?** 
 
 ## Utilities
 
@@ -178,58 +172,25 @@ Returns **UtilsService**
 
 Get the address of the chargedState contract.
 
-Returns **[string][83]** state contract address
+Returns **[string][77]** state contract address
 
 ### getSettingsAddress
 
 Get the address of the chargedSettings contract.
 
-Returns **[string][83]** settings contract address
+Returns **[string][77]** settings contract address
 
 ### getManagersAddress
 
 Get the address of the chargedManagers contract.
 
-Returns **[string][83]** manager contract address
+Returns **[string][77]** manager contract address
 
 ### getFeesForDeposit
 
 Get the deposit fee of the protocol.
 
-Returns **[string][83]** protocol fee amount.
-
-## Charged
-
-### ChargedConstructor
-
-Charged class constructor object parameter.
-
-Type: [Object][81]
-
-#### Properties
-
-*   `providers` **([Array][86]\<NetworkProvider> | providers.Provider | providers.ExternalProvider)?** Provider for connection to the Ethereum network.
-*   `signer` **Signer?** Needed to send signed transactions to the Ethereum Network to execute state changing operations.
-*   `config` **ConfigurationParameters** 
-
-### NFT
-
-#### Parameters
-
-*   `contractAddress` **[string][83]** 
-*   `tokenId` **[number][82]** 
-
-#### Examples
-
-```javascript
-const charged = new Charged({providers: window.ethereum});
-
-const nft = charged.NFT( '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 43);
-
-const creatorAnnuities = await nft.getCreatorAnnuities();
-```
-
-Returns **NftService** Instance of the NFT connected to the charged particle protocol
+Returns **[string][77]** protocol fee amount.
 
 ## Charged
 
@@ -256,22 +217,22 @@ const charged = new Charged({providers: polygonProvider})
 
 Charged class constructor object parameter.
 
-Type: [Object][81]
+Type: [Object][75]
 
 #### Properties
 
-*   `providers` **([Array][86]\<NetworkProvider> | providers.Provider | providers.ExternalProvider)?** Provider for connection to the Ethereum network.
+*   `providers` **([Array][80]\<NetworkProvider> | providers.Provider | providers.ExternalProvider)?** Provider for connection to the Ethereum network.
 *   `signer` **Signer?** Needed to send signed transactions to the Ethereum Network to execute state changing operations.
 *   `config` **ConfigurationParameters** 
 
-### NFT
+## NFT
 
-#### Parameters
+### Parameters
 
-*   `contractAddress` **[string][83]** 
-*   `tokenId` **[number][82]** 
+*   `contractAddress` **[string][77]** 
+*   `tokenId` **[number][76]** 
 
-#### Examples
+### Examples
 
 ```javascript
 const charged = new Charged({providers: window.ethereum});
@@ -283,22 +244,22 @@ const creatorAnnuities = await nft.getCreatorAnnuities();
 
 Returns **NftService** Instance of the NFT connected to the charged particle protocol
 
-## energize
+### energize
 
 Fund particle with asset token
 Must be called by the account providing the asset. Account must also approve THIS contract as operator as asset.
 
 If you are getting gas limit errors this may be because you forgot to approve the contract as operator of asset
 
-### Parameters
+#### Parameters
 
 *   `walletManagerId` **ManagerId** The Asset-Pair to Energize the Token with
-*   `assetToken` **[string][83]** The Address of the Asset Token being used
+*   `assetToken` **[string][77]** The Address of the Asset Token being used
 *   `assetAmount` **BigNumberish** The Amount of Asset Token to Energize the Token with
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to
-*   `referrer` **[string][83]?** 
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to
+*   `referrer` **[string][77]?** 
 
-### Examples
+#### Examples
 
 ```javascript
 // Asset amount expects a big numberish type. If you do not supply a
@@ -324,21 +285,21 @@ const result = await nft.energize(
 );
 ```
 
-Returns **[Promise][87]\<ContractTransaction>** A contract receipt from the transaction.[Solidity Contract Method][88]
+Returns **[Promise][81]\<ContractTransaction>** A contract receipt from the transaction.[Solidity Contract Method][82]
 
-## discharge
+### discharge
 
 Allows the owner or operator of the token to collect or transfer the interest generated from the token
 without removing the underlying asset that is held within the token.
 
-### Parameters
+#### Parameters
 
-*   `receiver` **[string][83]** The address to receive the discharged asset tokens.
+*   `receiver` **[string][77]** The address to receive the discharged asset tokens.
 *   `walletManagerId` **ManagerId** The wallet manager of that assets to discharge from the token.
-*   `assetToken` **[string][83]** The address of the asset token being discharged.
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.j
+*   `assetToken` **[string][77]** The address of the asset token being discharged.
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.j
 
-### Examples
+#### Examples
 
 ```javascript
 const myWallet = '0xWALLET';
@@ -360,51 +321,51 @@ const result = await nft.discharge(
 )
 ```
 
-Returns **[Promise][87]\<ContractTransaction>** A receipt from the contract transaction.[Solidity Contract Method][89]
+Returns **[Promise][81]\<ContractTransaction>** A receipt from the contract transaction.[Solidity Contract Method][83]
 
-## dischargeAmount
+### dischargeAmount
 
 Allows the owner or operator of the Token to collect or transfer a specific amount of the interest
 generated from the token without removing the underlying Asset that is held within the token.
 
-### Parameters
+#### Parameters
 
-*   `receiver` **[string][83]** The address to receive the discharged asset tokens.
+*   `receiver` **[string][77]** The address to receive the discharged asset tokens.
 *   `walletManagerId` **ManagerId** The wallet manager of the assets to discharge from the token.
-*   `assetToken` **[string][83]** The address of the asset token being discharged.
+*   `assetToken` **[string][77]** The address of the asset token being discharged.
 *   `assetAmount` **BigNumberish** The specific amount of asset token to discharge from the particle.
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][90]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][84]
 
-## dischargeForCreator
+### dischargeForCreator
 
 Allows the Creator of the Token to collect or transfer a their portion of the interest (if any)
 generated from the token without removing the underlying Asset that is held within the token.
 
-### Parameters
+#### Parameters
 
-*   `receiver` **[string][83]** The address to receive the discharged asset tokens
+*   `receiver` **[string][77]** The address to receive the discharged asset tokens
 *   `walletManagerId` **ManagerId** The wallet manager of the assets to discharge from the token
-*   `assetToken` **[string][83]** The address of the asset token being discharged
+*   `assetToken` **[string][77]** The address of the asset token being discharged
 *   `assetAmount` **BigNumberish** The specific amount of asset token to discharge from the particle
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to
 
-Returns **[Promise][87]\<ContractTransaction>** A receipt from the transaction[Solidity Contract Method][91]
+Returns **[Promise][81]\<ContractTransaction>** A receipt from the transaction[Solidity Contract Method][85]
 
-## release
+### release
 
 Releases the full amount of asset + interest held within the particle by LP of the assets.
-To release NFT assets from your particle, see [break bond][51].
+To release NFT assets from your particle, see [break bond][86].
 
-### Parameters
+#### Parameters
 
-*   `receiver` **[string][83]** The address to receive the released asset tokens.
+*   `receiver` **[string][77]** The address to receive the released asset tokens.
 *   `walletManagerId` **ManagerId** The wallet manager of the assets to release from the token.
-*   `assetToken` **[string][83]** The address of the asset token being released.
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `assetToken` **[string][77]** The address of the asset token being released.
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-### Examples
+#### Examples
 
 ```javascript
 // Release the DAI from our particle. Withdraws the interest (if any) as well!
@@ -417,36 +378,36 @@ const result = nft.release(
 );
 ```
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][92]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][87]
 
-## releaseAmount
+### releaseAmount
 
 Releases a partial amount of asset + interest held within the particle by LP of the assets.
 
-### Parameters
+#### Parameters
 
-*   `receiver` **[string][83]** The address to receive the released asset tokens
+*   `receiver` **[string][77]** The address to receive the released asset tokens
 *   `walletManagerId` **ManagerId** The wallet manager of the assets to release from the token
-*   `assetToken` **[string][83]** The address of the asset token being released
+*   `assetToken` **[string][77]** The address of the asset token being released
 *   `assetAmount` **BigNumberish** The specific amount of asset token to release from the particle
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to
 
-Returns **[Promise][87]\<ContractTransaction>** A receipt from the transaction[Solidity Contract Method][93]
+Returns **[Promise][81]\<ContractTransaction>** A receipt from the transaction[Solidity Contract Method][88]
 
-## bond
+### bond
 
 Deposit other NFT assets into the particle.
 Must be called by the account providing the asset. Account must approve THIS contract as operator of asset.
 
-### Parameters
+#### Parameters
 
-*   `basketManagerId` **[string][83]** The basket to deposit the NFT into.
-*   `nftTokenAddress` **[string][83]** The address of the NFT token being deposited.
-*   `nftTokenId` **[string][83]** The ID of the NFT token being deposited.
+*   `basketManagerId` **[string][77]** The basket to deposit the NFT into.
+*   `nftTokenAddress` **[string][77]** The address of the NFT token being deposited.
+*   `nftTokenId` **[string][77]** The ID of the NFT token being deposited.
 *   `nftTokenAmount` **BigNumberish** The amount of tokens to deposit (ERC1155-specific).
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-### Examples
+#### Examples
 
 ```javascript
 const nftTokenAddress = '0xMOONBIRDS';
@@ -469,22 +430,22 @@ const result = await nft.bond(
 );
 ```
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][94]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][89]
 
-## breakBond
+### breakBond
 
 Release NFT assets from the particle.
 
-### Parameters
+#### Parameters
 
-*   `receiver` **[string][83]** The address to receive the released asset tokens.
-*   `basketManagerId` **[string][83]** The basket to release the NFT from.
-*   `nftTokenAddress` **[string][83]** The address of the NFT token being released.
-*   `nftTokenId` **[string][83]** The ID of the NFT token being released.
+*   `receiver` **[string][77]** The address to receive the released asset tokens.
+*   `basketManagerId` **[string][77]** The basket to release the NFT from.
+*   `nftTokenAddress` **[string][77]** The address of the NFT token being released.
+*   `nftTokenId` **[string][77]** The ID of the NFT token being released.
 *   `nftTokenAmount` **BigNumberish** The amount of tokens to deposit (ERC1155-specific).
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-### Examples
+#### Examples
 
 ```javascript
 // We bonded 14 erc-1155 nfts to our particle. We want to release 3.
@@ -501,162 +462,162 @@ const result = await nft.breakBond(
 );
 ```
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][95]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][90]
 
-## releaseTimelock
+### releaseTimelock
 
 Sets a timelock on the ability to release the assets of a particle.
 
-### Parameters
+#### Parameters
 
-*   `unlockBlock` **[number][82]** The Ethereum block number to timelock until (~15 seconds per block).
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `unlockBlock` **[number][76]** The Ethereum block number to timelock until (~15 seconds per block).
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][96]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][91]
 
-## dischargeTimelock
+### dischargeTimelock
 
 Sets a timelock on the ability to discharge the assets of a particle
 
-### Parameters
+#### Parameters
 
-*   `unlockBlock` **[number][82]** The Ethereum block number to timelock until (~15 seconds per block).
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `unlockBlock` **[number][76]** The Ethereum block number to timelock until (~15 seconds per block).
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][97]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][92]
 
-## bondsTimelock
+### bondsTimelock
 
 Sets a timelock on the ability to break the covalent bond of a particle
 
-### Parameters
+#### Parameters
 
-*   `unlockBlock` **[number][82]** The Ethereum block number to timelock until (~15 seconds per block).
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `unlockBlock` **[number][76]** The Ethereum block number to timelock until (~15 seconds per block).
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][98]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][93]
 
-## setCreatorAnnuities
+### setCreatorAnnuities
 
 Sets the custom configuration for creators of proton-based NFTs
 Must be called by account that created and owns the particle
 
-### Parameters
+#### Parameters
 
-*   `creator` **[string][83]** The creator's address of the proton-based NFT.
+*   `creator` **[string][77]** The creator's address of the proton-based NFT.
 *   `annuityPercent` **BigNumberish** The percentage of interest-annuities to reserve for the creator. In decimal this can range from 0 - 10000. 5712 would be 57.12%..
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][99]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][94]
 
-## setCreatorAnnuitiesRedirect
+### setCreatorAnnuitiesRedirect
 
 Sets a custom receiver address for the creator annuities
 Must be called by account that created and owns the particle
 
-### Parameters
+#### Parameters
 
-*   `receiver` **[string][83]** The receiver of the creator interest annuities.
-*   `chainId` **[number][82]?** Optional parameter that allows for the user to specify which network to write to.
+*   `receiver` **[string][77]** The receiver of the creator interest annuities.
+*   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to.
 
-Returns **[Promise][87]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][100]
+Returns **[Promise][81]\<ContractTransaction>** Details from the transaction.[Solidity Contract Method][95]
 
-## getMass
+### getMass
 
 Gets the amount of asset tokens that have been deposited into the Particle.
 
-### Parameters
+#### Parameters
 
 *   `walletManagerId` **ManagerId** The ID of the wallet manager to check.
-*   `assetToken` **[string][83]** The address of the asset token to check.
+*   `assetToken` **[string][77]** The address of the asset token to check.
 
 Returns **BigNumber** The Amount of underlying assets held within the token.
 
-## getCharge
+### getCharge
 
 Gets the amount of interest that the particle has generated.
 
-### Parameters
+#### Parameters
 
 *   `walletManagerId` **ManagerId** The ID of the Wallet Manager.
-*   `assetToken` **[string][83]** The address of the asset Token to check.
+*   `assetToken` **[string][77]** The address of the asset Token to check.
 
 Returns **BigNumber** The amount of interest generated.
 
-## getKinectics
+### getKinectics
 
 Gets the amount of LP Tokens that the Particle has generated.
 
-### Parameters
+#### Parameters
 
 *   `walletManagerId` **ManagerId** The ID of the Wallet Manager.
-*   `assetToken` **[string][83]** The Address of the Asset Token to check.
+*   `assetToken` **[string][77]** The Address of the Asset Token to check.
 
 Returns **BigNumber** The amount of LP tokens that have been generated.
 
-## getBonds
+### getBonds
 
 Gets the total amount of ERC721 tokens that the Particle holds.
 
-### Parameters
+#### Parameters
 
-*   `basketManagerId` **[string][83]** The ID of the BasketManager to check.
+*   `basketManagerId` **[string][77]** The ID of the BasketManager to check.
 
 Returns **BigNumber** The total amount of ERC721 tokens that are held within the Particle.
 
-## getCreatorAnnuities
+### getCreatorAnnuities
 
 Gets the amount of creator annuities reserved for the creator for the specified NFT.
 
 Returns **address** The address of the creator.
 
-Returns **[number][82]** The percentage amount of annuities reserved for the creator.
+Returns **[number][76]** The percentage amount of annuities reserved for the creator.
 
-## getCreatorAnnuitiesRedirect
+### getCreatorAnnuitiesRedirect
 
 Get the address that receives creator annuities for a given Particle/ Defaults to creator address if it has not been redirected.
 
 Returns **address** The address of the creator.
 
-Returns **[number][82]** The percentage amount of annuities reserved for the creator.
+Returns **[number][76]** The percentage amount of annuities reserved for the creator.
 
-## tokenURI
+### tokenURI
 
 Gets the tokenUri using the tokenId and contractAddress of the Particle.
 
-Returns **[string][83]** Token metadata URI.
+Returns **[string][77]** Token metadata URI.
 
-## getDischargeState
-
-Gets the Discharge timelock state of the Particle.
-
-### Parameters
-
-*   `sender` **[string][83]** The address approved for Discharging assets from the Particle.
-
-Returns **\[[boolean][84], [boolean][84], BigNumber, BigNumber]** \[allowFromAll, isApproved, timelock, empLockExpiry]
-
-## getReleaseState
+### getDischargeState
 
 Gets the Discharge timelock state of the Particle.
 
-### Parameters
+#### Parameters
 
-*   `sender` **[string][83]** The address approved for Releasing assets from the Particle.
+*   `sender` **[string][77]** The address approved for Discharging assets from the Particle.
 
-Returns **\[[boolean][84], [boolean][84], BigNumber, BigNumber]** \[allowFromAll, isApproved, timelock, empLockExpiry]
+Returns **\[[boolean][78], [boolean][78], BigNumber, BigNumber]** \[allowFromAll, isApproved, timelock, empLockExpiry]
 
-## getBondsState
+### getReleaseState
+
+Gets the Discharge timelock state of the Particle.
+
+#### Parameters
+
+*   `sender` **[string][77]** The address approved for Releasing assets from the Particle.
+
+Returns **\[[boolean][78], [boolean][78], BigNumber, BigNumber]** \[allowFromAll, isApproved, timelock, empLockExpiry]
+
+### getBondsState
 
 Gets the Bonds Timelock state of the Particle.
 
-### Parameters
+#### Parameters
 
-*   `sender` **[string][83]** The address approved for removing Bond assets from the Particle.
+*   `sender` **[string][77]** The address approved for removing Bond assets from the Particle.
 
-Returns **[boolean][84]** allowFromAll
+Returns **[boolean][78]** allowFromAll
 
-Returns **[boolean][84]** isApproved
+Returns **[boolean][78]** isApproved
 
 Returns **BigNumber** timelock
 
@@ -700,164 +661,154 @@ Returns **BigNumber** empLockExpiry
 
 [19]: #charged
 
-[20]: #chargedconstructor
+[20]: #parameters
 
-[21]: #properties-5
+[21]: #examples-2
 
-[22]: #nft
+[22]: #chargedconstructor
 
-[23]: #parameters
+[23]: #properties-5
 
-[24]: #examples-2
+[24]: #nft
 
-[25]: #charged-1
+[25]: #parameters-1
 
-[26]: #parameters-1
+[26]: #examples-3
 
-[27]: #examples-3
+[27]: #energize
 
-[28]: #chargedconstructor-1
+[28]: #parameters-2
 
-[29]: #properties-6
+[29]: #examples-4
 
-[30]: #nft-1
+[30]: #discharge
 
-[31]: #parameters-2
+[31]: #parameters-3
 
-[32]: #examples-4
+[32]: #examples-5
 
-[33]: #energize
+[33]: #dischargeamount
 
-[34]: #parameters-3
+[34]: #parameters-4
 
-[35]: #examples-5
+[35]: #dischargeforcreator
 
-[36]: #discharge
+[36]: #parameters-5
 
-[37]: #parameters-4
+[37]: #release
 
-[38]: #examples-6
+[38]: #parameters-6
 
-[39]: #dischargeamount
+[39]: #examples-6
 
-[40]: #parameters-5
+[40]: #releaseamount
 
-[41]: #dischargeforcreator
+[41]: #parameters-7
 
-[42]: #parameters-6
+[42]: #bond
 
-[43]: #release
+[43]: #parameters-8
 
-[44]: #parameters-7
+[44]: #examples-7
 
-[45]: #examples-7
+[45]: #breakbond
 
-[46]: #releaseamount
+[46]: #parameters-9
 
-[47]: #parameters-8
+[47]: #examples-8
 
-[48]: #bond
+[48]: #releasetimelock
 
-[49]: #parameters-9
+[49]: #parameters-10
 
-[50]: #examples-8
+[50]: #dischargetimelock
 
-[51]: #breakbond
+[51]: #parameters-11
 
-[52]: #parameters-10
+[52]: #bondstimelock
 
-[53]: #examples-9
+[53]: #parameters-12
 
-[54]: #releasetimelock
+[54]: #setcreatorannuities
 
-[55]: #parameters-11
+[55]: #parameters-13
 
-[56]: #dischargetimelock
+[56]: #setcreatorannuitiesredirect
 
-[57]: #parameters-12
+[57]: #parameters-14
 
-[58]: #bondstimelock
+[58]: #getmass
 
-[59]: #parameters-13
+[59]: #parameters-15
 
-[60]: #setcreatorannuities
+[60]: #getcharge
 
-[61]: #parameters-14
+[61]: #parameters-16
 
-[62]: #setcreatorannuitiesredirect
+[62]: #getkinectics
 
-[63]: #parameters-15
+[63]: #parameters-17
 
-[64]: #getmass
+[64]: #getbonds
 
-[65]: #parameters-16
+[65]: #parameters-18
 
-[66]: #getcharge
+[66]: #getcreatorannuities
 
-[67]: #parameters-17
+[67]: #getcreatorannuitiesredirect
 
-[68]: #getkinectics
+[68]: #tokenuri
 
-[69]: #parameters-18
+[69]: #getdischargestate
 
-[70]: #getbonds
+[70]: #parameters-19
 
-[71]: #parameters-19
+[71]: #getreleasestate
 
-[72]: #getcreatorannuities
+[72]: #parameters-20
 
-[73]: #getcreatorannuitiesredirect
+[73]: #getbondsstate
 
-[74]: #tokenuri
+[74]: #parameters-21
 
-[75]: #getdischargestate
+[75]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[76]: #parameters-20
+[76]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[77]: #getreleasestate
+[77]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[78]: #parameters-21
+[78]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[79]: #getbondsstate
+[79]: https://docs.ethers.io/v5/api/contract/contract/#Contract--metaclass
 
-[80]: #parameters-22
+[80]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[81]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[81]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[82]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[82]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L267
 
-[83]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[83]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L310
 
-[84]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[84]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L351
 
-[85]: https://docs.ethers.io/v5/api/contract/contract/#Contract--metaclass
+[85]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L393
 
-[86]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[86]: #breakBond
 
-[87]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[87]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L440
 
-[88]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L267
+[88]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L483
 
-[89]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L310
+[89]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L533
 
-[90]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L351
+[90]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L570
 
-[91]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L393
+[91]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L440
 
-[92]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L440
+[92]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L406
 
-[93]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L483
+[93]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L474
 
-[94]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L533
+[94]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedSettings.sol#L200
 
-[95]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L570
-
-[96]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L440
-
-[97]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L406
-
-[98]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L474
-
-[99]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedSettings.sol#L200
-
-[100]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedSettings.sol#L218
+[95]: https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedSettings.sol#L218
