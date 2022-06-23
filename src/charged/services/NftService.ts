@@ -1,5 +1,5 @@
 import { BigNumberish, ContractTransaction } from 'ethers';
-import { ChargedState, WalletManagerId, BasketManagerId } from '../../types';
+import { ChargedState, ManagerId, defaultManagerId } from '../../types';
 import BaseService from './baseService';
 
 /** 
@@ -98,7 +98,7 @@ export default class NftService extends BaseService {
    * @param {WalletManagerId} [walletManagerId] - The ID of the wallet manager to check.
    * @return {BigNumber}                - The Amount of underlying assets held within the token.
    */
-  public async getMass(assetToken: string, walletManagerId: WalletManagerId = 'generic.B' ) {
+  public async getMass(assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -120,7 +120,7 @@ export default class NftService extends BaseService {
    * @return {BigNumber}                - The amount of interest generated.
    *
    */
-  public async getCharge( assetToken: string, walletManagerId: WalletManagerId = 'generic.B' ) {
+  public async getCharge( assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -142,7 +142,7 @@ export default class NftService extends BaseService {
    * @return {BigNumber}                - The amount of LP tokens that have been generated.
    *
    */
-  public async getKinectics( assetToken: string, walletManagerId: WalletManagerId = 'generic.B') {
+  public async getKinectics( assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -163,7 +163,7 @@ export default class NftService extends BaseService {
    * @param {string} [basketManagerId]  - The ID of the BasketManager to check.
    *
    */
-  public async getBonds(basketManagerId: string = 'generic.B') {
+  public async getBonds(basketManagerId: ManagerId = defaultManagerId) {
     const parameters = [this.contractAddress, this.tokenId, basketManagerId];
     return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters);
   }
@@ -306,7 +306,7 @@ export default class NftService extends BaseService {
   public async energize(
     assetToken: string,
     assetAmount: BigNumberish,
-    walletManagerId: WalletManagerId = 'generic.B',
+    walletManagerId: ManagerId = defaultManagerId,
     chainId?: number,
     referrer?: string
   ) {
@@ -348,7 +348,7 @@ export default class NftService extends BaseService {
   public async discharge(
     receiver: string,
     assetToken: string,
-    walletManagerId: WalletManagerId = 'generic.B',
+    walletManagerId: ManagerId = defaultManagerId,
     chainId?: number
   ) {
 
@@ -392,7 +392,7 @@ export default class NftService extends BaseService {
     receiver: string,
     assetToken: string,
     assetAmount: BigNumberish,
-    walletManagerId: WalletManagerId = 'generic.B',
+    walletManagerId: ManagerId = defaultManagerId,
     chainId?: number
   ) {
 
@@ -437,7 +437,7 @@ export default class NftService extends BaseService {
     receiver: string,
     assetToken: string,
     assetAmount: BigNumberish,
-    walletManagerId: WalletManagerId = 'generic.B',
+    walletManagerId: ManagerId = defaultManagerId,
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -477,7 +477,7 @@ export default class NftService extends BaseService {
   public async release(
     receiver: string,
     assetToken: string,
-    walletManagerId: WalletManagerId = 'generic.B',
+    walletManagerId: ManagerId = defaultManagerId,
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -518,7 +518,7 @@ export default class NftService extends BaseService {
     receiver: string,
     assetToken: string,
     assetAmount: BigNumberish,
-    walletManagerId: WalletManagerId = 'generic.B',
+    walletManagerId: ManagerId = defaultManagerId,
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -562,7 +562,7 @@ export default class NftService extends BaseService {
     nftTokenAddress: string,
     nftTokenId: string,
     nftTokenAmount: BigNumberish,
-    basketManagerId: BasketManagerId = 'generic.B',
+    basketManagerId: ManagerId = defaultManagerId,
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -607,7 +607,7 @@ export default class NftService extends BaseService {
     nftTokenAddress: string,
     nftTokenId: string,
     nftTokenAmount: BigNumberish,
-    basketManagerId: BasketManagerId = 'generic.B',
+    basketManagerId: ManagerId = defaultManagerId,
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
