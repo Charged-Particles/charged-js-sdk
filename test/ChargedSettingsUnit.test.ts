@@ -32,11 +32,13 @@ describe('chargedSettings contract test', () => {
 
     const annuitiesPercentage = '9700';
     const receiver = '0xFD424D0E0CD49D6AD8f08893CE0D53F8EAEB4213';
-    const setAnnuities = await nft.setCreatorAnnuities(creatorAddy, annuitiesPercentage);
-    const setAnnuitiesRedirect = await nft.setCreatorAnnuitiesRedirect(receiver);
+    const setAnnuitiesTx = await nft.setCreatorAnnuities(creatorAddy, annuitiesPercentage);
+    const setAnnuitiesRedirectTx = await nft.setCreatorAnnuitiesRedirect(receiver);
+    const setAnnuitiesReceipt = await setAnnuitiesTx.wait();
+    const setAnnuitiesRedirectReceipt = await setAnnuitiesRedirectTx.wait();
 
-    expect(setAnnuities).toBe(true);
-    expect(setAnnuitiesRedirect).toBe(true);
+    expect(setAnnuitiesReceipt).toBe(true);
+    expect(setAnnuitiesRedirectReceipt).toBe(true);
 
     expect(writeContractMock.mock.calls[0][0]).toBe('chargedSettings');
     expect(writeContractMock.mock.calls[0][1]).toBe('setCreatorAnnuities');

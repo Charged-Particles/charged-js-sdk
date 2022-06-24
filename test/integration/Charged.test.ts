@@ -86,12 +86,13 @@ describe('Charged class', () => {
     const network = 42;
 
     const nft = charged.NFT(particleBAddress, tokenId);
-    const receipt = await nft.energize(
+    const tx = await nft.energize(
       'aave.B',
       '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
       BigNumber.from(10),
       network
     );
+    const receipt = await tx.wait();
 
     expect(receipt).toHaveProperty('status', 1)
   });
@@ -287,8 +288,9 @@ describe('Charged class', () => {
       '43',
       1,
     );
+    const receipt = await bondTrx.wait();
 
-    expect(bondTrx).toHaveProperty('transactionHash');
+    expect(receipt).toHaveProperty('transactionHash');
 
     const bondCountAfterDeposit = await nft.getBonds('generic.B');
     const bondCountAfterDepositValue = bondCountAfterDeposit[42].value;
@@ -310,8 +312,9 @@ describe('Charged class', () => {
       '87',
       1,
     );
+    const receipt = await breakBondTrx.wait();
 
-    expect(breakBondTrx).toHaveProperty('transactionHash');
+    expect(receipt).toHaveProperty('transactionHash');
     const bondCountAfterBreak = await nft.getBonds('generic.B');
     const bondCountAfterBreakValue = bondCountAfterBreak[42].value;
     expect(bondCountAfterBreakValue).toEqual(bondCountBeforeBreakValue.sub(1));
@@ -335,8 +338,9 @@ describe('Charged class', () => {
       '4',
       amountToRemove,
     );
+    const receipt = await breakBondTrx.wait();
 
-    expect(breakBondTrx).toHaveProperty('transactionHash');
+    expect(receipt).toHaveProperty('transactionHash');
 
     const bondCountAfterBreak = await nft.getBonds('generic.B');
     const bondCountAfterBreakValue = bondCountAfterBreak[42].value;
@@ -348,8 +352,9 @@ describe('Charged class', () => {
       '4',
       1,
     );
+    const bondReceipt = await bondTrx.wait();
 
-    expect(bondTrx).toHaveProperty('transactionHash');
+    expect(bondReceipt).toHaveProperty('transactionHash');
     const bondCountAfterBond = await nft.getBonds('generic.B');
     const bondCountAfterBondValue = bondCountAfterBond[42].value;
     expect(bondCountAfterBondValue).toEqual(bondCountAfterBreakValue.add(1));
