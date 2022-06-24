@@ -565,12 +565,7 @@ export default class NftService extends BaseService {
       assetToken,
       assetAmount
     ];
-<<<<<<< HEAD
     return await this.writeContract(
-=======
-
-    const tx: ContractTransaction = await this.writeContract(
->>>>>>> dd49703714b3989b9525468f2929a715d42afd20
       'chargedParticles',
       'releaseParticleAmount',
       signerNetwork,
