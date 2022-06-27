@@ -28,8 +28,9 @@ describe('ChargedState contract test', () => {
   const nft = charged.NFT(tokenAddress, tokenId);
 
   it('Set release timelock', async () => {
-    const result = await nft.releaseTimelock(expectedUnlockBlockNumber);
-    expect(result).toEqual(true);
+    const tx = await nft.releaseTimelock(expectedUnlockBlockNumber);
+    const receipt = await tx.wait();
+    expect(receipt).toEqual(true);
 
     expect(writeContractMock.mock.calls[0][0]).toBe('chargedState');
     expect(writeContractMock.mock.calls[0][1]).toBe('setReleaseTimelock');
@@ -56,8 +57,9 @@ describe('ChargedState contract test', () => {
   });
 
   it('Set discharge timelock', async () => {
-    const result = await nft.dischargeTimelock(expectedUnlockBlockNumber);
-    expect(result).toEqual(true);
+    const tx = await nft.dischargeTimelock(expectedUnlockBlockNumber);
+    const receipt = await tx.wait();
+    expect(receipt).toEqual(true);
 
     expect(writeContractMock.mock.calls[0][0]).toBe('chargedState');
     expect(writeContractMock.mock.calls[0][1]).toBe('setDischargeTimelock');
@@ -84,8 +86,9 @@ describe('ChargedState contract test', () => {
   });
 
   it('Set bonds timelock', async () => {
-    const result = await nft.bondsTimelock(expectedUnlockBlockNumber);
-    expect(result).toEqual(true);
+    const tx = await nft.bondsTimelock(expectedUnlockBlockNumber);
+    const receipt = await tx.wait();
+    expect(receipt).toEqual(true);
 
     expect(writeContractMock.mock.calls[0][0]).toBe('chargedState');
     expect(writeContractMock.mock.calls[0][1]).toBe('setBreakBondTimelock');
