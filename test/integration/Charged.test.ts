@@ -83,18 +83,15 @@ describe('Charged class', () => {
 
     const particleBAddress = kovanAddresses.protonB.address;
     const tokenId = 43;
-    const network = 42;
 
     const nft = charged.NFT(particleBAddress, tokenId);
     const tx = await nft.energize(
-      'aave.B',
       '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
-      BigNumber.from(10),
-      network
+      BigNumber.from(10)
     );
     const receipt = await tx.wait();
 
-    expect(receipt).toHaveProperty('status', 1)
+    expect(receipt).toHaveProperty('status', 1);
   });
 
   it('Initializes with ether.js external provider', async () => {
@@ -240,9 +237,9 @@ describe('Charged class', () => {
 
     await expect(async () => {
       await nft.energize(
-        'aave.B',
         '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
         BigNumber.from(10),
+        'aave.B',
         network
       );
     }).rejects.toThrow('Trying to write with no signer');
@@ -273,7 +270,7 @@ describe('Charged class', () => {
     expect(await contract.getStateAddress()).toEqual(kovanAddresses.chargedState.address);
   });
 
-  it('Bonds an erc721 into protonB.', async () => {
+  it('Bond an erc721 into protonB.', async () => {
     const charged = new Charged({ providers: localProvider, signer: myWallet });
 
     const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 1);
@@ -283,10 +280,9 @@ describe('Charged class', () => {
     expect(bondCountBeforeDepositValue.toNumber()).toEqual(0);
 
     const bondTrx = await nft.bond(
-      'generic.B',
       '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
       '43',
-      1,
+      '1',
     );
     const receipt = await bondTrx.wait();
 
@@ -307,10 +303,10 @@ describe('Charged class', () => {
 
     const breakBondTrx = await nft.breakBond(
       myWallet.address,
-      'generic.B',
       '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
       '87',
       1,
+      'generic.B'
     );
     const receipt = await breakBondTrx.wait();
 
@@ -333,7 +329,6 @@ describe('Charged class', () => {
 
     const breakBondTrx = await nft.breakBond(
       myWallet.address,
-      'generic.B',
       '0x8bcbeea783c9291f0d5949143bbefc8bf235300c',
       '4',
       amountToRemove,
@@ -347,7 +342,6 @@ describe('Charged class', () => {
     expect(bondCountAfterBreakValue).toEqual(bondCountBeforeBreakValue.sub(amountToRemove));
 
     const bondTrx = await nft.bond(
-      'generic.B',
       '0x8bcbeea783c9291f0d5949143bbefc8bf235300c',
       '4',
       1,

@@ -79,9 +79,9 @@ describe('NFT service class', () => {
 
     await expect(async () => {
       return await nft.energize(
-        'aave.B',
         '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
         BigNumber.from(10),
+        'aave.B',
         network
       );
     }).rejects.toThrow();
@@ -100,9 +100,9 @@ describe('NFT service class', () => {
 
     await expect(async () => {
       return await nft.energize(
-        'aave.B',
         '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
         BigNumber.from(10),
+        'aave.B',
         network
       );
     }).rejects.toThrow();

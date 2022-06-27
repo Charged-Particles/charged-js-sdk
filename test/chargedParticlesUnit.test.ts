@@ -68,7 +68,7 @@ describe('chargedParticles contract test', () => {
   it('should release 47 ENJ tokens', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(tokenAddress, tokenId);
-    const tx = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
+    const tx = await nft.releaseAmount(walletAddress, ENJCoin, ethers.utils.parseEther("47"), 'aave.B');
     const receipt = await tx.wait();
 
     expect(receipt).toBe(true);
@@ -90,7 +90,7 @@ describe('chargedParticles contract test', () => {
   it('should discharge', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(tokenAddress, tokenId);
-    const tx = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
+    const tx = await nft.discharge(walletAddress, ENJCoin, 'aave.B');
     const receipt = await tx.wait();
 
     expect(receipt).toBe(true);
@@ -111,9 +111,9 @@ describe('chargedParticles contract test', () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(tokenAddress, tokenId);
 
-    const mass = await nft.getMass('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
-    const charge = await nft.getCharge('aave.B', '0xC64f90Cd7B564D3ab580eb20a102A8238E218be2');
-    const bonds = await nft.getBonds('generic.B');
+    const mass = await nft.getMass('0xC64f90Cd7B564D3ab580eb20a102A8238E218be2', 'aave.B');
+    const charge = await nft.getCharge('0xC64f90Cd7B564D3ab580eb20a102A8238E218be2', 'aave.B');
+    const bonds = await nft.getBonds();
 
     expect(mass).toHaveProperty('42.value', 'success');
     expect(charge).toHaveProperty('42.value', 'success');
@@ -150,7 +150,7 @@ describe('chargedParticles contract test', () => {
   it('Should energize', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(tokenAddress, tokenId);
-    const tx = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
+    const tx = await nft.energize(ENJCoin, ethers.utils.parseEther("47"), 'aave.B');
     const receipt = await tx.wait();
 
     expect(receipt).toBe(true);
