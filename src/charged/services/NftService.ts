@@ -288,9 +288,9 @@ export default class NftService extends BaseService {
   * 
   * const USDCoinAddress = '0xUSDC';
   * const result = await nft.energize(
-  *   'aave.B',
   *   USDCoinAddress,
   *   ethers.utils.parseUnits("20", 6),
+  *   'aave.B',
   * );
   * // Or, deposit assets that will not accrue interest
   * // or assets that are not supported by our yield generating protocols (e.g. aave)
@@ -299,9 +299,9 @@ export default class NftService extends BaseService {
   * // This will not generate interest.
   * const monkeyCoinAddress = '0xMONKEY';
   * const result = await nft.energize(
-  *   'generic.B',
   *   monkeyCoinAddress,
   *   ethers.utils.parseUnits("20")
+  *   'generic.B',
   * );
   */
   public async energize(
@@ -349,8 +349,8 @@ export default class NftService extends BaseService {
   * const rocketPoolAddress = '0xRPL';
   * const result = await nft.discharge(
   *   myWallet,
-  *   'aave.B',
   *   rocketPoolAddress,
+  *   'aave.B',
   * );
   * 
   * // You can also discharge to any arbitrary wallet!
@@ -493,8 +493,8 @@ export default class NftService extends BaseService {
   * const daiAddress = '0xDAI';
   * const result = nft.release(
   *   receiver,
-  *   'aave.B',
   *   daiAddress,
+  *   'aave.B',
   * );
   */
   public async release(
@@ -580,20 +580,20 @@ export default class NftService extends BaseService {
   * const nftTokenAddress = '0xMOONBIRDS';
   * const tokenId = '12';
   * const result = await nft.bond(
-  *   'generic.B',
   *   nftTokenAddress,
   *   tokenId,
   *   1,
+  *   'generic.B',
   * );
   * 
   * // We have 12 erc-1155 nfts that we want to bond to the particle.
   * const nftTokenAddress = '0xCOOLGAME';
   * const tokenId = '78';
   * const result = await nft.bond(
-  *   'generic.B',
   *   nftTokenAddress,
   *   tokenId,
   *   12
+  *   'generic.B',
   * );
   */
   public async bond(
@@ -646,10 +646,10 @@ export default class NftService extends BaseService {
   * const tokenId = '35';
   * const result = await nft.breakBond(
   *   receiver,
-  *   'generic.B',
   *   nftTokenAddress,
   *   tokenId,
   *   3
+  *   'generic.B',
   * );
   * 
   */

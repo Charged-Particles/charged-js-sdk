@@ -42,8 +42,7 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why",
-    "docs": "documentation build ./src/** -f md --shallow -o ./docs/api.md"
+    "analyze": "size-limit --why"
   },
   "peerDependencies": {},
   "devDependencies": {
