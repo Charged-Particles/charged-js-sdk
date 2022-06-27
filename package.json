@@ -43,18 +43,13 @@
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "docs:api-using-documentation": "documentation build ./src/** -f md --shallow -o ./docs/api.md",
-    "docs:api": "jsdoc2md -f ./src/** > docs/api.md",
-    "docs:prepare": "gitbook install",
-    "docs:build": "yarn run docs:api && gitbook build",
-    "docs:serve": "yarn run docs:api && gitbook serve"
+    "docs-using-documentation": "documentation build ./src/** -f md --shallow -o ./docs/api.md",
+    "docs": "jsdoc2md -f ./src/** > docs/api.md"
   },
   "peerDependencies": {},
   "devDependencies": {
     "@types/lodash": "^4.14.182",
-    "better-docs": "^2.7.2",
     "dotenv": "^16.0.1",
-    "gitbook-cli": "^2.3.2",
     "jsdoc-to-markdown": "^7.1.1",
     "size-limit": "^7.0.8",
     "ganache-cli": "^6.12.2",
