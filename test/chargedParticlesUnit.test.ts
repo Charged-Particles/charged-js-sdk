@@ -68,9 +68,10 @@ describe('chargedParticles contract test', () => {
   it('should release 47 ENJ tokens', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(tokenAddress, tokenId);
-    const result = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
+    const tx = await nft.releaseAmount(walletAddress, 'aave.B', ENJCoin, ethers.utils.parseEther("47"));
+    const receipt = await tx.wait();
 
-    expect(result).toBe(true);
+    expect(receipt).toBe(true);
     expect(writeContractMock).toHaveBeenCalled();
 
     expect(writeContractMock.mock.calls[0][0]).toBe('chargedParticles');
@@ -89,9 +90,10 @@ describe('chargedParticles contract test', () => {
   it('should discharge', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(tokenAddress, tokenId);
-    const result = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
+    const tx = await nft.discharge(walletAddress, 'aave.B', ENJCoin);
+    const receipt = await tx.wait();
 
-    expect(result).toBe(true);
+    expect(receipt).toBe(true);
 
     expect(writeContractMock.mock.calls[0][0]).toBe('chargedParticles');
     expect(writeContractMock.mock.calls[0][1]).toBe('dischargeParticle');
@@ -148,9 +150,10 @@ describe('chargedParticles contract test', () => {
   it('Should energize', async () => {
     const charged = new Charged({ providers: providersKovan, signer })
     const nft = charged.NFT(tokenAddress, tokenId);
-    const result = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
+    const tx = await nft.energize('aave.B', ENJCoin, ethers.utils.parseEther("47"));
+    const receipt = await tx.wait();
 
-    expect(result).toBe(true);
+    expect(receipt).toBe(true);
     expect(writeContractMock.mock.calls[0][0]).toBe('chargedParticles');
     expect(writeContractMock.mock.calls[0][1]).toBe('energizeParticle');
     expect(writeContractMock.mock.calls[0][2]).toBe(42);
