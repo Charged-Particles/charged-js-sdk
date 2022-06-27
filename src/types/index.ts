@@ -55,11 +55,20 @@ export type ChargedState = {
 
 /**  
  * A string enum that identifies which wallet manager to use. Used in functions like `release` and `discharge`
- * @typedef {ManagerId}
  * @memberof Types
+ * @typedef {WalletManagerId}
  * @property {string} ManagerId - possible values: `aave`, `aave.B`, `generic`, `generic.B`
  */
 export type ManagerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
+
+/**  
+ * A string enum that identifies which wallet manager to use. Used in functions like `release` and `discharge`
+ * @typedef {BasketManagerId}
+ * @property {string} ManagerId - possible values: `generic`, `generic.B`
+ */
+export type BasketManagerId = 'generic' | 'generic.B';
+
+export const defaultManagerId: ManagerId = 'generic.B';
 
 /**
 * Charged class constructor object parameter.
