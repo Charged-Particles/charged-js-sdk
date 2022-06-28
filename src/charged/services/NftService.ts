@@ -1,0 +1,848 @@
+import { BigNumberish, ContractTransaction } from 'ethers';
+import { ChargedState, ManagerId, defaultManagerId } from '../../types';
+import BaseService from './baseService';
+
+/** 
+* @name NFT
+* @class NFT
+*
+* Returns a wrapped token with charged particle methods.
+* @param {string} contractAddress
+* @param {number} tokenId
+* @return {NftService}  Instance of the NFT connected to the charged particle protocol
+* 
+* @example
+* const charged = new Charged({providers: window.ethereum});
+* 
+* const nft = charged.NFT( '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 43);
+* 
+* const creatorAnnuities = await nft.getCreatorAnnuities();
+* 
+*/
+export default class NftService extends BaseService {
+  public contractAddress: string;
+
+  public tokenId: number;
+
+  constructor(
+    state: ChargedState,
+    contractAddress: string,
+    tokenId: number,
+  ) {
+    super(state);
+    this.contractAddress = contractAddress;
+    this.tokenId = tokenId;
+  }
+
+  public async getChainIdsForBridgedNFTs(): Promise<number[]> {
+    const { providers } = this.state;
+
+    const tokenChainIds: number[] = [];
+
+    try {
+      for (const chainId in providers) {
+        let provider = providers[chainId];
+
+        if (provider === void (0)) { continue };
+
+        const contractExists = await provider.getCode(this.contractAddress);
+
+        if (contractExists !== '0x') { // contract exists on respective network
+          if (chainId == 'external') {
+            const { chainId } = await provider.getNetwork();
+            tokenChainIds.push(chainId);
+          } else {
+            tokenChainIds.push(Number(chainId));
+          }
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+
+    // if we find it is on multiple chains, then we have to find the owner of nft and store it for each chain
+    // when we go to write check if the owner matches the signer
+    return tokenChainIds;
+  }
+
+  public async bridgeNFTCheck(signerNetwork: number) {
+    const { sdk } = this.state.configuration;
+
+    if (!sdk?.NftBridgeCheck) { return };
+
+    const tokenChainIds = await this.getChainIdsForBridgedNFTs();
+
+    if (signerNetwork === void (0)) { throw new Error("Could not retrieve signers network.") };
+
+    if (tokenChainIds.includes(signerNetwork)) { return true }; // TODO: store this in class and retrieve to avoid expensive calls.
+
+    throw new Error(`Signer network: ${signerNetwork}, does not match provider chain.`)
+  }
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // ChargedParticles functions
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  /***********************************|
+ |        Read Functions              |
+ |__________________________________*/
+
+  /**
+   * Gets the amount of asset tokens that have been deposited into the Particle.
+   * 
+   * @memberof NFT
+   *
+   * @param {string} assetToken         - The address of the asset token to check.
+   * @param {WalletManagerId} [walletManagerId] - The ID of the wallet manager to check.
+   * @return {BigNumber}                - The Amount of underlying assets held within the token.
+   */
+  public async getMass(assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken
+    ];
+    return await this.fetchAllNetworks('chargedParticles', 'baseParticleMass', parameters);
+  }
+
+  /**
+   * Gets the amount of interest that the particle has generated.
+   * 
+   * @memberof NFT
+   *
+   * @param {string} assetToken         - The address of the asset Token to check.
+   * @param {WalletManagerId} [walletManagerId] - The ID of the Wallet Manager.
+   * @return {BigNumber}                - The amount of interest generated.
+   *
+   */
+  public async getCharge( assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken
+    ];
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCharge', parameters);
+  }
+
+  /**
+   * Gets the amount of LP Tokens that the Particle has generated.
+   * 
+   * @memberof NFT
+   *
+   * @param {string} assetToken         - The Address of the Asset Token to check.
+   * @param {WalletManagerId} [walletManagerId] - The ID of the Wallet Manager.
+   * @return {BigNumber}                - The amount of LP tokens that have been generated.
+   *
+   */
+  public async getKinectics( assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken
+    ];
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleKinetics', parameters);
+  }
+
+  /**
+   * Gets the total amount of ERC721 tokens that the Particle holds.
+   * 
+   * @memberof NFT
+   *
+   * @return {BigNumber}                - The total amount of ERC721 tokens that are held within the Particle.
+   * @param {string} [basketManagerId]  - The ID of the BasketManager to check.
+   *
+   */
+  public async getBonds(basketManagerId: ManagerId = defaultManagerId) {
+    const parameters = [this.contractAddress, this.tokenId, basketManagerId];
+    return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters);
+  }
+
+  /**
+   * Gets the amount of creator annuities reserved for the creator for the specified NFT.
+   * 
+   * @memberof NFT
+   *
+   * @return {address}                  - The address of the creator.
+   * @return {number}                   - The percentage amount of annuities reserved for the creator.
+   *
+   */
+  public async getCreatorAnnuities() {
+    const parameters = [this.contractAddress, this.tokenId];
+    return await this.fetchAllNetworks('chargedSettings', 'getCreatorAnnuities', parameters);
+  }
+
+  /**
+   * Get the address that receives creator annuities for a given Particle/ Defaults to creator address if it has not been redirected.
+   * 
+   * @memberof NFT
+   *
+   * @return {address}                  - The address of the creator.
+   * @return {number}                   - The percentage amount of annuities reserved for the creator.
+   *
+   */
+  public async getCreatorAnnuitiesRedirect() {
+    const parameters = [this.contractAddress, this.tokenId];
+    return await this.fetchAllNetworks('chargedSettings', 'getCreatorAnnuitiesRedirect', parameters);
+  }
+
+  /**
+   * Gets the tokenUri using the tokenId and contractAddress of the Particle.
+   * 
+   * @memberof NFT
+   *
+   * @return {string}                   - Token metadata URI.
+   *
+   */
+  public async tokenURI() {
+    return await this.fetchAllNetworks(
+      'erc721',
+      'tokenURI',
+      [this.tokenId],
+      this.contractAddress,
+    );
+  }
+
+  /**
+   * Gets the Discharge timelock state of the Particle.
+   * 
+   * @memberof NFT
+   *
+   * @param {string} sender             - The address approved for Discharging assets from the Particle.
+   * @return {[boolean, boolean, BigNumber, BigNumber]} - [allowFromAll, isApproved, timelock, empLockExpiry]
+   */
+  public async getDischargeState(sender: string) {
+    const parameters = [this.contractAddress, this.tokenId, sender];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getDischargeState',
+      parameters
+    );
+  }
+
+  /**
+   * Gets the Discharge timelock state of the Particle.
+   * 
+   * @memberof NFT
+   *
+   * @param {string} sender             - The address approved for Releasing assets from the Particle.
+   * @return {[boolean, boolean, BigNumber, BigNumber]} - [allowFromAll, isApproved, timelock, empLockExpiry]
+   *
+   */
+  public async getReleaseState(sender: string) {
+    const parameters = [this.contractAddress, this.tokenId, sender];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getReleaseState',
+      parameters
+    );
+  }
+
+  /**
+   * Gets the Bonds Timelock state of the Particle.
+   * 
+   * @memberof NFT
+   *
+   * @param {string} sender             - The address approved for removing Bond assets from the Particle.
+   * @return {boolean} allowFromAll
+   * @return {boolean} isApproved
+   * @return {BigNumber} timelock
+   * @return {BigNumber} empLockExpiry
+   *
+   */
+  public async getBondsState(sender: string) {
+    const parameters = [this.contractAddress, this.tokenId, sender];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'getBreakBondState',
+      parameters
+    );
+  }
+
+  /***********************************|
+ |        Write Functions             |
+ |__________________________________*/
+
+  /**
+  * Fund particle with asset token
+  * Must be called by the account providing the asset. Account must also approve THIS contract as operator as asset.
+  * 
+  * If you are getting gas limit errors this may be because you forgot to approve the contract as operator of asset
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} assetToken           - The Address of the Asset Token being used
+  * @param {BigNumberish} assetAmount    - The Amount of Asset Token to Energize the Token with
+  * @param {WalletManagerId} [walletManagerId] - The Asset-Pair to Energize the Token with
+  * @param {number} [chainId]            - Optional parameter that allows for the user to specify which network to write to
+  * @param {string} [referrer]
+  * @return {Promise<ContractTransaction>} A contract receipt from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L267 Solidity Contract Method}
+  * @example
+  * // Asset amount expects a big numberish type. If you do not supply a
+  * // big number object, ethers will assume you are working in wei.
+  * // Deposits 20 USDC tokens into our particle that will accrue interest.
+  * 
+  * const USDCoinAddress = '0xUSDC';
+  * const result = await nft.energize(
+  *   USDCoinAddress,
+  *   ethers.utils.parseUnits("20", 6),
+  *   'aave.B',
+  * );
+  * // Or, deposit assets that will not accrue interest
+  * // or assets that are not supported by our yield generating protocols (e.g. aave)
+  * 
+  * // For example, we will energize our particle with 20 monkey coins
+  * // This will not generate interest.
+  * const monkeyCoinAddress = '0xMONKEY';
+  * const result = await nft.energize(
+  *   monkeyCoinAddress,
+  *   ethers.utils.parseUnits("20")
+  *   'generic.B',
+  * );
+  */
+  public async energize(
+    assetToken: string,
+    assetAmount: BigNumberish,
+    walletManagerId: ManagerId = defaultManagerId,
+    chainId?: number,
+    referrer?: string
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken,
+      assetAmount,
+      referrer ?? '0x0000000000000000000000000000000000000000'
+    ];
+    return await this.writeContract(
+      'chargedParticles',
+      'energizeParticle',
+      signerNetwork,
+      parameters
+    );
+  }
+
+  /**
+  * Allows the owner or operator of the token to collect or transfer the interest generated from the token
+  * without removing the underlying asset that is held within the token.
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} receiver - The address to receive the discharged asset tokens.
+  * @param {string} assetToken - The address of the asset token being discharged.
+  * @param {WalletManagerId} [walletManagerId] - The wallet manager of that assets to discharge from the token.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.j
+  * @return {Promise<ContractTransaction>}  A receipt from the contract transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L310 Solidity Contract Method}
+  * 
+  * @example
+  * const myWallet = '0xWALLET';
+  * const rocketPoolAddress = '0xRPL';
+  * const result = await nft.discharge(
+  *   myWallet,
+  *   rocketPoolAddress,
+  *   'aave.B',
+  * );
+  * 
+  * // You can also discharge to any arbitrary wallet!
+  * // Let's send all of our interest accrued by our DAI to Vitalik.
+  * const vitaliksWallet = '0xCOOLGUY';
+  * const daiAddress = '0xDAI';
+  * const result = await nft.discharge(
+  *   vitaliksWallet,
+  *   'aave.B',
+  *   daiAddress,
+  * )
+  */
+  public async discharge(
+    receiver: string,
+    assetToken: string,
+    walletManagerId: ManagerId = defaultManagerId,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      receiver,
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken
+    ];
+    return await this.writeContract(
+      'chargedParticles',
+      'dischargeParticle',
+      signerNetwork,
+      parameters
+    );
+  }
+
+  /**
+  * Allows the owner or operator of the Token to collect or transfer a specific amount of the interest
+  * generated from the token without removing the underlying Asset that is held within the token.
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} receiver - The address to receive the discharged asset tokens.
+  * @param {string} assetToken - The address of the asset token being discharged.
+  * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle.
+  * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to discharge from the token.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L351 Solidity Contract Method}
+  */
+  public async dischargeAmount(
+    receiver: string,
+    assetToken: string,
+    assetAmount: BigNumberish,
+    walletManagerId: ManagerId = defaultManagerId,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      receiver,
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken,
+      assetAmount
+    ];
+    return await this.writeContract(
+      'chargedParticles',
+      'dischargeParticleAmount',
+      signerNetwork,
+      parameters
+    );
+  }
+
+  /**
+  * Allows the Creator of the Token to collect or transfer a their portion of the interest (if any)
+  * generated from the token without removing the underlying Asset that is held within the token.
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} receiver - The address to receive the discharged asset tokens
+  * @param {string} assetToken - The address of the asset token being discharged
+  * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle
+  * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to discharge from the token
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
+  * @return {Promise<ContractTransaction>}  A receipt from the transaction
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L393 Solidity Contract Method}
+  */
+  public async dischargeForCreator(
+    receiver: string,
+    assetToken: string,
+    assetAmount: BigNumberish,
+    walletManagerId: ManagerId = defaultManagerId,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      receiver,
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken,
+      assetAmount
+    ];
+    return await this.writeContract(
+      'chargedParticles',
+      'dischargeParticleForCreator',
+      signerNetwork,
+      parameters
+    );
+  }
+
+  /**
+  * Releases the full amount of asset + interest held within the particle by LP of the assets.
+  * To release NFT assets from your particle, see {@link #breakBond break bond}.
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} receiver - The address to receive the released asset tokens.
+  * @param {string} assetToken - The address of the asset token being released.
+  * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to release from the token.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L440 Solidity Contract Method}
+  * 
+  * @example
+  * // Release the DAI from our particle. Withdraws the interest (if any) as well!
+  * const receiver = '0xMYWALLET';
+  * const daiAddress = '0xDAI';
+  * const result = nft.release(
+  *   receiver,
+  *   daiAddress,
+  *   'aave.B',
+  * );
+  */
+  public async release(
+    receiver: string,
+    assetToken: string,
+    walletManagerId: ManagerId = defaultManagerId,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      receiver,
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken
+    ];
+    return await this.writeContract(
+      'chargedParticles',
+      'releaseParticle',
+      signerNetwork,
+      parameters
+    );
+  }
+
+  /**
+  * Releases a partial amount of asset + interest held within the particle by LP of the assets.
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} receiver - The address to receive the released asset tokens
+  * @param {string} assetToken - The address of the asset token being released
+  * @param {BigNumberish} assetAmount - The specific amount of asset token to release from the particle
+  * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to release from the token
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
+  * @return {Promise<ContractTransaction>}  A receipt from the transaction
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L483 Solidity Contract Method}
+  */
+  public async releaseAmount(
+    receiver: string,
+    assetToken: string,
+    assetAmount: BigNumberish,
+    walletManagerId: ManagerId = defaultManagerId,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      receiver,
+      this.contractAddress,
+      this.tokenId,
+      walletManagerId,
+      assetToken,
+      assetAmount
+    ];
+    return await this.writeContract(
+      'chargedParticles',
+      'releaseParticleAmount',
+      signerNetwork,
+      parameters
+    );
+  }
+
+  /**
+  * Deposit other NFT assets into the particle.
+  * Must be called by the account providing the asset. Account must approve THIS contract as operator of asset.
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} nftTokenAddress - The address of the NFT token being deposited.
+  * @param {string} nftTokenId - The ID of the NFT token being deposited.
+  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {BasketManagerId} [basketManagerId] - The basket to deposit the NFT into.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L533 Solidity Contract Method}
+  * 
+  * @example
+  * const nftTokenAddress = '0xMOONBIRDS';
+  * const tokenId = '12';
+  * const result = await nft.bond(
+  *   nftTokenAddress,
+  *   tokenId,
+  *   1,
+  *   'generic.B',
+  * );
+  * 
+  * // We have 12 erc-1155 nfts that we want to bond to the particle.
+  * const nftTokenAddress = '0xCOOLGAME';
+  * const tokenId = '78';
+  * const result = await nft.bond(
+  *   nftTokenAddress,
+  *   tokenId,
+  *   12
+  *   'generic.B',
+  * );
+  */
+  public async bond(
+    nftTokenAddress: string,
+    nftTokenId: string,
+    nftTokenAmount: BigNumberish,
+    basketManagerId: ManagerId = defaultManagerId,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      basketManagerId,
+      nftTokenAddress,
+      nftTokenId,
+      nftTokenAmount
+    ];
+    return await this.writeContract(
+      'chargedParticles',
+      'covalentBond',
+      signerNetwork,
+      parameters
+    );
+
+  }
+
+  /**
+  * Release NFT assets from the particle.
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} receiver - The address to receive the released asset tokens.
+  * @param {string} nftTokenAddress - The address of the NFT token being released.
+  * @param {string} nftTokenId - The ID of the NFT token being released.
+  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {BasketManagerId} [basketManagerId] - The basket to release the NFT from.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L570 Solidity Contract Method}
+  * 
+  * @example
+  * // We bonded 14 erc-1155 nfts to our particle. We want to release 3.
+  * // When working with erc-721 use 1 for nftTokenAmount.
+  * const receiver = '0xMYWALLET';
+  * const nftTokenAddress = '0xNFTS';
+  * const tokenId = '35';
+  * const result = await nft.breakBond(
+  *   receiver,
+  *   nftTokenAddress,
+  *   tokenId,
+  *   3
+  *   'generic.B',
+  * );
+  * 
+  */
+  public async breakBond(
+    receiver: string,
+    nftTokenAddress: string,
+    nftTokenId: string,
+    nftTokenAmount: BigNumberish,
+    basketManagerId: ManagerId = defaultManagerId,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      receiver,
+      this.contractAddress,
+      this.tokenId,
+      basketManagerId,
+      nftTokenAddress,
+      nftTokenId,
+      nftTokenAmount
+    ];
+
+    return await this.writeContract(
+      'chargedParticles',
+      'breakCovalentBond',
+      signerNetwork,
+      parameters
+    );
+
+  }
+
+  /**
+  * Sets a timelock on the ability to release the assets of a particle.
+  *
+  * @memberof NFT
+  * 
+  * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} - Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L440 Solidity Contract Method}
+  */
+  public async releaseTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    return await this.writeContract(
+      'chargedState',
+      'setReleaseTimelock',
+      signerNetwork,
+      parameters
+    );
+
+  }
+
+  /**
+  * Sets a timelock on the ability to discharge the assets of a particle
+  *
+  * @memberof NFT
+  * 
+  * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L406 Solidity Contract Method}
+  */
+  public async dischargeTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    return await this.writeContract(
+      'chargedState',
+      'setDischargeTimelock',
+      signerNetwork,
+      parameters
+    );
+
+  }
+
+  /**
+  * Sets a timelock on the ability to break the covalent bond of a particle
+  *
+  * @memberof NFT
+  * 
+  * @param {number} unlockBlock - The Ethereum block number to timelock until (~15 seconds per block).
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedState.sol#L474 Solidity Contract Method}
+  */
+  public async bondsTimelock(
+    unlockBlock: number,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      unlockBlock,
+    ];
+
+    return await this.writeContract(
+      'chargedState',
+      'setBreakBondTimelock',
+      signerNetwork,
+      parameters
+    );
+
+  }
+
+  /**
+  * Sets the custom configuration for creators of proton-based NFTs
+  * Must be called by account that created and owns the particle
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} creator - The creator's address of the proton-based NFT.
+  * @param {BigNumberish} annuityPercent - The percentage of interest-annuities to reserve for the creator. In decimal this can range from 0 - 10000. 5712 would be 57.12%..
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedSettings.sol#L200 Solidity Contract Method}
+  */
+  public async setCreatorAnnuities(creator: string, annuityPercent: BigNumberish, chainId?: number): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      creator,
+      annuityPercent,
+    ];
+
+    return await this.writeContract(
+      'chargedSettings',
+      'setCreatorAnnuities',
+      signerNetwork,
+      parameters
+    )
+
+  }
+
+  /**
+  * Sets a custom receiver address for the creator annuities
+  * Must be called by account that created and owns the particle
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} receiver - The receiver of the creator interest annuities.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} - Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedSettings.sol#L218 Solidity Contract Method}
+  */
+  public async setCreatorAnnuitiesRedirect(receiver: string, chainId?: number): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      receiver,
+    ];
+
+    return await this.writeContract(
+      'chargedSettings',
+      'setCreatorAnnuitiesRedirect',
+      signerNetwork,
+      parameters
+    )
+
+  }
+}
