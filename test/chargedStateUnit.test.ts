@@ -115,14 +115,11 @@ describe('ChargedState contract test', () => {
     ]);
   });
 
-  it.only('Set signer after Charged init', async () => {
+  it('Set signer after Charged init', async () => {
     const charged = new Charged({ providers: providersKovan });
-    
     expect(charged).toHaveProperty('state.signer', undefined);
-
     charged.setSigner(signer);
-
-    console.log(charged.state.signer);
+    expect(charged).toHaveProperty('state.signer.address', '0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A');
   });
 
 });
