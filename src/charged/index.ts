@@ -43,7 +43,7 @@ export default class Charged {
 
   public utils: UtilsService;
 
-  readonly state: ChargedState;
+  private state: ChargedState;
 
 
   constructor(params: ChargedConstructor = {}) {
@@ -94,6 +94,10 @@ export default class Charged {
 
   public NFT(contractAddress: string, tokenId: number) {
     return new NftService(this.state, contractAddress, tokenId);
+  }
+
+  public setSigner(signer: Signer) {
+    this.state = { ...this.state, signer };
   }
 
   private getValidatedParams(params: ChargedConstructor) {
