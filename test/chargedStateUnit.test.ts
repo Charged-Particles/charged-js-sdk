@@ -38,7 +38,7 @@ describe('ChargedState contract test', () => {
     expect(writeContractMock.mock.calls[0][3]).toEqual([
       tokenAddress,
       tokenId,
-      expectedUnlockBlockNumber 
+      expectedUnlockBlockNumber
     ]);
   });
 
@@ -67,8 +67,8 @@ describe('ChargedState contract test', () => {
     expect(writeContractMock.mock.calls[0][3]).toEqual([
       tokenAddress,
       tokenId,
-      expectedUnlockBlockNumber 
-    ]); 
+      expectedUnlockBlockNumber
+    ]);
   });
 
   it('Set get discharge timelock', async () => {
@@ -113,6 +113,16 @@ describe('ChargedState contract test', () => {
       tokenId,
       walletAddress
     ]);
+  });
+
+  it.only('Set signer after Charged init', async () => {
+    const charged = new Charged({ providers: providersKovan });
+    
+    expect(charged).toHaveProperty('state.signer', undefined);
+
+    charged.setSigner(signer);
+
+    console.log(charged.state.signer);
   });
 
 });
