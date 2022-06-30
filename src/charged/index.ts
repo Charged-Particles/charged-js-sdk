@@ -45,7 +45,6 @@ export default class Charged {
 
   private state: ChargedState;
 
-
   constructor(params: ChargedConstructor = {}) {
 
     const { providers, signer, config: userConfig } = this.getValidatedParams(params);
@@ -94,6 +93,10 @@ export default class Charged {
 
   public NFT(contractAddress: string, tokenId: number) {
     return new NftService(this.state, contractAddress, tokenId);
+  }
+
+  public getState() {
+    return this.state;
   }
 
   public setSigner(signer: Signer) {
