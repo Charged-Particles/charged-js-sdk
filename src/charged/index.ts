@@ -43,7 +43,7 @@ export default class Charged {
 
   public utils: UtilsService;
 
-  private state: ChargedState;
+  public state: ChargedState;
 
   constructor(params: ChargedConstructor = {}) {
 
@@ -93,10 +93,6 @@ export default class Charged {
 
   public NFT(contractAddress: string, tokenId: number) {
     return new NftService(this.state, contractAddress, tokenId);
-  }
-
-  public getState() {
-    return this.state;
   }
 
   public setSigner(signer: Signer) {
