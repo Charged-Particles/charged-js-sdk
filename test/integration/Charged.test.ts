@@ -67,7 +67,8 @@ describe('Charged class', () => {
 
   it('Initializes charged with default providers', async () => {
     const charged = new Charged();
-    const providers = charged.state.providers;
+    const state = charged.getState();
+    const providers = state.providers;
 
     expect(providers).toHaveProperty('1');
     expect(providers).toHaveProperty('42');
@@ -249,7 +250,9 @@ describe('Charged class', () => {
     const charged = new Charged({ providers: localProvider });
     const nft = charged.NFT(particleBAddress, tokenId);
 
-    expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', false);
+    const state = charged.getState(); 
+    expect(state).toHaveProperty('configuration.sdk.NftBridgeCheck', false);
+
     const NoNftBridgeCheck = await nft.bridgeNFTCheck(42);
     expect(NoNftBridgeCheck).toBeUndefined();
   });
@@ -257,7 +260,9 @@ describe('Charged class', () => {
   it('Bridge NFT check setting to true', async () => {
     const userSetting = { sdk: { NftBridgeCheck: true } }
     const charged = new Charged({ providers: localProvider, config: userSetting });
-    expect(charged).toHaveProperty('state.configuration.sdk.NftBridgeCheck', true);
+
+    const state = charged.getState(); 
+    expect(state).toHaveProperty('configuration.sdk.NftBridgeCheck', true);
   });
 
   it('should create a contract from exported abis', async () => {
