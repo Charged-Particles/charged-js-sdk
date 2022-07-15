@@ -103,6 +103,10 @@ export default class Charged {
     this.state = { ...this.state, signer };
   }
 
+  public setExternalProvider(provider: ethers.providers.Provider) {
+    this.state.providers['external'] = provider;
+  }
+
   private getValidatedParams(params: ChargedConstructor) {
     const validParameters = ['providers', 'signer', 'config'];
 
