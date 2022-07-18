@@ -141,29 +141,24 @@ export default class BaseService {
 
   public async getSignerConnectedNetwork(network?: number): Promise<number> {
     const { providers } = this.state;
-
     const chainIds = Object.keys(providers);
     const chainIdsLength = chainIds.length;
 
     if (chainIdsLength) {
-
-      if (chainIdsLength > 1 && network) {
+      if (chainIds.includes('external')) {
+        const externalProviderNetwork = await providers['external'].getnetwork()
+        return externalProviderNetwork.chainid;
+      } else if (chainIdsLength > 1 && network) {
         return network; // specify network intent when more than one provider.
-
       } else if (chainIdsLength == 1) {
         const chainIdFromSingleProvider = chainIds[0]; // return the network of the single provider
-
-        if (chainIdFromSingleProvider == 'external') {
-          const externalProviderNetwork = await providers['external'].getNetwork()
-          return externalProviderNetwork.chainId;
-        }
-        else { return Number(chainIdFromSingleProvider) };
-
+        return Number(chainIdFromSingleProvider);
       } else {
         throw new Error('Please specify the targeted network');
       }
     } else {
-      throw new Error(`Could not fetch network: from supplied providers`);
+      throw new Error(`Could not fetch network from supplied providers`);
     }
   }
 }
+
