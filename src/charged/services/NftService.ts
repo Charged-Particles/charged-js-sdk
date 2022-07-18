@@ -264,37 +264,34 @@ export default class NftService extends BaseService {
  |__________________________________*/
 
   /**
-  * Fund particle with asset token
-  * Must be called by the account providing the asset. Account must also approve THIS contract as operator as asset.
+  * Deposit an ERC20 asset into the Particle.
+  * Must be called by the account providing the asset.
   * 
-  * If you are getting gas limit errors this may be because you forgot to approve the contract as operator of asset
+  * Asset owner must approve the Charged Particle contract as operator of the asset.
+  * If you are getting gas limit errors this may be because you forgot to approve the contract as operator of asset.
   * 
   * @memberof NFT
   * 
-  * @param {string} assetToken           - The Address of the Asset Token being used
-  * @param {BigNumberish} assetAmount    - The Amount of Asset Token to Energize the Token with
-  * @param {WalletManagerId} [walletManagerId] - The Asset-Pair to Energize the Token with
-  * @param {number} [chainId]            - Optional parameter that allows for the user to specify which network to write to
+  * @param {string} assetToken           - Address of the asset token being used.
+  * @param {BigNumberish} assetAmount    - Amount of asset token to energize the token with.
+  * @param {WalletManagerId} [walletManagerId] - The Asset-Pair to Energize the Token with.
+  * @param {number} [chainId]            - Optional parameter that allows for the user to specify which network to write to.
   * @param {string} [referrer]
-  * @return {Promise<ContractTransaction>} A contract receipt from the transaction.
+  * @return {Promise<ContractTransaction>}
   * 
   * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L267 Solidity Contract Method}
   * @example
-  * // Asset amount expects a big numberish type. If you do not supply a
-  * // big number object, ethers will assume you are working in wei.
-  * // Deposits 20 USDC tokens into our particle that will accrue interest.
+  * // Asset amount expects a big numberish type. If you do not supply a big number object, ethers will assume you are working in wei.
   * 
+  * // Deposits 20 USDC tokens into our particle that will accrue interest.
   * const USDCoinAddress = '0xUSDC';
   * const result = await nft.energize(
   *   USDCoinAddress,
   *   ethers.utils.parseUnits("20", 6),
   *   'aave.B',
   * );
-  * // Or, deposit assets that will not accrue interest
-  * // or assets that are not supported by our yield generating protocols (e.g. aave)
-  * 
-  * // For example, we will energize our particle with 20 monkey coins
-  * // This will not generate interest.
+
+  * // Deposit assets that will not accrue interest.
   * const monkeyCoinAddress = '0xMONKEY';
   * const result = await nft.energize(
   *   monkeyCoinAddress,
@@ -329,16 +326,16 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Allows the owner or operator of the token to collect or transfer the interest generated from the token
-  * without removing the underlying asset that is held within the token.
+  * Allows the owner or operator of the token to collect or transfer the interest generated from an Aave compatible token.
+  * The underlying asset amount will not be moved.
   * 
   * @memberof NFT
   * 
   * @param {string} receiver - The address to receive the discharged asset tokens.
   * @param {string} assetToken - The address of the asset token being discharged.
   * @param {WalletManagerId} [walletManagerId] - The wallet manager of that assets to discharge from the token.
-  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.j
-  * @return {Promise<ContractTransaction>}  A receipt from the contract transaction.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>}
   * 
   * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L310 Solidity Contract Method}
   * 
@@ -367,9 +364,7 @@ export default class NftService extends BaseService {
     walletManagerId: ManagerId = defaultManagerId,
     chainId?: number
   ): Promise<ContractTransaction> {
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -388,7 +383,7 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Allows the owner or operator of the Token to collect or transfer a specific amount of the interest
+  * Allows the owner or operator of the token to collect or transfer a specific amount of the interest
   * generated from the token without removing the underlying Asset that is held within the token.
   * 
   * @memberof NFT
@@ -398,7 +393,7 @@ export default class NftService extends BaseService {
   * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle.
   * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to discharge from the token.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
-  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * @return {Promise<ContractTransaction>}
   * 
   * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L351 Solidity Contract Method}
   */
@@ -431,17 +426,17 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Allows the Creator of the Token to collect or transfer a their portion of the interest (if any)
+  * Allows the creator of the token to collect or transfer a portion of the interest (if any)
   * generated from the token without removing the underlying Asset that is held within the token.
   * 
   * @memberof NFT
   * 
-  * @param {string} receiver - The address to receive the discharged asset tokens
-  * @param {string} assetToken - The address of the asset token being discharged
-  * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle
-  * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to discharge from the token
-  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractTransaction>}  A receipt from the transaction
+  * @param {string} receiver - The address to receive the discharged asset tokens.
+  * @param {string} assetToken - The address of the asset token being discharged.
+  * @param {BigNumberish} assetAmount - The specific amount of asset token to discharge from the particle.
+  * @param {WalletManagerId=} [walletManagerId] - The wallet manager of the assets to discharge from the token.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>}
   * 
   * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L393 Solidity Contract Method}
   */
@@ -481,7 +476,7 @@ export default class NftService extends BaseService {
   * @param {string} assetToken - The address of the asset token being released.
   * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to release from the token.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
-  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * @return {Promise<ContractTransaction>}
   * 
   * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L440 Solidity Contract Method}
   * 
@@ -524,12 +519,12 @@ export default class NftService extends BaseService {
   * 
   * @memberof NFT
   * 
-  * @param {string} receiver - The address to receive the released asset tokens
-  * @param {string} assetToken - The address of the asset token being released
-  * @param {BigNumberish} assetAmount - The specific amount of asset token to release from the particle
-  * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to release from the token
-  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to
-  * @return {Promise<ContractTransaction>}  A receipt from the transaction
+  * @param {string} receiver - The address to receive the released asset tokens.
+  * @param {string} assetToken - The address of the asset token being released.
+  * @param {BigNumberish} assetAmount - The specific amount of asset token to release from the particle.
+  * @param {WalletManagerId} [walletManagerId] - The wallet manager of the assets to release from the token.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>}
   * 
   * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L483 Solidity Contract Method}
   */
@@ -560,14 +555,14 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Deposit other NFT assets into the particle.
-  * Must be called by the account providing the asset. Account must approve THIS contract as operator of asset.
+  * Deposit an NFT assets into the particle.
+  * Must be called by the account providing the asset. The account must approve the Charged Particle contract as operator of asset.
   * 
   * @memberof NFT
   * 
   * @param {string} nftTokenAddress - The address of the NFT token being deposited.
   * @param {string} nftTokenId - The ID of the NFT token being deposited.
-  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit, set to 1 for ERC271.
   * @param {BasketManagerId} [basketManagerId] - The basket to deposit the NFT into.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractTransaction>} Details from the transaction.
@@ -629,10 +624,10 @@ export default class NftService extends BaseService {
   * @param {string} receiver - The address to receive the released asset tokens.
   * @param {string} nftTokenAddress - The address of the NFT token being released.
   * @param {string} nftTokenId - The ID of the NFT token being released.
-  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit (ERC1155-specific).
+  * @param {BigNumberish} nftTokenAmount - The amount of tokens to deposit, set to 1 for erc721.
   * @param {BasketManagerId} [basketManagerId] - The basket to release the NFT from.
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
-  * @return {Promise<ContractTransaction>} Details from the transaction.
+  * @return {Promise<ContractTransaction>}
   * 
   * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedParticles.sol#L570 Solidity Contract Method}
   * 
@@ -682,7 +677,7 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Sets a timelock on the ability to release the assets of a particle.
+  * Sets a timelock on the ability to release assets of a particle.
   *
   * @memberof NFT
   * 
@@ -781,8 +776,8 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Sets the custom configuration for creators of proton-based NFTs
-  * Must be called by account that created and owns the particle
+  * Sets the custom configuration for creators of proton-based NFTs.
+  * Must be called by account that created and owns the particle.
   * 
   * @memberof NFT
   * 
@@ -814,8 +809,8 @@ export default class NftService extends BaseService {
   }
 
   /**
-  * Sets a custom receiver address for the creator annuities
-  * Must be called by account that created and owns the particle
+  * Sets a custom receiver address for the creator annuities.
+  * Must be called by account that created and owns the particle.
   * 
   * @memberof NFT
   * 
