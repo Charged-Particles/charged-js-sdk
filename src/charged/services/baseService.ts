@@ -146,8 +146,8 @@ export default class BaseService {
 
     if (chainIdsLength) {
       if (chainIds.includes('external')) {
-        const externalProviderNetwork = await providers['external'].getnetwork()
-        return externalProviderNetwork.chainid;
+        const externalProviderNetwork = await providers['external'].getNetwork()
+        return externalProviderNetwork.chainId;
       } else if (chainIdsLength > 1 && network) {
         return network; // specify network intent when more than one provider.
       } else if (chainIdsLength == 1) {
