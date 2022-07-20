@@ -286,7 +286,7 @@ describe('Charged class', () => {
 
     const bondTrx = await nft.bond(
       '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
-      '43',
+      '52',
       '1',
     );
     const receipt = await bondTrx.wait();
@@ -304,7 +304,7 @@ describe('Charged class', () => {
 
     const bondCountBeforeBreak = await nft.getBonds('generic.B');
     const bondCountBeforeBreakValue = bondCountBeforeBreak[42].value;
-    expect(bondCountBeforeBreakValue.toNumber()).toEqual(4);
+    expect(bondCountBeforeBreakValue.toNumber()).toEqual(5);
 
     const breakBondTrx = await nft.breakBond(
       myWallet.address,
@@ -328,9 +328,7 @@ describe('Charged class', () => {
 
     const bondCountBeforeBreak = await nft.getBonds('generic.B');
     const bondCountBeforeBreakValue = bondCountBeforeBreak[42].value;
-    console.log(bondCountBeforeBreakValue.toNumber());
-
-    expect(bondCountBeforeBreakValue.toNumber()).toEqual(10);
+    expect(bondCountBeforeBreakValue.toNumber()).toEqual(6);
 
     const breakBondTrx = await nft.breakBond(
       myWallet.address,
