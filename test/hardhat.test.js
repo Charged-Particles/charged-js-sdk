@@ -23,14 +23,14 @@ describe('Hardhat testing with jest', () => {
     const balanceBeforeTransaction = await ethers.provider.getBalance(impersonatedAddres);
     const blockBeforeTransaction = await ethers.provider.getBlockNumber();
 
-    console.log(balanceBeforeTransaction, blockBeforeTransaction);
-
     const txResult = await impersonatedSigner.sendTransaction(tx);
     await txResult.wait();
 
     const balanceAfterTransaction = await ethers.provider.getBalance(impersonatedAddres);
     const blockAfterTransaction = await ethers.provider.getBlockNumber();
-    console.log(balanceAfterTransaction, blockAfterTransaction);
+
+    expect(balanceBeforeTransaction.gt(balanceAfterTransaction)).toBe(true);
+    expect(blockAfterTransaction - blockBeforeTransaction).toEqual(1);
   });
 });
 
