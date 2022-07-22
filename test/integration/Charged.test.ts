@@ -3,8 +3,9 @@
  */
 const { ethers } = require("hardhat");
 const Web3HttpProvider = require('web3-providers-http');
-const erc20Abi = require('../abi/erc20.json');
+// const erc20Abi = require('../abi/erc20.json');
 
+import erc20Abi from '../abi/erc20.json';
 import {
   rpcUrlMainnet,
   infuraProjectId,
