@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-ethers");
+require('dotenv/config');
 
 module.exports = {
   networks: {
@@ -7,7 +8,7 @@ module.exports = {
         auto: true,
       },
       forking: {
-        url: "https://eth-mainnet.g.alchemy.com/v2/onL35MUKZeTnQ3XZ3K_fbyg4ZcDyAbu5",
+        url: process.env['RPC_URL_MAINNET'],
         blockNumber: 15187166,
       },
       accounts: {
