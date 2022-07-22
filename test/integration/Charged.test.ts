@@ -1,3 +1,10 @@
+/**
+ * @jest-environment hardhat
+ */
+const { ethers } = require("hardhat");
+const Web3HttpProvider = require('web3-providers-http');
+const erc20Abi = require('../abi/erc20.json');
+
 import {
   rpcUrlMainnet,
   infuraProjectId,
@@ -6,12 +13,11 @@ import {
   alchemyKovanKey,
   alchemyPolygonKey
 } from '../../src/utils/config';
-
-import Charged from '../../src/charged/index';
-import { getWallet } from '../../src/utils/testUtilities';
-import { BigNumber, ethers } from 'ethers';
 import { chargedParticlesAbi, kovanAddresses } from '../../src/index';
-const Web3HttpProvider = require('web3-providers-http');
+import { getWallet } from '../../src/utils/testUtilities';
+import { BigNumber } from 'ethers';
+import Charged from '../../src/charged/index';
+
 
 const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
 const myWallet = getWallet();
@@ -77,22 +83,6 @@ describe('Charged class', () => {
 
     expect(stateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
     expect(stateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
-  });
-
-  it('energize a test particle', async () => {
-    const charged = new Charged({ providers: localProvider, signer: myWallet });
-
-    const particleBAddress = kovanAddresses.protonB.address;
-    const tokenId = 43;
-
-    const nft = charged.NFT(particleBAddress, tokenId);
-    const tx = await nft.energize(
-      '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
-      BigNumber.from(10)
-    );
-    const receipt = await tx.wait();
-
-    expect(receipt).toHaveProperty('status', 1);
   });
 
   it('Initializes with ether.js external provider', async () => {
@@ -357,5 +347,40 @@ describe('Charged class', () => {
     const bondCountAfterBond = await nft.getBonds('generic.B');
     const bondCountAfterBondValue = bondCountAfterBond[42].value;
     expect(bondCountAfterBondValue).toEqual(bondCountAfterBreakValue.add(1));
+  });
+
+  it.only('energize a test particle', async () => {
+    // Found address with DAI
+    const impersonatedAddress = '0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1';
+    const testAddress = '0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A'; 
+    const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
+    // const amountToSend = ethers.utils.parseEther('.1');
+    const impersonatedSigner = await ethers.getImpersonatedSigner(impersonatedAddress);
+    
+    const erc20Contract = new ethers.Contract(daiAddress, erc20Abi, impersonatedSigner);
+
+    const whaleBalanceBeforeTransfer = await erc20Contract.balanceOf(impersonatedAddress);
+    console.log(whaleBalanceBeforeTransfer);
+
+    const txTransfer = await erc20Contract.transfer(testAddress, 10);
+    await txTransfer.wait();
+    console.log(txTransfer);
+    
+    const whaleBalanceAfterTransfer = await erc20Contract.balanceOf(testAddress);
+    console.log(whaleBalanceAfterTransfer);
+
+    // const charged = new Charged({ providers: localProvider, signer: myWallet });
+
+    // const particleBAddress = kovanAddresses.protonB.address;
+    // const tokenId = 43;
+
+    // const nft = charged.NFT(particleBAddress, tokenId);
+    // const tx = await nft.energize(
+    //   '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
+    //   BigNumber.from(10)
+    // );
+    // const receipt = await tx.wait();
+
+    // expect(receipt).toHaveProperty('status', 1);
   });
 });
