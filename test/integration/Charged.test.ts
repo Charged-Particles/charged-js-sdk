@@ -14,7 +14,7 @@ import {
   alchemyKovanKey,
   alchemyPolygonKey
 } from '../../src/utils/config';
-import { chargedParticlesAbi, mainnetAddresses } from '../../src/index';
+import { chargedParticlesAbi, protonBAbi, mainnetAddresses } from '../../src/index';
 import { getWallet } from '../../src/utils/testUtilities';
 import { BigNumber } from 'ethers';
 import Charged from '../../src/charged/index';
@@ -39,6 +39,7 @@ const localProvider = [
 ];
 
 const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+const daiMainnetAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const tokenId = 43;
 const network = 42;
 const ganacheChainId = 1337;
@@ -266,25 +267,42 @@ describe('Charged class', () => {
   });
 
   it('Bond an erc721 into protonB.', async () => {
-    const charged = new Charged({ providers: localProvider, signer: myWallet });
+    const charged = new Charged({ providers: ethers.provider, signer: myWallet });
 
-    const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 1);
+    const nft = charged.NFT(mainnetAddresses.protonB.address, 1);
 
     const bondCountBeforeDeposit = await nft.getBonds('generic.B');
-    const bondCountBeforeDepositValue = bondCountBeforeDeposit[42].value;
+    const bondCountBeforeDepositValue = bondCountBeforeDeposit[1].value;
     expect(bondCountBeforeDepositValue.toNumber()).toEqual(0);
 
+    // Mint proton
+    const erc721Contract = new ethers.Contract(mainnetAddresses.protonB.address, protonBAbi, ethers.provider.getSigner());
+    const protonId = await erc721Contract.callStatic.createBasicProton(
+      myWallet.address,
+      myWallet.address,
+      'tokenUri.com',
+    );
+
+    const txCreateProton = await erc721Contract.createBasicProton(
+      myWallet.address,
+      myWallet.address,
+      'tokenUri.com',
+    );
+    await txCreateProton.wait();
+    
+    const txApprove = await erc721Contract.approve(mainnetAddresses.chargedParticles.address, protonId.toString());
+    await txApprove.wait();
+
     const bondTrx = await nft.bond(
-      '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
-      '43',
+      mainnetAddresses.protonB.address,
+      protonId,
       '1',
     );
     const receipt = await bondTrx.wait();
 
     expect(receipt).toHaveProperty('transactionHash');
-
     const bondCountAfterDeposit = await nft.getBonds('generic.B');
-    const bondCountAfterDepositValue = bondCountAfterDeposit[42].value;
+    const bondCountAfterDepositValue = bondCountAfterDeposit[1].value;
     expect(bondCountAfterDepositValue.toNumber()).toEqual(1);
   });
 
@@ -349,14 +367,13 @@ describe('Charged class', () => {
     expect(bondCountAfterBondValue).toEqual(bondCountAfterBreakValue.add(1));
   });
 
-  it.only('energize a test particle', async () => {
+  it('energize a test particle', async () => {
     // Found test address with DAI
-    const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
     const testAddress = myWallet.address; 
     const impersonatedAddress = '0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1';
 
     const impersonatedSigner = await ethers.getImpersonatedSigner(impersonatedAddress);
-    const erc20Contract = new ethers.Contract(daiAddress, erc20Abi, impersonatedSigner);
+    const erc20Contract = new ethers.Contract(daiMainnetAddress, erc20Abi, impersonatedSigner);
 
     const whaleBalanceBeforeTransfer = await erc20Contract.balanceOf(impersonatedAddress);
     expect(whaleBalanceBeforeTransfer).toEqual(ethers.BigNumber.from('15552713517234070012390106'));
@@ -380,14 +397,14 @@ describe('Charged class', () => {
     const nft = charged.NFT(particleBAddress, tokenId);
 
     const txEnergize = await nft.energize(
-      daiAddress,
+      daiMainnetAddress,
       BigNumber.from(1),
       'aave.B',
     );
     const txEnergizeReceipt = await txEnergize.wait();
     expect(txEnergizeReceipt).toHaveProperty('status', 1);
 
-    const energizeStatus = await nft.getMass(daiAddress, 'aave.B');
+    const energizeStatus = await nft.getMass(daiMainnetAddress, 'aave.B');
     expect(energizeStatus).toHaveProperty('1.value', ethers.BigNumber.from(1))
   });
 });
