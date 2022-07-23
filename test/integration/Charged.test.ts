@@ -350,17 +350,16 @@ describe('Charged class', () => {
   });
 
   it.only('energize a test particle', async () => {
-    // Found address with DAI
+    // Found test address with DAI
     const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
     const testAddress = myWallet.address; 
     const impersonatedAddress = '0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1';
-    // const amountToSend = ethers.utils.parseEther('.1');
+
     const impersonatedSigner = await ethers.getImpersonatedSigner(impersonatedAddress);
-    
     const erc20Contract = new ethers.Contract(daiAddress, erc20Abi, impersonatedSigner);
 
     const whaleBalanceBeforeTransfer = await erc20Contract.balanceOf(impersonatedAddress);
-    console.log('Whale' ,whaleBalanceBeforeTransfer);
+    expect(whaleBalanceBeforeTransfer).toEqual(ethers.BigNumber.from('15552713517234070012390106'));
 
     const txTransfer = await erc20Contract.transfer(testAddress, 10);
     await txTransfer.wait();
@@ -369,10 +368,10 @@ describe('Charged class', () => {
     await txApprove.wait();
 
     const txAllowance = await erc20Contract.allowance(testAddress, mainnetAddresses.chargedParticles.address);
-    console.log('Allowance',txAllowance);
+    expect(txAllowance).toEqual(ethers.BigNumber.from('10'));
 
     const testAddressBalanceAfterTransfer = await erc20Contract.balanceOf(testAddress);
-    console.log('Test wallet',testAddressBalanceAfterTransfer);
+    expect(testAddressBalanceAfterTransfer).toEqual(ethers.BigNumber.from('10'));
 
     const charged = new Charged({ providers: ethers.provider, signer: myWallet });
 
@@ -384,7 +383,6 @@ describe('Charged class', () => {
       daiAddress,
       BigNumber.from(1),
       'aave.B',
-      1
     );
     const txEnergizeReceipt = await txEnergize.wait();
     expect(txEnergizeReceipt).toHaveProperty('status', 1);
