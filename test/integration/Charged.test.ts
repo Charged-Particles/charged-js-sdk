@@ -351,9 +351,9 @@ describe('Charged class', () => {
 
   it.only('energize a test particle', async () => {
     // Found address with DAI
-    const impersonatedAddress = '0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1';
-    const testAddress = '0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A'; 
     const daiAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
+    const testAddress = myWallet.address; 
+    const impersonatedAddress = '0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1';
     // const amountToSend = ethers.utils.parseEther('.1');
     const impersonatedSigner = await ethers.getImpersonatedSigner(impersonatedAddress);
     
@@ -380,13 +380,16 @@ describe('Charged class', () => {
     const tokenId = 1;
     const nft = charged.NFT(particleBAddress, tokenId);
 
-    const tx = await nft.energize(
+    const txEnergize = await nft.energize(
       daiAddress,
       BigNumber.from(1),
       'aave.B',
       1
     );
-    const receipt = await tx.wait();
-    expect(receipt).toHaveProperty('status', 1);
+    const txEnergizeReceipt = await txEnergize.wait();
+    expect(txEnergizeReceipt).toHaveProperty('status', 1);
+
+    const energizeStatus = await nft.getMass(daiAddress, 'aave.B');
+    expect(energizeStatus).toHaveProperty('1.value', ethers.BigNumber.from(1))
   });
 });
