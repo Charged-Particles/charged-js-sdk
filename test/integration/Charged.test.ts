@@ -14,13 +14,12 @@ import {
   alchemyKovanKey,
   alchemyPolygonKey
 } from '../../src/utils/config';
-import { chargedParticlesAbi, kovanAddresses } from '../../src/index';
+import { chargedParticlesAbi, mainnetAddresses } from '../../src/index';
 import { getWallet } from '../../src/utils/testUtilities';
 import { BigNumber } from 'ethers';
 import Charged from '../../src/charged/index';
 
-
-const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
+const localTestNetRpcUrl = 'http://localhost:8545';
 const myWallet = getWallet();
 const providers = [
   {
@@ -34,7 +33,7 @@ const providers = [
 ];
 const localProvider = [
   {
-    network: 42,
+    network: 1,
     service: { 'rpc': localTestNetRpcUrl }
   }
 ];
@@ -259,11 +258,11 @@ describe('Charged class', () => {
   it('should create a contract from exported abis', async () => {
     const provider = new ethers.providers.JsonRpcProvider(localTestNetRpcUrl, ganacheChainId);
     const contract = new ethers.Contract(
-      kovanAddresses.chargedParticles.address,
+      mainnetAddresses.chargedParticles.address,
       chargedParticlesAbi,
       provider
     );
-    expect(await contract.getStateAddress()).toEqual(kovanAddresses.chargedState.address);
+    expect(await contract.getStateAddress()).toEqual(mainnetAddresses.chargedState.address);
   });
 
   it('Bond an erc721 into protonB.', async () => {
@@ -361,27 +360,33 @@ describe('Charged class', () => {
     const erc20Contract = new ethers.Contract(daiAddress, erc20Abi, impersonatedSigner);
 
     const whaleBalanceBeforeTransfer = await erc20Contract.balanceOf(impersonatedAddress);
-    console.log(whaleBalanceBeforeTransfer);
+    console.log('Whale' ,whaleBalanceBeforeTransfer);
 
     const txTransfer = await erc20Contract.transfer(testAddress, 10);
     await txTransfer.wait();
-    console.log(txTransfer);
     
-    const whaleBalanceAfterTransfer = await erc20Contract.balanceOf(testAddress);
-    console.log(whaleBalanceAfterTransfer);
+    const txApprove = await erc20Contract.connect(ethers.provider.getSigner()).approve(mainnetAddresses.chargedParticles.address, 10);
+    await txApprove.wait();
 
-    // const charged = new Charged({ providers: localProvider, signer: myWallet });
+    const txAllowance = await erc20Contract.allowance(testAddress, mainnetAddresses.chargedParticles.address);
+    console.log('Allowance',txAllowance);
 
-    // const particleBAddress = kovanAddresses.protonB.address;
-    // const tokenId = 43;
+    const testAddressBalanceAfterTransfer = await erc20Contract.balanceOf(testAddress);
+    console.log('Test wallet',testAddressBalanceAfterTransfer);
 
-    // const nft = charged.NFT(particleBAddress, tokenId);
-    // const tx = await nft.energize(
-    //   '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
-    //   BigNumber.from(10)
-    // );
-    // const receipt = await tx.wait();
+    const charged = new Charged({ providers: ethers.provider, signer: myWallet });
 
-    // expect(receipt).toHaveProperty('status', 1);
+    const particleBAddress = mainnetAddresses.protonB.address;
+    const tokenId = 1;
+    const nft = charged.NFT(particleBAddress, tokenId);
+
+    const tx = await nft.energize(
+      daiAddress,
+      BigNumber.from(1),
+      'aave.B',
+      1
+    );
+    const receipt = await tx.wait();
+    expect(receipt).toHaveProperty('status', 1);
   });
 });
