@@ -272,19 +272,12 @@ describe('Charged class', () => {
     const bondCountBeforeDepositValue = bondCountBeforeDeposit[1].value;
     expect(bondCountBeforeDepositValue.toNumber()).toEqual(0);
 
-<<<<<<< HEAD
     // Mint proton
     const erc721Contract = new ethers.Contract(mainnetAddresses.protonB.address, protonBAbi, ethers.provider.getSigner());
     const protonId = await erc721Contract.callStatic.createBasicProton(
       myWallet.address,
       myWallet.address,
       'tokenUri.com',
-=======
-    const bondTrx = await nft.bond(
-      '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
-      '52',
-      '1',
->>>>>>> staging
     );
 
     const txCreateProton = await erc721Contract.createBasicProton(
