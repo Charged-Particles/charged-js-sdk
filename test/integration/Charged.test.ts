@@ -41,7 +41,6 @@ const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
 const daiMainnetAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const tokenId = 43;
 const network = 42;
-const ganacheChainId = 1337;
 
 describe('Charged class', () => {
 
@@ -256,11 +255,10 @@ describe('Charged class', () => {
   });
 
   it('should create a contract from exported abis', async () => {
-    const provider = new ethers.providers.JsonRpcProvider(localTestNetRpcUrl, ganacheChainId);
     const contract = new ethers.Contract(
       mainnetAddresses.chargedParticles.address,
       chargedParticlesAbi,
-      provider
+      ethers.provider
     );
     expect(await contract.getStateAddress()).toEqual(mainnetAddresses.chargedState.address);
   });
@@ -305,7 +303,7 @@ describe('Charged class', () => {
     expect(bondCountAfterDepositValue.toNumber()).toEqual(1);
   });
 
-  it.only('Breaks a proton bond', async () => {
+  it('Breaks a proton bond', async () => {
     const impersonatedAddress = '0x6dA0a1784De1aBDDe1734bA37eCa3d560bf044c0';
     const impersonatedSigner = await ethers.getImpersonatedSigner(impersonatedAddress);
 
@@ -340,7 +338,7 @@ describe('Charged class', () => {
     expect(bondBalanceAfterBreak[1].value).toEqual(ethers.BigNumber.from(1));
   });
 
-  it('Breaks an 1155 bond from protonB and bond back', async () => {
+  it.skip('Breaks an 1155 bond from protonB and bond back', async () => {
     const amountToRemove = 2;
     const charged = new Charged({ providers: localProvider, signer: myWallet });
     const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 49);
