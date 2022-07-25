@@ -24,7 +24,7 @@ type ChargedConstructor = {
  * @class Charged
  * Create a Charged instance.
  * @constructs ChargedConstructor
- * @param {ChargedConstructor} params - Charged parameter object.
+ * @param {ChargedConstructor} params - Charged constructor object.
  * @example  
  * const charged = new Charged({providers: window.ethereum});
  * const allStateAddresses = await charged.utils.getStateAddress();
@@ -52,7 +52,6 @@ export default class Charged {
     let initializedProviders: { [network: string]: providers.Provider } = {};
 
     if (providers) {
-
       if (Array.isArray(providers)) {
         providers?.forEach(({ network, service }) => {
           initializedProviders[network] = getDefaultProviderByNetwork(network, service);
