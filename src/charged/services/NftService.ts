@@ -420,7 +420,6 @@ export default class NftService extends BaseService {
   ): Promise<ContractTransaction> {
     walletManagerCheck(walletManagerId);
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
-
     await this.bridgeNFTCheck(signerNetwork);
 
     const parameters = [
@@ -462,7 +461,6 @@ export default class NftService extends BaseService {
     chainId?: number
   ): Promise<ContractTransaction> {
     walletManagerCheck(walletManagerId);
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -513,7 +511,6 @@ export default class NftService extends BaseService {
     chainId?: number
   ): Promise<ContractTransaction> {
     walletManagerCheck(walletManagerId);
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -554,7 +551,6 @@ export default class NftService extends BaseService {
     chainId?: number
   ): Promise<ContractTransaction> {
     walletManagerCheck(walletManagerId);
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -617,7 +613,6 @@ export default class NftService extends BaseService {
     chainId?: number
   ): Promise<ContractTransaction> {
     basketManagerCheck(basketManagerId);
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
@@ -677,7 +672,6 @@ export default class NftService extends BaseService {
     chainId?: number
   ): Promise<ContractTransaction> {
     basketManagerCheck(basketManagerId);
-
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
     await this.bridgeNFTCheck(signerNetwork);
 
