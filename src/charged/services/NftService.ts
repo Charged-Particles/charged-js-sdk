@@ -1,6 +1,12 @@
 import { BigNumberish, ContractTransaction } from 'ethers';
-import { ChargedState, ManagerId, defaultManagerId } from '../../types';
 import BaseService from './baseService';
+import { 
+  ChargedState,
+  ManagerId,
+  defaultManagerId,
+  walletManagerCheck,
+  basketManagerCheck
+} from '../../types';
 
 /** 
 * @name NFT
@@ -97,6 +103,7 @@ export default class NftService extends BaseService {
    * @return {BigNumber}                - The Amount of underlying assets held within the token.
    */
   public async getMass(assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
+    walletManagerCheck(walletManagerId);
     const parameters = [
       this.contractAddress,
       this.tokenId,
@@ -157,6 +164,7 @@ export default class NftService extends BaseService {
    *
    */
   public async getBonds(basketManagerId: ManagerId = defaultManagerId) {
+    basketManagerCheck(basketManagerId);
     const parameters = [this.contractAddress, this.tokenId, basketManagerId];
     return await this.fetchAllNetworks('chargedParticles', 'currentParticleCovalentBonds', parameters);
   }

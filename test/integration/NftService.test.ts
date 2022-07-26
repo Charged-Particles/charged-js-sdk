@@ -107,4 +107,21 @@ describe('NFT service class', () => {
       );
     }).rejects.toThrow();
   });
+
+  it.only('Throws if wrong wallet manager id is passed', async () => {
+    const charged = new Charged({ providers: localProvider, signer });
+    const nft = charged.NFT(particleBAddressKovan, tokenId);
+    await expect(async () => {
+      //@ts-ignore
+      await nft.getMass('0xDAI', 'NotSupportedWalletManager');
+    }).rejects.toThrow('Provided a not supported wallet manager id.'); 
+
+    await expect(async () => {
+      //@ts-ignore
+      await nft.getBonds('NotSupportedBasketManager');
+    }).rejects.toThrow('Provided a not supported basket manager id.'); 
+
+    const bondsOnNft = await nft.getBonds('generic.B');
+    expect(bondsOnNft).toHaveProperty('42.status', 'fulfilled');
+  });
 });

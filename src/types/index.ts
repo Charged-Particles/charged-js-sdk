@@ -105,10 +105,10 @@ export type TransactionOverride = {
 
 export const walletManagerCheck = (managerId: ManagerId) => {
   const validWalletManagers = ['aave', 'aave.B', 'generic', 'generic.B'];
-  return validWalletManagers.includes(managerId);
+  if (!validWalletManagers.includes(managerId)) {throw new Error('Provided a not supported wallet manager id.')};
 };
 
 export const basketManagerCheck = (managerId: ManagerId) => {
   const validWalletManagers = ['generic', 'generic.B'];
-  return validWalletManagers.includes(managerId);
+  if (!validWalletManagers.includes(managerId)) {throw new Error('Provided a not supported basket manager id.')};
 };
