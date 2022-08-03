@@ -49,20 +49,20 @@ export type ChargedState = {
 };
 
 /**  
- * A string enum that identifies which wallet manager to use. Used in functions like `release` and `discharge`
+ * A string enum that identifies which wallet manager to use.
  * @typedef {WalletManagerId}
  * @property {string} ManagerId - possible values: `aave`, `aave.B`, `generic`, `generic.B`
  */
 export type ManagerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
 /**  
- * A string enum that identifies which wallet manager to use. Used in functions like `release` and `discharge`
+ * A string enum that identifies which wallet manager to use.
  * @typedef {BasketManagerId}
  * @property {string} ManagerId - possible values: `generic`, `generic.B`
  */
 export type BasketManagerId = 'generic' | 'generic.B';
 
-export const defaultManagerId: ManagerId = 'generic.B';
+export const defaultManagerId: ManagerId  = 'generic.B';
 
 /**
 * Charged class constructor object parameter.
@@ -87,12 +87,12 @@ export type SdkConfiguration = {
 /**
 * Overrides {@link https://docs.ethers.io/v5/api/contract/contract/#Contract--metaclass ethers transaction} default parameters.
 * @typedef {Object} TransactionOverride
-* @property {boolean} [from] 
-* @property {boolean} [value] 
-* @property {boolean} [gasPrice] 
-* @property {boolean} [gasLimit] 
-* @property {boolean} [blockTag] 
-* @property {boolean} [nonce] 
+* @property {string} [from] 
+* @property {number} [value] 
+* @property {number} [gasPrice] 
+* @property {number} [gasLimit] 
+* @property {number} [blockTag] 
+* @property {number} [nonce] 
 */
 export type TransactionOverride = {
   from?: string,
@@ -102,3 +102,13 @@ export type TransactionOverride = {
   blockTag?: any,
   nonce?: any
 }
+
+export const walletManagerCheck = (managerId: ManagerId) => {
+  const validWalletManagers = ['aave', 'aave.B', 'generic', 'generic.B'];
+  if (!validWalletManagers.includes(managerId)) {throw new Error('Provided a not supported wallet manager id.')};
+};
+
+export const basketManagerCheck = (managerId: ManagerId) => {
+  const validWalletManagers = ['generic', 'generic.B'];
+  if (!validWalletManagers.includes(managerId)) {throw new Error('Provided a not supported basket manager id.')};
+};
