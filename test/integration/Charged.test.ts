@@ -1,3 +1,10 @@
+/**
+ * @jest-environment hardhat
+ */
+const { ethers } = require("hardhat");
+const Web3HttpProvider = require('web3-providers-http');
+
+import erc20Abi from '../abi/erc20.json';
 import {
   rpcUrlMainnet,
   infuraProjectId,
@@ -6,14 +13,12 @@ import {
   alchemyKovanKey,
   alchemyPolygonKey
 } from '../../src/utils/config';
-
-import Charged from '../../src/charged/index';
+import { chargedParticlesAbi, protonBAbi, mainnetAddresses } from '../../src/index';
 import { getWallet } from '../../src/utils/testUtilities';
-import { BigNumber, ethers } from 'ethers';
-import { chargedParticlesAbi, kovanAddresses } from '../../src/index';
-const Web3HttpProvider = require('web3-providers-http');
+import { BigNumber } from 'ethers';
+import Charged from '../../src/charged/index';
 
-const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
+const localTestNetRpcUrl = 'http://localhost:8545';
 const myWallet = getWallet();
 const providers = [
   {
@@ -27,15 +32,15 @@ const providers = [
 ];
 const localProvider = [
   {
-    network: 42,
+    network: 1,
     service: { 'rpc': localTestNetRpcUrl }
   }
 ];
 
 const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
+const daiMainnetAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const tokenId = 43;
 const network = 42;
-const ganacheChainId = 1337;
 
 describe('Charged class', () => {
 
@@ -77,22 +82,6 @@ describe('Charged class', () => {
 
     expect(stateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
     expect(stateAddresses).toHaveProperty('42', { "status": "fulfilled", "value": "0x121da37d04D1405d96cFEa65F79Eaa095C2582Ca" });
-  });
-
-  it('energize a test particle', async () => {
-    const charged = new Charged({ providers: localProvider, signer: myWallet });
-
-    const particleBAddress = kovanAddresses.protonB.address;
-    const tokenId = 43;
-
-    const nft = charged.NFT(particleBAddress, tokenId);
-    const tx = await nft.energize(
-      '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
-      BigNumber.from(10)
-    );
-    const receipt = await tx.wait();
-
-    expect(receipt).toHaveProperty('status', 1);
   });
 
   it('Initializes with ether.js external provider', async () => {
@@ -266,62 +255,90 @@ describe('Charged class', () => {
   });
 
   it('should create a contract from exported abis', async () => {
-    const provider = new ethers.providers.JsonRpcProvider(localTestNetRpcUrl, ganacheChainId);
     const contract = new ethers.Contract(
-      kovanAddresses.chargedParticles.address,
+      mainnetAddresses.chargedParticles.address,
       chargedParticlesAbi,
-      provider
+      ethers.provider
     );
-    expect(await contract.getStateAddress()).toEqual(kovanAddresses.chargedState.address);
+    expect(await contract.getStateAddress()).toEqual(mainnetAddresses.chargedState.address);
   });
 
   it('Bond an erc721 into protonB.', async () => {
-    const charged = new Charged({ providers: localProvider, signer: myWallet });
+    const charged = new Charged({ providers: ethers.provider, signer: myWallet });
 
-    const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 1);
+    const nft = charged.NFT(mainnetAddresses.protonB.address, 1);
 
     const bondCountBeforeDeposit = await nft.getBonds('generic.B');
-    const bondCountBeforeDepositValue = bondCountBeforeDeposit[42].value;
+    const bondCountBeforeDepositValue = bondCountBeforeDeposit[1].value;
     expect(bondCountBeforeDepositValue.toNumber()).toEqual(0);
 
-    const bondTrx = await nft.bond(
-      '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
-      '52',
+    // Mint proton
+    const erc721Contract = new ethers.Contract(mainnetAddresses.protonB.address, protonBAbi, ethers.provider.getSigner());
+    const protonId = await erc721Contract.callStatic.createBasicProton(
+      myWallet.address,
+      myWallet.address,
+      'tokenUri.com',
+    );
+
+    const txCreateProton = await erc721Contract.createBasicProton(
+      myWallet.address,
+      myWallet.address,
+      'tokenUri.com',
+    );
+    await txCreateProton.wait();
+    
+    const txApprove = await erc721Contract.approve(mainnetAddresses.chargedParticles.address, protonId.toString());
+    await txApprove.wait();
+    
+    // Create bond
+    const txBond = await nft.bond(
+      mainnetAddresses.protonB.address,
+      protonId,
       '1',
     );
-    const receipt = await bondTrx.wait();
-
-    expect(receipt).toHaveProperty('transactionHash');
-
+    const txBondReceipt = await txBond.wait();
+    expect(txBondReceipt).toHaveProperty('transactionHash');
     const bondCountAfterDeposit = await nft.getBonds('generic.B');
-    const bondCountAfterDepositValue = bondCountAfterDeposit[42].value;
+    const bondCountAfterDepositValue = bondCountAfterDeposit[1].value;
     expect(bondCountAfterDepositValue.toNumber()).toEqual(1);
   });
 
-  it('Breaks a protonB bond', async () => {
-    const charged = new Charged({ providers: localProvider, signer: myWallet });
-    const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 18);
+  it('Breaks a proton bond', async () => {
+    const impersonatedAddress = '0x6dA0a1784De1aBDDe1734bA37eCa3d560bf044c0';
+    const impersonatedSigner = await ethers.getImpersonatedSigner(impersonatedAddress);
 
-    const bondCountBeforeBreak = await nft.getBonds('generic.B');
-    const bondCountBeforeBreakValue = bondCountBeforeBreak[42].value;
-    expect(bondCountBeforeBreakValue.toNumber()).toEqual(5);
+    const erc721Contract = new ethers.Contract(mainnetAddresses.proton.address, protonBAbi, impersonatedSigner);
+    const txTransfer = await erc721Contract.transferFrom(
+      impersonatedAddress,
+      myWallet.address,
+      '458'
+    );
+
+    await txTransfer.wait();
+    const ownerOf = await erc721Contract.ownerOf('458');
+    expect(ownerOf).toBe(myWallet.address);
+
+    const charged = new Charged({ providers: ethers.provider, signer: myWallet });
+    const nft = charged.NFT(mainnetAddresses.proton.address, 458);
+  
+    const bondBalanceBeforeBreak = await nft.getBonds('generic');
+    expect(bondBalanceBeforeBreak[1].value).toEqual(ethers.BigNumber.from(2));
 
     const breakBondTrx = await nft.breakBond(
       myWallet.address,
-      '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963',
-      '87',
+      '0x60f80121c31a0d46b5279700f9df786054aa5ee5',
+      '1095782',
       1,
-      'generic.B'
+      'generic',
+      1
     );
-    const receipt = await breakBondTrx.wait();
 
-    expect(receipt).toHaveProperty('transactionHash');
-    const bondCountAfterBreak = await nft.getBonds('generic.B');
-    const bondCountAfterBreakValue = bondCountAfterBreak[42].value;
-    expect(bondCountAfterBreakValue).toEqual(bondCountBeforeBreakValue.sub(1));
+    await breakBondTrx.wait();
+    const bondBalanceAfterBreak = await nft.getBonds('generic');
+    expect(bondBalanceAfterBreak[1].value).toEqual(ethers.BigNumber.from(1));
   });
 
-  it('Breaks an 1155 bond from protonB and bond back', async () => {
+  it.skip('Breaks an 1155 bond from protonB and bond back', async () => {
     const amountToRemove = 2;
     const charged = new Charged({ providers: localProvider, signer: myWallet });
     const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 49);
@@ -355,5 +372,46 @@ describe('Charged class', () => {
     const bondCountAfterBond = await nft.getBonds('generic.B');
     const bondCountAfterBondValue = bondCountAfterBond[42].value;
     expect(bondCountAfterBondValue).toEqual(bondCountAfterBreakValue.add(1));
+  });
+
+  it('energize a test particle', async () => {
+    // Found test address with DAI
+    const testAddress = myWallet.address; 
+    const impersonatedAddress = '0x31d3243CfB54B34Fc9C73e1CB1137124bD6B13E1';
+
+    const impersonatedSigner = await ethers.getImpersonatedSigner(impersonatedAddress);
+    const erc20Contract = new ethers.Contract(daiMainnetAddress, erc20Abi, impersonatedSigner);
+
+    const whaleBalanceBeforeTransfer = await erc20Contract.balanceOf(impersonatedAddress);
+    expect(whaleBalanceBeforeTransfer).toEqual(ethers.BigNumber.from('15552713517234070012390106'));
+
+    const txTransfer = await erc20Contract.transfer(testAddress, 10);
+    await txTransfer.wait();
+    
+    const txApprove = await erc20Contract.connect(ethers.provider.getSigner()).approve(mainnetAddresses.chargedParticles.address, 10);
+    await txApprove.wait();
+
+    const txAllowance = await erc20Contract.allowance(testAddress, mainnetAddresses.chargedParticles.address);
+    expect(txAllowance).toEqual(ethers.BigNumber.from('10'));
+
+    const testAddressBalanceAfterTransfer = await erc20Contract.balanceOf(testAddress);
+    expect(testAddressBalanceAfterTransfer).toEqual(ethers.BigNumber.from('10'));
+
+    const charged = new Charged({ providers: ethers.provider, signer: myWallet });
+
+    const particleBAddress = mainnetAddresses.protonB.address;
+    const tokenId = 1;
+    const nft = charged.NFT(particleBAddress, tokenId);
+
+    const txEnergize = await nft.energize(
+      daiMainnetAddress,
+      BigNumber.from(1),
+      'aave.B',
+    );
+    const txEnergizeReceipt = await txEnergize.wait();
+    expect(txEnergizeReceipt).toHaveProperty('status', 1);
+
+    const energizeStatus = await nft.getMass(daiMainnetAddress, 'aave.B');
+    expect(energizeStatus).toHaveProperty('1.value', ethers.BigNumber.from(1))
   });
 });
