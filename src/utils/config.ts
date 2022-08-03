@@ -21,6 +21,8 @@ export const infuraProjectId = getParamOrExit('INFURA_PROJECT_ID');
 
 export const alchemyMainnetKey = getParamOrExit('ALCHEMY_MAINNET_KEY');
 
+export const alchemyGoerliKey = getParamOrExit('ALCHEMY_GOERLI_KEY');
+
 export const alchemyMumbaiKey = getParamOrExit('ALCHEMY_MUMBAI_KEY');
 
 export const alchemyPolygonKey = getParamOrExit('ALCHEMY_POLYGON_KEY');

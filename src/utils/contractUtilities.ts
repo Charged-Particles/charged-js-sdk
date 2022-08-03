@@ -13,11 +13,13 @@ import mainnetAddressesImport from '@charged-particles/protocol-subgraph/network
 import kovanAddressesImport from '@charged-particles/protocol-subgraph/networks/kovan.json';
 import polygonAddressesImport from '@charged-particles/protocol-subgraph/networks/polygon.json';
 import mumbaiAddressesImport from '@charged-particles/protocol-subgraph/networks/mumbai.json';
+import goerliAddressImport from '@charged-particles/protocol-subgraph/networks/goerli.json';
 
 const mainnetAddresses:NetworkContractLocations = mainnetAddressesImport;
 const kovanAddresses:NetworkContractLocations = kovanAddressesImport;
 const polygonAddresses:NetworkContractLocations = polygonAddressesImport;
 const mumbaiAddresses:NetworkContractLocations = mumbaiAddressesImport;
+const goerliAddress:NetworkContractLocations = goerliAddressImport;
 
 // Return correct ABI
 export const getAbi = (contractName: string) => {
@@ -49,6 +51,7 @@ const isContractLocation = (contract: ContractLocation | string): contract is Co
 const getImportedContractLocations = (network: number) => {
   switch(network) {
     case 1: return mainnetAddresses;
+    case 5: return goerliAddress;
     case 42: return kovanAddresses;
     case 137: return polygonAddresses;
     case 80001: return mumbaiAddresses;

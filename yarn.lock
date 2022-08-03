@@ -931,9 +931,9 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@charged-particles/protocol-subgraph@^1.3.19":
-  version "1.3.19"
-  resolved "https://registry.yarnpkg.com/@charged-particles/protocol-subgraph/-/protocol-subgraph-1.3.19.tgz#ff4d1cf5ae5da8f1f3fda0b6fb6eda3641bb0494"
-  integrity sha512-937and09qpmx1JLzF9MDAyZXTwp1sNAY3huV+rM+7ZXgbsd7U9JySSl7x3an3o02jZvzMmkPy7qgHLxteTeJqA==
+  version "1.3.20"
+  resolved "https://registry.yarnpkg.com/@charged-particles/protocol-subgraph/-/protocol-subgraph-1.3.20.tgz#ad4717b922a214057fec30a77a878c2549d73773"
+  integrity sha512-fcjg/W9MzfjxGB8qHjEXJU7C1UVDm1EMyyJKm7XF3V54prKd8LkJUrI36OpS6fTLixeKHJIaaI/JTwRrw9I0VQ==
   dependencies:
     "@graphprotocol/graph-ts" "^0.24.1"
 
