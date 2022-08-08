@@ -116,7 +116,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
   });
 
-  it.only('Should fetch from Goerli Alchemy using API key', async () => {
+  it ('Should fetch from Goerli Alchemy using API key', async () => {
     const mumbaiProvider = [{ network: 5, service: { alchemy: alchemyGoerliKey } }];
     const charged = new Charged({ providers: mumbaiProvider })
     const allStateAddresses = await charged.utils.getStateAddress();

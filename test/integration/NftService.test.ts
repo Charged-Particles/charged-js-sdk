@@ -19,8 +19,8 @@ describe('NFT service class', () => {
       service: { 'alchemy': process.env.ALCHEMY_MAINNET_KEY }
     },
     {
-      network: 42,
-      service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
+      network: 5,
+      service: { 'alchemy': process.env.ALCHEMY_GOERLI_KEY }
     }
   ];
 
@@ -106,9 +106,10 @@ describe('NFT service class', () => {
     }).rejects.toThrow();
   });
 
-  it.only('Throws if wrong wallet manager id is passed', async () => {
-    const charged = new Charged({ providers: localProvider, signer });
-    const nft = charged.NFT(particleBAddressKovan, tokenId);
+  it('Throws if wrong wallet manager id is passed', async () => {
+    const charged = new Charged({ providers: ethers.provider, signer });
+    const nft = charged.NFT(mainnetAddresses.protonB.address, tokenId);
+
     await expect(async () => {
       //@ts-ignore
       await nft.getMass('0xDAI', 'NotSupportedWalletManager');
@@ -120,6 +121,6 @@ describe('NFT service class', () => {
     }).rejects.toThrow('Provided a not supported basket manager id.'); 
 
     const bondsOnNft = await nft.getBonds('generic.B');
-    expect(bondsOnNft).toHaveProperty('42.status', 'fulfilled');
+    expect(bondsOnNft).toHaveProperty('1.status', 'fulfilled');
   });
 });
