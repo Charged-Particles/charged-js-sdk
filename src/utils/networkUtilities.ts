@@ -1,20 +1,12 @@
 import { ethers } from 'ethers';
 import { Network } from '@ethersproject/networks';
-
-// ------------------------------------------------------------------------
-// TODO: move this into globals
-// ------------------------------------------------------------------------
-// alchemy rpcUrls
-const polygonRpcUrlAlchemy = "https://polygon-{chainName}.g.alchemy.com/v2/{apiKey}";
-const ethereumRpcUrlAlchemy = "https://eth-{chainName}.alchemyapi.io/v2/{apiKey}";
-
-// infura rpcUrls
-const polygonRpcUrlInfura = "https://polygon-{chainName}.infura.io/v3/{apiKey}";
-const ethereumRpcUrlInfura = "https://{chainName}.infura.io/v3/{apiKey}";
-
-// etherscan rpcUrls
-const rpcUrlEtherscan = "";
-// ------------------------------------------------------------------------
+import {
+  alchemyEthereumRpcUrl,
+  alchemyPolygonRpcUrl,
+  etherscanEthereumRpcUrl,
+  infuraEthereumRpcUrl,
+  infuraPolygonRpcUrl
+} from './config';
 
 export const getRpcNetwork = (chainId: number, rpcUrl: string): Network => {
   const rpcProvider: Network = {
@@ -40,22 +32,22 @@ export const getRpcUrl = (network: number, service: any): string => {
   switch (providerName) {
     case 'alchemy':
       if (connectedToPolygon) {
-        rpcUrl = polygonRpcUrlAlchemy;
+        rpcUrl = alchemyPolygonRpcUrl;
       } else {
-        rpcUrl = ethereumRpcUrlAlchemy;
+        rpcUrl = alchemyEthereumRpcUrl;
       }
       apiKey = service.alchemy;
       break;
     case 'infura':
       if (connectedToPolygon) {
-        rpcUrl = polygonRpcUrlInfura;
+        rpcUrl = infuraPolygonRpcUrl;
       } else {
-        rpcUrl = ethereumRpcUrlInfura;
+        rpcUrl = infuraEthereumRpcUrl;
       }
       apiKey = service.infura;
       break;
     case 'etherscan':
-      rpcUrl = rpcUrlEtherscan;
+      rpcUrl = etherscanEthereumRpcUrl;
       apiKey = service.etherscan;
       break;
 
