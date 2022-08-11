@@ -116,7 +116,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('80001', { "status": "fulfilled", "value": "0x581c57b86fC8c2D639f88276478324cE1380979D" });
   });
 
-  it.only('Should fetch from Goerli Alchemy using API key', async () => {
+  it ('Should fetch from Goerli Alchemy using API key', async () => {
     const mumbaiProvider = [{ network: 5, service: { alchemy: alchemyGoerliKey } }];
     const charged = new Charged({ providers: mumbaiProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -422,5 +422,17 @@ describe('Charged class', () => {
 
     const energizeStatus = await nft.getMass(daiMainnetAddress, 'aave.B');
     expect(energizeStatus).toHaveProperty('1.value', ethers.BigNumber.from(1))
+  });
+
+  it ('Interacts with the chain using an JsonRpcProvider', async() => {
+    // const goerliUrl = `https://eth-goerli.alchemyapi.io/v2/${alchemyGoerliKey}`;
+    // const jsonProvider = new ethers.providers.JsonRpcProvider(goerliUrl);
+    const signers = await ethers.getSigners();
+
+    const charged = new Charged({providers: signers[0].provider});
+    const stateAddresses = await charged.utils.getStateAddress();
+    expect(stateAddresses).toHaveProperty('1', { "status": "fulfilled", "value": "0x48974C6ae5A0A25565b0096cE3c81395f604140f" });
+
+    console.log(charged.getState());
   });
 });
