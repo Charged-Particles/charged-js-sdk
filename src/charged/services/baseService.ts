@@ -73,9 +73,8 @@ export default class BaseService {
       }
 
       if (network === 'external') {
-        console.log(providers['external'].getNetwork);
+        // safe to use the function
         if (typeof providers['external'].getNetwork === "function") { 
-          // safe to use the function
           const { chainId } = await providers['external'].getNetwork();
           network = chainId;
         } else {
