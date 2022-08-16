@@ -73,8 +73,13 @@ export default class BaseService {
       }
 
       if (network === 'external') {
-        const { chainId } = await providers['external'].getNetwork()
-        network = chainId;
+        // safe to use the function
+        if (typeof providers['external'].getNetwork === "function") { 
+          const { chainId } = await providers['external'].getNetwork();
+          network = chainId;
+        } else {
+          throw new Error('Could not deduce chanId');
+        }
       }
 
       networks.push(Number(network));
