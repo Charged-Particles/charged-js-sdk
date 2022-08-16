@@ -12,7 +12,6 @@ import Charged from '../../src/charged/index';
 
 describe('NFT service class', () => {
   const signer = getWallet();
-  const localTestNetRpcUrl = 'http://127.0.0.1:8545/';
   const providers = [
     {
       network: 1,
@@ -23,13 +22,6 @@ describe('NFT service class', () => {
       service: { 'alchemy': process.env.ALCHEMY_GOERLI_KEY }
     }
   ];
-
-  const localProvider = [
-    {
-      network: 1,
-      service: { 'rpc': localTestNetRpcUrl}
-    }
-  ]
 
   const tokenId = 2;
   const network = 1;
@@ -91,7 +83,7 @@ describe('NFT service class', () => {
     const tokenId = 2;
     const network = 1;
 
-    const charged = new Charged({ providers: localProvider, signer, config: userSetting });
+    const charged = new Charged({ providers: ethers.provider, signer, config: userSetting });
     expect(charged).toHaveProperty('state.configuration.transactionOverride.nonce', 1);
 
     const nft = charged.NFT(particleBAddress, tokenId);
@@ -106,10 +98,9 @@ describe('NFT service class', () => {
     }).rejects.toThrow();
   });
 
-  it('Throws if wrong wallet manager id is passed', async () => {
+  it ('Throws if wrong wallet manager id is passed', async () => {
     const charged = new Charged({ providers: ethers.provider, signer });
     const nft = charged.NFT(mainnetAddresses.protonB.address, tokenId);
-
     await expect(async () => {
       //@ts-ignore
       await nft.getMass('0xDAI', 'NotSupportedWalletManager');
