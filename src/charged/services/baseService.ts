@@ -39,7 +39,8 @@ export default class BaseService {
       } else if (action === 'write') {
         if (!signer && !providers['external']) { throw new Error('Trying to write with no signer') };
 
-        const writeProvider = signer ? signer.connect(provider) : providers['external'].getSigner();
+        const signerHasProvider = !!signer?.provider
+        const writeProvider = signer ? signerHasProvider ? signer : signer.connect(provider) : providers['external'].getSigner();
 
         const requestedContract = new ethers.Contract(
           address,
