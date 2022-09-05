@@ -1,5 +1,5 @@
 # @charged-aprticles/charged-js-sdk
-Charged Particles Javascript SDK
+Charged Particles Javascript SDK v0.1.7 (beta)
 
 ### Table of Contents
 
@@ -92,8 +92,8 @@ const charged = new Charged({providers: window.ethereum});
 const allStateAddresses = await charged.utils.getStateAddress();
 
 const polygonProvider = [
- { 
-   network: 137, 
+ {
+   network: 137,
    service: {alchemy: process.env.ALCHEMY_POLYGON_KEY}
  }
 ];
@@ -110,14 +110,14 @@ Type: [Object][75]
 
 *   `providers` **([Array][80]\<NetworkProvider> | providers.Provider | providers.ExternalProvider)?** Provider for connection to the Ethereum network.
 *   `signer` **Signer?** Needed to send signed transactions to the Ethereum Network to execute state changing operations.
-*   `config` **ConfigurationParameters** 
+*   `config` **ConfigurationParameters**
 
 ## NFT
 
 ### Parameters
 
-*   `contractAddress` **[string][77]** 
-*   `tokenId` **[number][76]** 
+*   `contractAddress` **[string][77]**
+*   `tokenId` **[number][76]**
 
 ### Examples
 
@@ -245,7 +245,7 @@ If you are getting gas limit errors this may be because you forgot to approve th
 *   `assetToken` **[string][77]** The Address of the Asset Token being used
 *   `assetAmount` **BigNumberish** The Amount of Asset Token to Energize the Token with
 *   `chainId` **[number][76]?** Optional parameter that allows for the user to specify which network to write to
-*   `referrer` **[string][77]?** 
+*   `referrer` **[string][77]?**
 
 #### Examples
 
@@ -519,7 +519,7 @@ const charged = new Charged({providers: window.ethereum});
 const creatorAnnuities = await charged.utils.getStateAddress();
 ```
 
-Returns **UtilsService** 
+Returns **UtilsService**
 
 ### getStateAddress
 
@@ -612,12 +612,12 @@ Type: [Object][75]
 
 #### Properties
 
-*   `from` **[boolean][78]?** 
-*   `value` **[boolean][78]?** 
-*   `gasPrice` **[boolean][78]?** 
-*   `gasLimit` **[boolean][78]?** 
-*   `blockTag` **[boolean][78]?** 
-*   `nonce` **[boolean][78]?** 
+*   `from` **[boolean][78]?**
+*   `value` **[boolean][78]?**
+*   `gasPrice` **[boolean][78]?**
+*   `gasLimit` **[boolean][78]?**
+*   `blockTag` **[boolean][78]?**
+*   `nonce` **[boolean][78]?**
 
 
 ### getFeesForDeposit
