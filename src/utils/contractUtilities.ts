@@ -39,7 +39,7 @@ export const getAddress = (network: number, contractName: string) => {
   if(isContractLocation(location)) {
     return location.address;
   } else {
-    throw `${contractName} is not valid in getAddress`;
+    throw `${contractName} on chain ID ${network} is not valid in getAddress`;
   }
 }
 

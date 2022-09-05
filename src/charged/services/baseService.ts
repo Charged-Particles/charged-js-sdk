@@ -1,5 +1,5 @@
 import { Contract, ethers } from 'ethers';
-import { ChargedState } from '../../types';
+import { ChargedState, AddressByChain } from '../../types';
 import { getAbi, getAddress } from '../../utils/contractUtilities';
 export default class BaseService {
   readonly contractInstances: { [action: string]: { [address: string]: Contract } };
@@ -112,7 +112,7 @@ export default class BaseService {
     contractAddress?: string
   ) {
     const { transactionOverride } = this.state.configuration;
-    
+
     const action = 'write';
     const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
     return requestedContract[methodName](...params, transactionOverride);
@@ -130,6 +130,26 @@ export default class BaseService {
     const action = 'read';
     const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
     return requestedContract.callStatic[methodName](...params, transactionOverride);
+  }
+
+  public async getContractAddress(contractName: string, networks: (number)[] = []): Promise<AddressByChain> {
+    const { providers } = this.state;
+    const chainIds: (number)[] = networks;
+    if (chainIds.length === 0) {
+      for (let network in providers) {
+        if (network === 'external') {
+          const { chainId } = await providers['external'].getNetwork();
+          network = chainId;
+        }
+        chainIds.push(Number(network));
+      }
+    }
+
+    const addresses: AddressByChain = {};
+    for (let i = 0; i < chainIds.length; i++) {
+      addresses[chainIds[i]] = getAddress(Number(chainIds[i]), contractName);
+    }
+    return addresses;
   }
 
   public async getSignerAddress() {
@@ -162,4 +182,3 @@ export default class BaseService {
     }
   }
 }
-
