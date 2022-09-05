@@ -48,14 +48,18 @@ export type ChargedState = {
   configuration: ConfigurationParameters;
 };
 
-/**  
+export type AddressByChain = {
+  [chainId: number]: string;
+};
+
+/**
  * A string enum that identifies which wallet manager to use.
  * @typedef {WalletManagerId}
  * @property {string} ManagerId - possible values: `aave`, `aave.B`, `generic`, `generic.B`
  */
 export type ManagerId = 'aave' | 'aave.B' | 'generic' | 'generic.B';
 
-/**  
+/**
  * A string enum that identifies which wallet manager to use.
  * @typedef {BasketManagerId}
  * @property {string} ManagerId - possible values: `generic`, `generic.B`
@@ -87,12 +91,12 @@ export type SdkConfiguration = {
 /**
 * Overrides {@link https://docs.ethers.io/v5/api/contract/contract/#Contract--metaclass ethers transaction} default parameters.
 * @typedef {Object} TransactionOverride
-* @property {string} [from] 
-* @property {number} [value] 
-* @property {number} [gasPrice] 
-* @property {number} [gasLimit] 
-* @property {number} [blockTag] 
-* @property {number} [nonce] 
+* @property {string} [from]
+* @property {number} [value]
+* @property {number} [gasPrice]
+* @property {number} [gasLimit]
+* @property {number} [blockTag]
+* @property {number} [nonce]
 */
 export type TransactionOverride = {
   from?: string,

@@ -18,8 +18,8 @@ describe('NFT service class', () => {
       service: { 'alchemy': process.env.ALCHEMY_MAINNET_KEY }
     },
     {
-      network: 42,
-      service: { 'alchemy': process.env.ALCHEMY_KOVAN_KEY }
+      network: 5,
+      service: { 'alchemy': process.env.ALCHEMY_GOERLI_KEY }
     }
   ];
 

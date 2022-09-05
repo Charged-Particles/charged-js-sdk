@@ -16,6 +16,14 @@ module.exports = {
         mnemonic: process.env['MNEMONIC'],
         count: 1,
       },
+    },
+    goerli: {
+      chainId: 5,
+      url: process.env['RPC_URL_GOERLI'],
+      accounts: {
+        mnemonic: process.env['MNEMONIC'],
+        count: 1,
+      },
     }
   },
 };

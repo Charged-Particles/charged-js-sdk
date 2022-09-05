@@ -19,6 +19,7 @@ import mainnetAddresses from '@charged-particles/protocol-subgraph/networks/main
 import kovanAddresses from '@charged-particles/protocol-subgraph/networks/kovan.json';
 import polygonAddresses from '@charged-particles/protocol-subgraph/networks/polygon.json';
 import mumbaiAddresses from '@charged-particles/protocol-subgraph/networks/mumbai.json';
+import goerliAddresses from '@charged-particles/protocol-subgraph/networks/goerli.json';
 
 export default Charged;
 
@@ -39,4 +40,5 @@ export {
   kovanAddresses,
   polygonAddresses,
   mumbaiAddresses,
+  goerliAddresses,
 }

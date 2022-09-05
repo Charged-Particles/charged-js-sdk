@@ -19,24 +19,24 @@ type ChargedConstructor = {
   config?: ConfigurationParameters
 };
 
-/** 
+/**
  * @module Charged
  * @class Charged
  * Create a Charged instance.
  * @constructs ChargedConstructor
  * @param {ChargedConstructor} params - Charged constructor object.
- * @example  
+ * @example
  * const charged = new Charged({providers: window.ethereum});
  * const allStateAddresses = await charged.utils.getStateAddress();
- * 
+ *
  * const polygonProvider = [
- *  { 
- *    network: 137, 
+ *  {
+ *    network: 137,
  *    service: {alchemy: process.env.ALCHEMY_POLYGON_KEY}
  *  }
  * ];
  * const charged = new Charged({providers: polygonProvider})
- * 
+ *
 */
 
 export default class Charged {
@@ -72,7 +72,7 @@ export default class Charged {
 
       console.info(
         `Charged Particles: These API keys are a provided as a community resource by the backend services for low-traffic projects and for early prototyping.
-        It is highly recommended to use own keys: https://docs.ethers.io/v5/api-keys/`
+        It is highly recommended to use your own keys: https://docs.ethers.io/v5/api-keys/`
       );
     }
 

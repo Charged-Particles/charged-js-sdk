@@ -28,3 +28,13 @@ export const alchemyMumbaiKey = getParamOrExit('ALCHEMY_MUMBAI_KEY');
 export const alchemyPolygonKey = getParamOrExit('ALCHEMY_POLYGON_KEY');
 
 export const alchemyKovanKey = getParamOrExit('ALCHEMY_KOVAN_KEY');
+
+export const alchemyPolygonRpcUrl = "https://polygon-{chainName}.g.alchemy.com/v2/{apiKey}";
+
+export const alchemyEthereumRpcUrl = "https://eth-{chainName}.alchemyapi.io/v2/{apiKey}";
+
+export const infuraPolygonRpcUrl = "https://polygon-{chainName}.infura.io/v3/{apiKey}";
+
+export const infuraEthereumRpcUrl = "https://{chainName}.infura.io/v3/{apiKey}";
+
+export const etherscanEthereumRpcUrl = "";
