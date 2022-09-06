@@ -875,4 +875,23 @@ export default class NftService extends BaseService {
       this.contractAddress,
     );
   }
+
+  public async ownerOf(
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      this.tokenId,
+    ];
+
+    return await this.writeContract(
+      'erc721',
+      'ownerOf',
+      signerNetwork,
+      parameters,
+      this.contractAddress,
+    );
+  }
 }
