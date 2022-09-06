@@ -114,4 +114,12 @@ describe('NFT service class', () => {
     const bondsOnNft = await nft.getBonds('generic.B');
     expect(bondsOnNft).toHaveProperty('1.status', 'fulfilled');
   });
+
+  it.only ('Get the owner of the NFT', async() => {
+    const charged = new Charged({ providers: ethers.provider, signer });
+    const nft = charged.NFT(mainnetAddresses.protonB.address, tokenId);
+    const ownerOf = await nft.ownerOf();
+
+    expect(ownerOf).toHaveProperty('1.value','0x0a2e95EbA92C86b617c36A8A73d3913F279F1CDE');
+  });
 });
