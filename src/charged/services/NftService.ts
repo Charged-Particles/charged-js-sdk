@@ -876,6 +876,27 @@ export default class NftService extends BaseService {
     );
   }
 
+  public async approve(
+    addressTo: string,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      addressTo,
+      this.tokenId,
+    ];
+
+    return await this.writeContract(
+      'erc721',
+      'approve',
+      signerNetwork,
+      parameters,
+      this.contractAddress,
+    );
+  }
+
   public async ownerOf(){
     const parameters = [
       this.tokenId,
@@ -884,6 +905,19 @@ export default class NftService extends BaseService {
     return await this.fetchAllNetworks(
       'erc721',
       'ownerOf',
+      parameters,
+      this.contractAddress,
+    );
+  }
+
+  public async getApproved(){
+    const parameters = [
+      this.tokenId,
+    ];
+
+    return await this.fetchAllNetworks(
+      'erc721',
+      'getApproved',
       parameters,
       this.contractAddress,
     );
