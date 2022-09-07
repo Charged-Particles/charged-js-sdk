@@ -122,7 +122,7 @@ describe('NFT service class', () => {
     expect(ownerOf).toHaveProperty('1.value','0x0a2e95EbA92C86b617c36A8A73d3913F279F1CDE');
   });
 
-  it.only ('Mint and transfer an NFT', async() => {
+  it ('Mint and transfer an NFT', async() => {
     // Impersonate nft owner
     const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
     const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
