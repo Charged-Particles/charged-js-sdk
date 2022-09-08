@@ -3,4 +3,4 @@ dist/*
 .env
 coverage/*
 yarn-error.log
-cache
+cache/*
