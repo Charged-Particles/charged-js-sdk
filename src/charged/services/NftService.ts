@@ -852,7 +852,19 @@ export default class NftService extends BaseService {
       parameters
     );
   }
-
+ 
+  /**
+  * Wrapper for transfer from ERC721 method 
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} addressFrom - NFT owner.
+  * @param {string} addressTo - Receivers account.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} - Details from the transaction.
+  * 
+  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedSettings.sol#L218 Solidity Contract Method}
+  */ 
   public async transferFrom(
     addressFrom: string,
     addressTo: string,
