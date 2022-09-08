@@ -863,7 +863,6 @@ export default class NftService extends BaseService {
   * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
   * @return {Promise<ContractTransaction>} - Details from the transaction.
   * 
-  * {@link https://github.com/Charged-Particles/charged-particles-universe/blob/a2c54a8b125e416ff600b731d2d13576223bfac7/contracts/ChargedSettings.sol#L218 Solidity Contract Method}
   */ 
   public async transferFrom(
     addressFrom: string,
@@ -888,6 +887,17 @@ export default class NftService extends BaseService {
     );
   }
 
+  /**
+  * Approve an address for its usage.
+  * ERC721 method. 
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} addressTo - Approved account.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} - Details from the transaction.
+  * 
+  */ 
   public async approve(
     addressTo: string,
     chainId?: number
@@ -909,6 +919,14 @@ export default class NftService extends BaseService {
     );
   }
 
+  /**
+   * Gets current owner of the NFT. 
+   * 
+   * @memberof NFT
+   *
+   * @return {string} - Address 
+   *
+   */
   public async ownerOf(){
     const parameters = [
       this.tokenId,
@@ -921,7 +939,14 @@ export default class NftService extends BaseService {
       this.contractAddress,
     );
   }
-
+  /**
+   * Gets current approved address fro NFT.
+   * 
+   * @memberof NFT
+   *
+   * @return {string} - Address 
+   *
+   */
   public async getApproved(){
     const parameters = [
       this.tokenId,
