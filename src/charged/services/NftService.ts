@@ -939,6 +939,7 @@ export default class NftService extends BaseService {
       this.contractAddress,
     );
   }
+
   /**
    * Gets current approved address fro NFT.
    * 
