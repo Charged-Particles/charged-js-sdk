@@ -114,4 +114,40 @@ describe('NFT service class', () => {
     const bondsOnNft = await nft.getBonds('generic.B');
     expect(bondsOnNft).toHaveProperty('1.status', 'fulfilled');
   });
+
+  it ('Get the owner of the NFT', async() => {
+    const charged = new Charged({ providers: ethers.provider, signer });
+    const nft = charged.NFT(mainnetAddresses.protonB.address, tokenId);
+    const ownerOf = await nft.ownerOf();
+    expect(ownerOf).toHaveProperty('1.value','0x0a2e95EbA92C86b617c36A8A73d3913F279F1CDE');
+  });
+
+  it ('Mint and transfer an NFT', async() => {
+    // Impersonate nft owner
+    const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
+    const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
+
+    const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
+    const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', 1);
+
+    const ownerOfBeforeTransfer = await nft.ownerOf();
+    expect(ownerOfBeforeTransfer).toHaveProperty('1.value','0x46EFbAedc92067E6d60E84ED6395099723252496');
+
+    const transferTx = await nft.transferFrom(apeOwner, signer.address)
+    await transferTx.wait();
+
+    const ownerOfAfterTransfer = await nft.ownerOf();
+    expect(ownerOfAfterTransfer).toHaveProperty('1.value', signer.address);
+  });
+
+  it.only('Approves nft ', async() => {
+    const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
+    const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
+    const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
+    const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', 1);
+    const approveTx = await nft.approve(signer.address);
+    await approveTx.wait();
+    const approvedUser = await nft.getApproved();
+    expect(approvedUser).toHaveProperty('1.value', signer.address);
+  });
 });
