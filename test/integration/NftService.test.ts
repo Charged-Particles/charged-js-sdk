@@ -140,7 +140,7 @@ describe('NFT service class', () => {
     expect(ownerOfAfterTransfer).toHaveProperty('1.value', signer.address);
   });
 
-  it.only('Approves nft ', async() => {
+  it ('Approves nft ', async() => {
     const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
     const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
     const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });

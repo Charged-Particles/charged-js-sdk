@@ -941,7 +941,7 @@ export default class NftService extends BaseService {
   }
 
   /**
-   * Gets current approved address fro NFT.
+   * Gets current approved address from NFT.
    * 
    * @memberof NFT
    *
@@ -956,6 +956,50 @@ export default class NftService extends BaseService {
     return await this.fetchAllNetworks(
       'erc721',
       'getApproved',
+      parameters,
+      this.contractAddress,
+    );
+  }
+
+    /**
+   *  Sets erc1155 approval for all 
+   * 
+   * @memberof NFT
+   *
+   * @return {string} - Address 
+   *
+   */
+     public async setApprovalForAll(operator: string, approved: boolean){
+      const parameters = [
+        operator,
+        approved,
+      ];
+  
+      return await this.fetchAllNetworks(
+        'fungibleERC1155',
+        'setApprovalForAll',
+        parameters,
+        this.contractAddress,
+      );
+    }
+
+     /**
+   *  GEts erc1155 approved
+   * 
+   * @memberof NFT
+   *
+   * @return {string} - Address 
+   *
+   */
+    public async isApprovedForAll(operator: string, approved: boolean){
+    const parameters = [
+      operator,
+      approved,
+    ];
+
+    return await this.fetchAllNetworks(
+      'fungibleERC1155',
+      'setApprovalForAll',
       parameters,
       this.contractAddress,
     );
