@@ -152,22 +152,25 @@ describe('NFT service class', () => {
   });
 
   it.only('Approves erc1155 NFT', async() => {
-    // const apeOwner = '0x447a3c0a6d2aa6e6e2132f69963341469df9d826';
-    // const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
-    // const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
-    // const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', 1);
-    // const approveTx = await nft.approve(signer.address);
-    // await approveTx.wait();
-    // const approvedUser = await nft.getApproved();
-    // expect(approvedUser).toHaveProperty('1.value', signer.address);
     const abi = [
       'function balanceOf(address account, uint256 id) external view returns (uint256)'
     ]
-
+    
+    const nftOwner = '0x52cf48ec3485c2f1312d9f1f1ddd3fca9cc232e3';
     const contract = new ethers.Contract('0xa755c08a422434C480076c80692d9aEe67bCea2B', abi, ethers.provider);
-    const balanceOf = await contract.balanceOf('0x52cf48ec3485c2f1312d9f1f1ddd3fca9cc232e3', 1);
-
+    const balanceOf = await contract.balanceOf(nftOwner, 1);
     expect(balanceOf.toNumber()).toBe(3577);
-    console.log(balanceOf);
+    
+    // grant approval
+    const impersonatedSigner = await ethers.getImpersonatedSigner(nftOwner);
+    const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
+
+    const nft = charged.NFT('0xa755c08a422434C480076c80692d9aEe67bCea2B', 1);
+    const approveTx = await nft.setApprovalForAll(signer.address, true);
+    await approveTx.wait();
+
+    // Check permission
+    const approvedUser = await nft.isApprovedForAll(nftOwner, signer.address);
+    expect(approvedUser).toHaveProperty('1.value', true);
   });
 });

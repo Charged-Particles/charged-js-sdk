@@ -969,15 +969,23 @@ export default class NftService extends BaseService {
    * @return {string} - Address 
    *
    */
-     public async setApprovalForAll(operator: string, approved: boolean){
+     public async setApprovalForAll(
+        operator: string,
+        approved: boolean,
+        chainId?: number
+      ): Promise<ContractTransaction> {
+      const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+      await this.bridgeNFTCheck(signerNetwork);
+
       const parameters = [
         operator,
         approved,
       ];
   
-      return await this.fetchAllNetworks(
+      return await this.writeContract(
         'fungibleERC1155',
         'setApprovalForAll',
+        signerNetwork,
         parameters,
         this.contractAddress,
       );
@@ -991,15 +999,15 @@ export default class NftService extends BaseService {
    * @return {string} - Address 
    *
    */
-    public async isApprovedForAll(operator: string, approved: boolean){
+    public async isApprovedForAll(account: string, operator: string){
     const parameters = [
+      account,
       operator,
-      approved,
     ];
 
     return await this.fetchAllNetworks(
       'fungibleERC1155',
-      'setApprovalForAll',
+      'isApprovedForAll',
       parameters,
       this.contractAddress,
     );
