@@ -151,7 +151,7 @@ describe('NFT service class', () => {
     expect(approvedUser).toHaveProperty('1.value', signer.address);
   });
 
-  it.only('Approves erc1155 NFT', async() => {
+  it ('Approves erc1155 NFT', async() => {
     const abi = [
       'function balanceOf(address account, uint256 id) external view returns (uint256)'
     ]
