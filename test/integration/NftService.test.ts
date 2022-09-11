@@ -140,7 +140,7 @@ describe('NFT service class', () => {
     expect(ownerOfAfterTransfer).toHaveProperty('1.value', signer.address);
   });
 
-  it ('Approves nft ', async() => {
+  it ('Approves erc721 NFT ', async() => {
     const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
     const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
     const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
@@ -149,5 +149,25 @@ describe('NFT service class', () => {
     await approveTx.wait();
     const approvedUser = await nft.getApproved();
     expect(approvedUser).toHaveProperty('1.value', signer.address);
+  });
+
+  it.only('Approves erc1155 NFT', async() => {
+    // const apeOwner = '0x447a3c0a6d2aa6e6e2132f69963341469df9d826';
+    // const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
+    // const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
+    // const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', 1);
+    // const approveTx = await nft.approve(signer.address);
+    // await approveTx.wait();
+    // const approvedUser = await nft.getApproved();
+    // expect(approvedUser).toHaveProperty('1.value', signer.address);
+    const abi = [
+      'function balanceOf(address account, uint256 id) external view returns (uint256)'
+    ]
+
+    const contract = new ethers.Contract('0xa755c08a422434C480076c80692d9aEe67bCea2B', abi, ethers.provider);
+    const balanceOf = await contract.balanceOf('0x52cf48ec3485c2f1312d9f1f1ddd3fca9cc232e3', 1);
+
+    expect(balanceOf.toNumber()).toBe(3577);
+    console.log(balanceOf);
   });
 });
