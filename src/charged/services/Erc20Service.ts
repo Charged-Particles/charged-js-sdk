@@ -1,5 +1,5 @@
 import BaseService from './baseService';
-import { 
+import {
   ChargedState,
 } from '../../types';
 
@@ -23,5 +23,24 @@ export default class Erc20Service extends BaseService {
     this.contractAddress = contractAddress;
   }
 
+  /**
+ * Returns your account's balance of a given ERC20 token.
+ *
+ * @param {string} account
+ * @returns {number} The user account's token balance, in base units (eg. 1000000000000000000 wei)
+ *
+ */
 
+  public async balanceOf(account: string) {
+    const parameters = [
+      account
+    ];
+
+    return await this.fetchAllNetworks(
+      'ionx',
+      'balanceOf',
+      parameters,
+      this.contractAddress,
+    );
+  };
 }
