@@ -30,7 +30,6 @@ export default class Erc20Service extends BaseService {
  * @returns {number} The user account's token balance, in base units (eg. 1000000000000000000 wei)
  *
  */
-
   public async balanceOf(account: string) {
     const parameters = [
       account
@@ -43,4 +42,40 @@ export default class Erc20Service extends BaseService {
       this.contractAddress,
     );
   };
+
+  public async allowance(owner: string, spender: string) {
+    const parameters = [
+      owner,
+      spender,
+    ];
+
+    return await this.fetchAllNetworks(
+      'ionx',
+      'allowance',
+      parameters,
+      this.contractAddress,
+    );
+  };
+
+  public async approve(
+    account: string,
+    amount: number,
+    chainId?: number
+  ) {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    const parameters = [
+      account,
+      amount,
+    ];
+
+    return await this.writeContract(
+      'ionx',
+      'approve',
+      signerNetwork,
+      parameters,
+      this.contractAddress,
+    );
+
+  };
+
 }
