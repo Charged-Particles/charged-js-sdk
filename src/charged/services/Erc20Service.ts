@@ -1,3 +1,4 @@
+import { BigNumberish } from 'ethers';
 import BaseService from './baseService';
 import {
   ChargedState,
@@ -59,7 +60,7 @@ export default class Erc20Service extends BaseService {
 
   public async approve(
     account: string,
-    amount: number,
+    amount: BigNumberish,
     chainId?: number
   ) {
     const signerNetwork = await this.getSignerConnectedNetwork(chainId);
@@ -75,7 +76,6 @@ export default class Erc20Service extends BaseService {
       parameters,
       this.contractAddress,
     );
-
   };
 
 }
