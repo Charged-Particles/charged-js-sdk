@@ -43,12 +43,14 @@ describe('NFT service class', () => {
     expect(allowanceBalance.toString()).toEqual('100000000');
   });
 
-  it ('Gets data of two chains', async () => {
+  it.only ('Gets data of two chains', async () => {
     const linkMumbaiAddress = '0x326c977e6efc84e512bb9c30f76e30c160ed06fb';
     const charged = new Charged({providers: [{ network: 1, service: { 'alchemy': alchemyMainnetKey }}, { network: 80001, service: { 'alchemy': alchemyMumbaiKey }}]});
     const link = charged.erc20(linkMumbaiAddress);
 
     const allowance = await link.allowance(signer.address, '0x51f845af34c60499a1056FCDf47BcBC681A0fA39');
-    console.log(allowance[80001].value.toString(), allowance);
+
+    const allowanceBalance = _.get(allowance, '80001.value');
+    expect(allowanceBalance.toString()).toEqual('39614081256132168796771975168');
   });
 });
