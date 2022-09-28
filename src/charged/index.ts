@@ -91,7 +91,7 @@ export default class Charged {
     this.utils = new UtilsService(this.state);
   }
 
-  public NFT(contractAddress: string, tokenId: number) {
+  public NFT(contractAddress: string, tokenId: string) {
     return new NftService(this.state, contractAddress, tokenId);
   }
 
