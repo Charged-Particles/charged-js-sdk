@@ -25,7 +25,9 @@ export default class BaseService {
     const provider = providers[network] ?? providers['external'];
     const address = contractAddress ?? getAddress(network, contractName);
 
-    if (!this.contractInstances[action][address]) {
+    const contractUuid = address.concat(String(network));
+
+    if (!this.contractInstances[action][contractUuid]) {
 
       if (action === 'read') {
         const requestedContract = new ethers.Contract(
@@ -34,7 +36,7 @@ export default class BaseService {
           provider
         );
 
-        this.contractInstances[action][address] = requestedContract;
+        this.contractInstances[action][contractUuid] = requestedContract;
 
       } else if (action === 'write') {
         if (!signer && !providers['external']) { throw new Error('Trying to write with no signer') };
@@ -48,11 +50,11 @@ export default class BaseService {
           writeProvider
         );
 
-        this.contractInstances[action][address] = requestedContract;
+        this.contractInstances[action][contractUuid] = requestedContract;
       }
     }
 
-    return this.contractInstances[action][address];
+    return this.contractInstances[action][contractUuid];
   }
 
   public async fetchAllNetworks(
