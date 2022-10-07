@@ -173,4 +173,29 @@ describe('NFT service class', () => {
     const approvedUser = await nft.isApprovedForAll(nftOwner, signer.address);
     expect(approvedUser).toHaveProperty('1.value', true);
   });
+
+  it.only ('Transfer an 1155', async() => {
+    const abi = [
+      'function balanceOf(address account, uint256 id) external view returns (uint256)'
+    ]
+    
+    const nftOwner = '0x52cf48ec3485c2f1312d9f1f1ddd3fca9cc232e3';
+    const nftReceiver = '0x2e4f5cf824370a47C4DBD86281d3875036A30534';
+    const contract = new ethers.Contract('0xa755c08a422434C480076c80692d9aEe67bCea2B', abi, ethers.provider);
+    const balanceOf = await contract.balanceOf(nftOwner, 1);
+
+    expect(balanceOf.toNumber()).toBe(3577);
+    
+    // grant approval
+    const impersonatedSigner = await ethers.getImpersonatedSigner(nftOwner);
+    const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
+
+    const nft = charged.NFT('0xa755c08a422434C480076c80692d9aEe67bCea2B', 1);
+    const approveTx = await nft.erc1155SafeTransfer(impersonatedSigner.address, nftReceiver, 5);
+    console.log(await approveTx.wait());
+
+    // Check permission
+    // const approvedUser = await nft.isApprovedForAll(nftOwner, signer.address);
+    // expect(approvedUser).toHaveProperty('1.value', true); });
+  })
 });
