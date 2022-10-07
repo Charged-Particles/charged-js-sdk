@@ -122,6 +122,17 @@ describe('NFT service class', () => {
     expect(ownerOf).toHaveProperty('1.value','0x0a2e95EbA92C86b617c36A8A73d3913F279F1CDE');
   });
 
+  it ('Approves erc721 NFT ', async() => {
+    const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
+    const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
+    const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
+    const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', 1);
+    const approveTx = await nft.approve(signer.address);
+    await approveTx.wait();
+    const approvedUser = await nft.getApproved();
+    expect(approvedUser).toHaveProperty('1.value', signer.address);
+  });
+
   it ('Mint and transfer an NFT', async() => {
     // Impersonate nft owner
     const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
@@ -138,17 +149,6 @@ describe('NFT service class', () => {
 
     const ownerOfAfterTransfer = await nft.ownerOf();
     expect(ownerOfAfterTransfer).toHaveProperty('1.value', signer.address);
-  });
-
-  it ('Approves erc721 NFT ', async() => {
-    const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
-    const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
-    const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
-    const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', 1);
-    const approveTx = await nft.approve(signer.address);
-    await approveTx.wait();
-    const approvedUser = await nft.getApproved();
-    expect(approvedUser).toHaveProperty('1.value', signer.address);
   });
 
   it ('Approves erc1155 NFT', async() => {
