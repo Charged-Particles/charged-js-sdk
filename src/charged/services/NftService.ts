@@ -1,6 +1,6 @@
 import { BigNumberish, ContractTransaction } from 'ethers';
 import BaseService from './baseService';
-import { 
+import {
   ChargedState,
   ManagerId,
   defaultManagerId,
@@ -123,7 +123,7 @@ export default class NftService extends BaseService {
    * @return {BigNumber}                - The amount of interest generated.
    *
    */
-  public async getCharge( assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
+  public async getCharge(assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
     walletManagerCheck(walletManagerId);
     const parameters = [
       this.contractAddress,
@@ -144,7 +144,7 @@ export default class NftService extends BaseService {
    * @return {BigNumber}                - The amount of LP tokens that have been generated.
    *
    */
-  public async getKinectics( assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
+  public async getKinectics(assetToken: string, walletManagerId: ManagerId = defaultManagerId) {
     walletManagerCheck(walletManagerId);
     const parameters = [
       this.contractAddress,
@@ -850,6 +850,201 @@ export default class NftService extends BaseService {
       'setCreatorAnnuitiesRedirect',
       signerNetwork,
       parameters
+    );
+  }
+
+  /**
+  * Wrapper for transfer from ERC721 method 
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} addressFrom - NFT owner.
+  * @param {string} addressTo - Receivers account.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} - Details from the transaction.
+  * 
+  */
+  public async transferFrom(
+    addressFrom: string,
+    addressTo: string,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      addressFrom,
+      addressTo,
+      this.tokenId,
+    ];
+
+    return await this.writeContract(
+      'erc721',
+      'transferFrom',
+      signerNetwork,
+      parameters,
+      this.contractAddress,
+    );
+  }
+
+  /**
+  * Approve an address for its usage.
+  * ERC721 method. 
+  * 
+  * @memberof NFT
+  * 
+  * @param {string} addressTo - Approved account.
+  * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+  * @return {Promise<ContractTransaction>} - Details from the transaction.
+  * 
+  */
+  public async approve(
+    addressTo: string,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      addressTo,
+      this.tokenId,
+    ];
+
+    return await this.writeContract(
+      'erc721',
+      'approve',
+      signerNetwork,
+      parameters,
+      this.contractAddress,
+    );
+  }
+
+  /**
+   * Gets current owner of the NFT. 
+   * 
+   * @memberof NFT
+   *
+   * @return {string} - Address 
+   *
+   */
+  public async ownerOf() {
+    const parameters = [
+      this.tokenId,
+    ];
+
+    return await this.fetchAllNetworks(
+      'erc721',
+      'ownerOf',
+      parameters,
+      this.contractAddress,
+    );
+  }
+
+  /**
+   * Gets current approved address from NFT.
+   * 
+   * @memberof NFT
+   *
+   * @return {string} - Address 
+   *
+   */
+  public async getApproved() {
+    const parameters = [
+      this.tokenId,
+    ];
+
+    return await this.fetchAllNetworks(
+      'erc721',
+      'getApproved',
+      parameters,
+      this.contractAddress,
+    );
+  }
+
+  /**
+ *  Sets erc1155 approval for all 
+ * 
+ * @memberof NFT
+ *
+ * @return {string} - Address 
+ *
+ */
+  public async setApprovalForAll(
+    operator: string,
+    approved: boolean,
+    chainId?: number
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      operator,
+      approved,
+    ];
+
+    return await this.writeContract(
+      'fungibleERC1155',
+      'setApprovalForAll',
+      signerNetwork,
+      parameters,
+      this.contractAddress,
+    );
+  }
+
+  /**
+ *  Sets erc1155 approval for all 
+ * 
+ * @memberof NFT
+ *
+ * @return {string} - Address 
+ *
+ */
+  public async erc1155SafeTransfer(
+    addressFrom: string,
+    addressTo: string,
+    amount: number,
+    chainId?: number,
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      addressFrom,
+      addressTo,
+      this.tokenId,
+      amount,
+      '0x'
+    ];
+
+    return await this.writeContract(
+      'fungibleERC1155',
+      'safeTransferFrom',
+      signerNetwork,
+      parameters,
+      this.contractAddress,
+    );
+  }
+
+
+  /**
+*  GEts erc1155 approved
+* 
+* @memberof NFT
+*
+* @return {string} - Address 
+*
+*/
+  public async isApprovedForAll(account: string, operator: string) {
+    const parameters = [
+      account,
+      operator,
+    ];
+
+    return await this.fetchAllNetworks(
+      'fungibleERC1155',
+      'isApprovedForAll',
+      parameters,
+      this.contractAddress,
     );
   }
 }

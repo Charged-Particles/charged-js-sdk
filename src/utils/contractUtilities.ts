@@ -4,6 +4,8 @@ import ChargedSettings from '@charged-particles/protocol-subgraph/abis/ChargedSe
 import ChargedManagers from '@charged-particles/protocol-subgraph/abis/ChargedManagers.json';
 import ChargedState from '@charged-particles/protocol-subgraph/abis/ChargedState.json';
 import ProtonB from '@charged-particles/protocol-subgraph/abis/ProtonB.json';
+import fungibleERC1155 from '@charged-particles/protocol-subgraph/abis/ERC1155.json';
+import ERC20 from '@charged-particles/protocol-subgraph/abis/ERC20.json';
 
 // Types
 import { NetworkContractLocations, ContractLocation } from '../types/interfaces';
@@ -28,7 +30,9 @@ export const getAbi = (contractName: string) => {
     case 'chargedState': return ChargedState;
     case 'chargedSettings': return ChargedSettings;
     case 'chargedManagers': return ChargedManagers;
+    case 'fungibleERC1155': return fungibleERC1155;
     case 'erc721': return ProtonB;
+    case 'ionx': return ERC20;
     default: throw `${contractName} is not valid in getAbi`;
   }
 }

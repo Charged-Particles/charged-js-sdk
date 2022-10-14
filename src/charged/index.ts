@@ -4,6 +4,7 @@ import { NetworkProvider, ChargedState, ConfigurationParameters } from "../types
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
+import Erc20service from "./services/Erc20Service";
 
 /**
  * Charged class constructor object parameter.
@@ -92,6 +93,10 @@ export default class Charged {
 
   public NFT(contractAddress: string, tokenId: number) {
     return new NftService(this.state, contractAddress, tokenId);
+  }
+
+  public erc20(contractAddress: string) {
+    return new Erc20service(this.state, contractAddress);
   }
 
   public getState() {

@@ -25,7 +25,9 @@ export default class BaseService {
     const provider = providers[network] ?? providers['external'];
     const address = contractAddress ?? getAddress(network, contractName);
 
-    if (!this.contractInstances[action][address]) {
+    const contractUuid = address.concat(String(network));
+
+    if (!this.contractInstances[action][contractUuid]) {
 
       if (action === 'read') {
         const requestedContract = new ethers.Contract(
@@ -34,7 +36,7 @@ export default class BaseService {
           provider
         );
 
-        this.contractInstances[action][address] = requestedContract;
+        this.contractInstances[action][contractUuid] = requestedContract;
 
       } else if (action === 'write') {
         if (!signer && !providers['external']) { throw new Error('Trying to write with no signer') };
@@ -48,11 +50,11 @@ export default class BaseService {
           writeProvider
         );
 
-        this.contractInstances[action][address] = requestedContract;
+        this.contractInstances[action][contractUuid] = requestedContract;
       }
     }
 
-    return this.contractInstances[action][address];
+    return this.contractInstances[action][contractUuid];
   }
 
   public async fetchAllNetworks(
@@ -61,47 +63,53 @@ export default class BaseService {
     params: any[] = [],
     contractAddress?: string
   ) {
-    const { providers } = this.state;
-
-    let transactions = [];
-    let networks: (number)[] = [];
-
-    for (let network in providers) {
-      // Only query contracts that exist on network
-      if (contractAddress) {
-        const contractExistsOnNetwork = await providers[network].getCode(contractAddress);
-        if (contractExistsOnNetwork === '0x') { continue };
+    try {
+      const { providers } = this.state;
+  
+      let transactions = [];
+      let networks: (number)[] = [];
+  
+      for (let network in providers) {
+        // Only query contracts that exist on network
+        if (contractAddress) {
+          const contractExistsOnNetwork = await providers[network].getCode(contractAddress);
+          if (contractExistsOnNetwork === '0x') { continue };
+        }
+  
+        if (network === 'external') {
+          const { chainId } = await providers['external'].getNetwork()
+          network = chainId;
+        }
+  
+        networks.push(Number(network));
+        transactions.push(
+          this.readContract(
+            contractName,
+            methodName,
+            Number(network),
+            params,
+            contractAddress
+          )
+        );
       }
+  
+      const responses = await Promise.allSettled(transactions);
+      const formattedResponse: { [number: number]: { value: any, status: string } } = {};
+  
+      responses.forEach((response, index) => {
+        if (response.status === "fulfilled") {
+          formattedResponse[networks[index]] = { value: response.value, status: 'fulfilled' };
+        } else {
+          formattedResponse[networks[index]] = { value: response.reason, status: 'rejected' };
+        }
+      });
+  
+      return formattedResponse;
 
-      if (network === 'external') {
-        const { chainId } = await providers['external'].getNetwork()
-        network = chainId;
-      }
-
-      networks.push(Number(network));
-      transactions.push(
-        this.readContract(
-          contractName,
-          methodName,
-          Number(network),
-          params,
-          contractAddress
-        )
-      );
+    } catch (e) {
+      console.log(e);
+      return {};
     }
-
-    const responses = await Promise.allSettled(transactions);
-    const formattedResponse: { [number: number]: { value: any, status: string } } = {};
-
-    responses.forEach((response, index) => {
-      if (response.status === "fulfilled") {
-        formattedResponse[networks[index]] = { value: response.value, status: 'fulfilled' };
-      } else {
-        formattedResponse[networks[index]] = { value: response.reason, status: 'rejected' };
-      }
-    });
-
-    return formattedResponse;
   }
 
   public async writeContract(
