@@ -6,7 +6,11 @@ async function main() {
   const charged = new Charged({ providers: ethers.provider, signer });
   const ionx = charged.erc20(mainnetAddresses.ionx.address);
 
-  const approveTx = await ionx.approve(signer.address, hre.ethers.utils.parseUnits('1'));
+  // Approve token usage to charge particles contract
+  const approveTx = await ionx.approve(
+    mainnetAddresses.chargedParticles.address, 
+    hre.ethers.utils.parseUnits('1')
+  );
   await approveTx.wait();
 
   const particleBAddress = mainnetAddresses.protonB.address;
