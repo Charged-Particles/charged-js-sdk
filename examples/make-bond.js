@@ -6,24 +6,21 @@ import Charged,  {
 async function main() {
   const signer = await hre.ethers.getSigner();
 
-  const charged = new Charged({ providers: ethers.provider, signer });
-  const nft = charged.NFT(mainnetAddresses.protonB.address, 1);
-
-  // Mint proton
+  // Initialize erc721 contract
   const erc721Contract = new ethers.Contract(
     mainnetAddresses.protonB.address, 
     protonBAbi, 
     signer
   );
 
-  // get proton id
-  const protonId = await erc721Contract.callStatic.createBasicProton(
-    signer.address,
-    signer.address,
-    'tokenUri.com',
+  // Get bond proton id
+  const bondProtonId = await erc721Contract.callStatic.createBasicProton(
+    signer.address, // creator
+    signer.address, // receiver
+    'tokenUri.com', // tokenMetaUri
   );
 
-  // mint proton
+  // Mint proton to be deposited
   const txCreateProton = await erc721Contract.createBasicProton(
     myWallet.address,
     myWallet.address,
@@ -31,19 +28,23 @@ async function main() {
   );
   await txCreateProton.wait();
   
-  // Give Charged Particle protocol approval 
+  // Give Charged Particle protocol approval over bond proton nft.
   const txApprove = await erc721Contract.approve(
     mainnetAddresses.chargedParticles.address, 
-    protonId.toString()
+    bondProtonId.toString()
   );
-
   await txApprove.wait();
-  
+
+  // Initialize charged SDK
+  const charged = new Charged({ providers: ethers.provider, signer });
+  // Nft being deposited into.
+  const nft = charged.NFT(mainnetAddresses.protonB.address, 1); 
+
   // Create bond
   const txBond = await nft.bond(
     mainnetAddresses.protonB.address,
-    protonId,
-    '1',
+    bondProtonId, 
+    '1', // amount 
   );
 
   await txBond.wait();
