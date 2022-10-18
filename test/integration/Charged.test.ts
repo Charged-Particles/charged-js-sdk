@@ -27,8 +27,8 @@ const providers = [
     service: { 'alchemy': alchemyMainnetKey }
   },
   {
-    network: 42,
-    service: { 'alchemy': alchemyMumbaiKey }
+    network: 5,
+    service: { 'alchemy': alchemyGoerliKey }
   }
 ];
 const localProvider = [
@@ -53,7 +53,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('42');
   });
 
-  it('Initializes NFT service', async () => {
+  it ('Initializes NFT service', async () => {
     const charged = new Charged({ providers });
 
     const particleBAddress = '0x04d572734006788B646ce35b133Bdf7160f79995';
@@ -64,7 +64,7 @@ describe('Charged class', () => {
     expect(nft.contractAddress).toEqual(particleBAddress);
     expect(nft.tokenId).toEqual(tokenId);
 
-    const tokenURI = await nft.tokenURI()
+    const tokenURI = await nft.tokenURI();
 
     expect(tokenURI).toEqual({
       "1": { value: "https://ipfs.infura.io/ipfs/QmT5ZjLAZevefv3CMiLAD1p1CeoTSc6EWbGY8EmzXaFt85", status: 'fulfilled' },
