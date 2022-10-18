@@ -51,6 +51,6 @@ describe('NFT service class', () => {
     const allowance = await link.allowance(signer.address, '0x51f845af34c60499a1056FCDf47BcBC681A0fA39');
 
     const allowanceBalance = _.get(allowance, '80001.value');
-    expect(allowanceBalance.toString()).toEqual('39614081256132168796771975168');
+    expect(allowanceBalance.toString()).toEqual('39614081253132168796771975168');
   });
 });
