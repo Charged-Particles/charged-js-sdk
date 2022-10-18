@@ -27,8 +27,8 @@ export default class Erc20Service extends BaseService {
   /**
  * Returns your account's balance of a given ERC20 token.
  *
- * @param {string} account
- * @returns {number} The user account's token balance, in base units (eg. 1000000000000000000 wei)
+ * @param {string} account - Address
+ * @returns {BigNumber}
  *
  */
   public async balanceOf(account: string) {
@@ -44,6 +44,13 @@ export default class Erc20Service extends BaseService {
     );
   };
 
+  /**
+ * Get your account's allowance of a given ERC20 token.
+ *
+ * @param {string} account - Address
+ * @returns {BigNumber} 
+ *
+ */
   public async allowance(owner: string, spender: string) {
     const parameters = [
       owner,
@@ -58,6 +65,15 @@ export default class Erc20Service extends BaseService {
     );
   };
 
+  /**
+ *   
+ *
+ * @param {string} account - Address
+ * @param {BigNumberish} amount 
+ * @param {number} [chainId] 
+ * @returns {Promise<ContractTransaction>}
+ *
+ */
   public async approve(
     account: string,
     amount: BigNumberish,
