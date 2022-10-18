@@ -1,4 +1,4 @@
-import Charged,  { 
+import Charged, { 
   protonBAbi, 
   mainnetAddresses 
 } from '@charged-particles/charged-js-sdk';
