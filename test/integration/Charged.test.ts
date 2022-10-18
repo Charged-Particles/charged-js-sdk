@@ -40,7 +40,6 @@ const localProvider = [
 const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
 const daiMainnetAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const tokenId = 43;
-const network = 42;
 
 describe('Charged class', () => {
 
@@ -165,7 +164,7 @@ describe('Charged class', () => {
     expect(allStateAddresses).toHaveProperty('137', { "status": "fulfilled", "value": "0x9c00b8CF03f58c0420CDb6DE72E27Bf11964025b" });
   });
 
-  it('Should fetch from Kovan Infura using project secret', async () => {
+  it('Should fetch from Goerli Infura using project secret', async () => {
     const kovanProvider = [{ network: 5, service: { infura: infuraProjectId } }];
     const charged = new Charged({ providers: kovanProvider })
     const allStateAddresses = await charged.utils.getStateAddress();
@@ -238,7 +237,7 @@ describe('Charged class', () => {
         '0xFf795577d9AC8bD7D90Ee22b6C1703490b6512FD',
         BigNumber.from(10),
         'aave.B',
-        network
+        42,
       );
     }).rejects.toThrow('Trying to write with no signer');
   });
