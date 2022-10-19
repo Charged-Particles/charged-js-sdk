@@ -160,7 +160,6 @@ export default class NftService extends BaseService {
    * 
    * @memberof NFT
    *
-   * @return {BigNumber}                - The total amount of ERC721 tokens that are held within the Particle.
    * @param {string} [basketManagerId]  - The ID of the BasketManager to check.
    * @return {BigNumber}                - The NFT balance held by the Particle.
    *
@@ -297,7 +296,7 @@ export default class NftService extends BaseService {
   * const USDCoinAddress = '0xUSDC';
   * const result = await nft.energize(
   *   USDCoinAddress,
-  *   ethers.utils.parseUnits("20", 6),
+  *   ethers.utils.parseUnits("20", 6), // 6 is the the decimals because USDC uses 6.
   *   'aave.B',
   * );
 

@@ -18,7 +18,7 @@ async function main() {
   const nft = charged.NFT(particleBAddress, tokenId);
 
   const txEnergize = await nft.energize(
-    daiMainnetAddress,
+    mainnetAddresses.ionx.address,
     hre.ethers.utils.BigNumber.from(1),
     'aave.B',
   );
