@@ -14,7 +14,7 @@ import {
 *
 * Returns a wrapped token with charged particle methods.
 * @param {string} contractAddress
-* @param {number} tokenId
+* @param {string} tokenId
 * @return {NftService}  Instance of the NFT connected to the charged particle protocol
 * 
 * @example
@@ -28,12 +28,12 @@ import {
 export default class NftService extends BaseService {
   public contractAddress: string;
 
-  public tokenId: number;
+  public tokenId: string;
 
   constructor(
     state: ChargedState,
     contractAddress: string,
-    tokenId: number,
+    tokenId: string,
   ) {
     super(state);
     this.contractAddress = contractAddress;

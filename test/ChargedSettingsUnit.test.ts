@@ -15,7 +15,7 @@ const providersKovan = [
 ];
 const creatorAddy = '0x277BFc4a8dc79a9F194AD4a83468484046FAFD3A';
 const tokenAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-const tokenId = 85;
+const tokenId = '85';
 
 const {readContractMock, writeContractMock} = contractMocks(jest);
 
