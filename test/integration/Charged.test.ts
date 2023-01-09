@@ -40,7 +40,7 @@ const localProvider = [
 
 const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
 const daiMainnetAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
-const tokenId = 43;
+const tokenId = '43';
 const network = 42;
 
 describe('Charged class', () => {
@@ -57,7 +57,7 @@ describe('Charged class', () => {
     const charged = new Charged({ providers });
 
     const particleBAddress = '0x04d572734006788B646ce35b133Bdf7160f79995';
-    const tokenId = 4;
+    const tokenId = '4';
 
     const nft = charged.NFT(particleBAddress, tokenId);
 
@@ -275,7 +275,7 @@ describe('Charged class', () => {
   it('Bond an erc721 into protonB.', async () => {
     const charged = new Charged({ providers: ethers.provider, signer: myWallet });
 
-    const nft = charged.NFT(mainnetAddresses.protonB.address, 1);
+    const nft = charged.NFT(mainnetAddresses.protonB.address, '1');
 
     const bondCountBeforeDeposit = await nft.getBonds('generic.B');
     const bondCountBeforeDepositValue = bondCountBeforeDeposit[1].value;
@@ -328,7 +328,7 @@ describe('Charged class', () => {
     expect(ownerOf).toBe(myWallet.address);
 
     const charged = new Charged({ providers: ethers.provider, signer: myWallet });
-    const nft = charged.NFT(mainnetAddresses.proton.address, 458);
+    const nft = charged.NFT(mainnetAddresses.proton.address, '458');
   
     const bondBalanceBeforeBreak = await nft.getBonds('generic');
     expect(bondBalanceBeforeBreak[1].value).toEqual(ethers.BigNumber.from(2));
@@ -350,7 +350,7 @@ describe('Charged class', () => {
   it.skip('Breaks an 1155 bond from protonB and bond back', async () => {
     const amountToRemove = 2;
     const charged = new Charged({ providers: localProvider, signer: myWallet });
-    const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', 49);
+    const nft = charged.NFT('0xd1bce91a13089b1f3178487ab8d0d2ae191c1963', '49');
 
     const bondCountBeforeBreak = await nft.getBonds('generic.B');
     const bondCountBeforeBreakValue = bondCountBeforeBreak[42].value;
@@ -409,7 +409,7 @@ describe('Charged class', () => {
     const charged = new Charged({ providers: ethers.provider, signer: myWallet });
 
     const particleBAddress = mainnetAddresses.protonB.address;
-    const tokenId = 1;
+    const tokenId = '1';
     const nft = charged.NFT(particleBAddress, tokenId);
 
     const txEnergize = await nft.energize(

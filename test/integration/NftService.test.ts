@@ -23,7 +23,7 @@ describe('NFT service class', () => {
     }
   ];
 
-  const tokenId = 2;
+  const tokenId = '2';
   const network = 1;
 
   it('get tokens across more than one network', async () => {
@@ -62,7 +62,7 @@ describe('NFT service class', () => {
     const charged = new Charged({ providers: externalWeb3Provider });
 
     const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-    const tokenId = 43;
+    const tokenId = '43';
     const network = 42;
 
     const nft = charged.NFT(particleBAddress, tokenId);
@@ -80,7 +80,7 @@ describe('NFT service class', () => {
   it('Sets nonce to 1 for transaction', async () => {
     const userSetting = { transactionOverride: { nonce: 1 }, sdk: {NftBridgeCheck: true} }
     const particleBAddress = '0x1CeFb0E1EC36c7971bed1D64291fc16a145F35DC';
-    const tokenId = 2;
+    const tokenId = '2';
     const network = 1;
 
     const charged = new Charged({ providers: ethers.provider, signer, config: userSetting });
@@ -128,7 +128,7 @@ describe('NFT service class', () => {
     const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
 
     const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
-    const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', 1);
+    const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', '1');
 
     const ownerOfBeforeTransfer = await nft.ownerOf();
     expect(ownerOfBeforeTransfer).toHaveProperty('1.value','0x46EFbAedc92067E6d60E84ED6395099723252496');
@@ -144,7 +144,7 @@ describe('NFT service class', () => {
     const apeOwner = '0x46EFbAedc92067E6d60E84ED6395099723252496';
     const impersonatedSigner = await ethers.getImpersonatedSigner(apeOwner);
     const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
-    const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', 1);
+    const nft = charged.NFT('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', '1');
     const approveTx = await nft.approve(signer.address);
     await approveTx.wait();
     const approvedUser = await nft.getApproved();
@@ -165,7 +165,7 @@ describe('NFT service class', () => {
     const impersonatedSigner = await ethers.getImpersonatedSigner(nftOwner);
     const charged = new Charged({ providers: ethers.provider, signer: impersonatedSigner });
 
-    const nft = charged.NFT('0xa755c08a422434C480076c80692d9aEe67bCea2B', 1);
+    const nft = charged.NFT('0xa755c08a422434C480076c80692d9aEe67bCea2B', '1');
     const approveTx = await nft.setApprovalForAll(signer.address, true);
     await approveTx.wait();
 
