@@ -1,6 +1,5 @@
 {
     "configurations": [
-    
         {
             "type": "node-terminal",
             "name": "Run Script: NFTservice test",
@@ -13,6 +12,13 @@
             "name": "Run Script: Charged test",
             "request": "launch",
             "command": "yarn run test Charged.test.ts --no-cache",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "node-terminal",
+            "name": "Run Script: ERC20 Service",
+            "request": "launch",
+            "command": "yarn run test test/integration/Erc20Service.test.ts --no-cache",
             "cwd": "${workspaceFolder}"
         }
     ]
