@@ -40,7 +40,6 @@ const localProvider = [
 const particleBAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
 const daiMainnetAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 const tokenId = '43';
-const network = 42;
 
 describe('Charged class', () => {
 
