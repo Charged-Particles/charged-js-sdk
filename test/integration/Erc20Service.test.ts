@@ -14,6 +14,7 @@ import {
 
 describe('NFT service class', () => {
   const signer = getWallet();
+  const bigNumberZero = ethers.BigNumber.from(0);
 
   it('Gets data of two chains', async () => {
     const linkMumbaiAddress = '0x326c977e6efc84e512bb9c30f76e30c160ed06fb';
@@ -28,7 +29,7 @@ describe('NFT service class', () => {
 
     const allowance = await link.allowance(signer.address, '0x51f845af34c60499a1056FCDf47BcBC681A0fA39');
 
-    const allowanceBalance = _.get(allowance, '80001.value');
+    const allowanceBalance = _.get(allowance, '80001.value', bigNumberZero);
     expect(allowanceBalance.toString()).toEqual('39614081253132168796771975168');
   });
 
@@ -40,7 +41,7 @@ describe('NFT service class', () => {
     const whaleBalanceResponse = await ionx.balanceOf(whaleAddress);
     expect(whaleBalanceResponse).toHaveProperty('1.value');
 
-    const whaleBalance = _.get(whaleBalanceResponse, '1.value');
+    const whaleBalance = _.get(whaleBalanceResponse, '1.value', bigNumberZero);
     expect(whaleBalance.toString()).toEqual('46637960330000000000000000');
   });
 
@@ -56,7 +57,7 @@ describe('NFT service class', () => {
 
     const allowanceResponse = await ionx.allowance(whaleAddress, signer.address);
 
-    const allowanceBalance = _.get(allowanceResponse, '1.value');
+    const allowanceBalance = _.get(allowanceResponse, '1.value', bigNumberZero);
     expect(allowanceBalance.toString()).toEqual('100000000');
   });
 });
