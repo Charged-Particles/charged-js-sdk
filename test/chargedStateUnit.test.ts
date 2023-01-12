@@ -15,7 +15,7 @@ const providersKovan = [
 const expectedUnlockBlockNumber = 32174859;
 const walletAddress = '0x277bfc4a8dc79a9f194ad4a83468484046fafd3a';
 const tokenAddress = '0xd1bce91a13089b1f3178487ab8d0d2ae191c1963';
-const tokenId = 78;
+const tokenId = '78';
 
 beforeEach(() => {
   // Clear all instances and calls to constructor and all methods:
