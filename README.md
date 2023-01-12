@@ -1,5 +1,5 @@
 # @charged-aprticles/charged-js-sdk
-Charged Particles Javascript SDK v0.1.7 (beta)
+Charged Particles Javascript SDK v0.1.8 (beta)
 
 ### Table of Contents
 
