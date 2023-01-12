@@ -939,7 +939,7 @@
 
 "@charged-particles/contract-allowlist@https://github.com/Charged-Particles/contract-allowlist.git":
   version "1.0.6"
-  resolved "https://github.com/Charged-Particles/contract-allowlist.git#cd60b79fc06dd54069e409ee11a29e79c85a4028"
+  resolved "https://github.com/Charged-Particles/contract-allowlist.git#7e33aae7a1ea350531e2fba55a9c1f0f5dc2b3c1"
   dependencies:
     typescript "^4.9.4"
 

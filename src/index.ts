@@ -16,7 +16,6 @@ import genericBasketManagerBAbi from '@charged-particles/protocol-subgraph/abis/
 
 // contract-allowlist
 import { allowlist } from '@charged-particles/contract-allowlist/src/allowlist';
-// import allowlist
 
 // networks
 import mainnetAddresses from '@charged-particles/protocol-subgraph/networks/mainnet.json';
