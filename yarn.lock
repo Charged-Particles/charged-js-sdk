@@ -943,10 +943,9 @@
   dependencies:
     typescript "^4.9.4"
 
-"@charged-particles/protocol-subgraph@1.3.20":
-  version "1.3.20"
-  resolved "https://registry.yarnpkg.com/@charged-particles/protocol-subgraph/-/protocol-subgraph-1.3.20.tgz#ad4717b922a214057fec30a77a878c2549d73773"
-  integrity sha512-fcjg/W9MzfjxGB8qHjEXJU7C1UVDm1EMyyJKm7XF3V54prKd8LkJUrI36OpS6fTLixeKHJIaaI/JTwRrw9I0VQ==
+"@charged-particles/protocol-subgraph@https://github.com/Charged-Particles/charged-particles-subgraph":
+  version "1.3.19"
+  resolved "https://github.com/Charged-Particles/charged-particles-subgraph#255bf127203b34833fa0581c390d042699ab34fe"
   dependencies:
     "@graphprotocol/graph-ts" "^0.24.1"
 
