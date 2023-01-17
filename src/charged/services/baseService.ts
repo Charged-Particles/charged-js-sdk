@@ -1,6 +1,7 @@
 import { Contract, ethers } from 'ethers';
 import { ChargedState } from '../../types';
 import { getAbi, getAddress } from '../../utils/contractUtilities';
+import { Multicall } from 'ethereum-multicall';
 export default class BaseService {
   readonly contractInstances: { [action: string]: { [address: string]: Contract } };
 
@@ -119,6 +120,25 @@ export default class BaseService {
     const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
     return requestedContract[methodName](...params, transactionOverride);
   }
+
+  // This is used for the bundleService
+  public async multiWriteContract(
+    network: number,
+    calls: any[] = [],
+  ) {
+    const { providers } = this.state;
+    const contractAddress = getAddress(network, 'chargedParticles');
+    const multicall = new Multicall({ ethersProvider: providers[network], tryAggregate: true });
+
+    return multicall.call({
+      abi: getAbi('chargedParticles'),
+      reference: `${contractAddress}-${calls.length}_calls`,
+      contractAddress,
+      context: { contractAddress },
+      calls,
+    });
+  }
+
 
   public async readContract(
     contractName: string,
