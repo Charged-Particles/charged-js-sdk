@@ -46,8 +46,8 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "@charged-particles/contract-allowlist": "https://github.com/Charged-Particles/contract-allowlist.git",
-    "@charged-particles/protocol-subgraph": "https://github.com/Charged-Particles/charged-particles-subgraph",
+    "@charged-particles/contract-allowlist": "^1.0.6",
+    "@charged-particles/protocol-subgraph": "^1.3.21",
     "@nomiclabs/hardhat-ethers": "^2.1.0",
     "@types/lodash": "^4.14.182",
     "@uniswap/sdk-core": "^3.0.1",
