@@ -2,7 +2,7 @@
   "name": "@charged-particles/charged-js-sdk",
   "description": "Charged Particles - Javascript SDK",
   "author": "Firma Lux, Inc.",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "license": "ISC",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
