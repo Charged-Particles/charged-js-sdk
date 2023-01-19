@@ -1,12 +1,10 @@
 import { ethers, providers, Signer } from "ethers";
 import { SUPPORTED_NETWORKS, getDefaultProviderByNetwork } from "../utils/networkUtilities";
 import { NetworkProvider, ChargedState, ConfigurationParameters } from "../types";
-import { Token } from "./services/BundleService"; // Token Type
 
 import UtilsService from "./services/UtilsService";
 import NftService from "./services/NftService";
 import Erc20service from "./services/Erc20Service";
-import BundleService from "./services/BundleService";
 
 /**
  * Charged class constructor object parameter.
@@ -100,10 +98,6 @@ export default class Charged {
   public erc20(contractAddress: string) {
     return new Erc20service(this.state, contractAddress);
   }
-
-  public bundle(contractAddress: string, tokenId: string, tokens: Token[], chainId: number) {
-    return new BundleService(this.state, contractAddress, tokenId, tokens, chainId);
-  };
 
   public getState() {
     return this.state;
