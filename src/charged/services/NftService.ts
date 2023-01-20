@@ -1024,7 +1024,10 @@ export default class NftService extends BaseService {
  * 
  * @memberof NFT
  *
- * @return {string} - Address 
+ * @param {string} operator
+ * @param {string} approved 
+ * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+ * @returns {Promise<ContractTransaction>}
  *
  */
   public async setApprovalForAll(
@@ -1050,11 +1053,14 @@ export default class NftService extends BaseService {
   }
 
   /**
- *  Sets erc1155 approval for all 
+ * Transfers erc1155 token amount 
  * 
  * @memberof NFT
  *
- * @return {string} - Address 
+ * @param {string} addressFrom
+ * @param {string} addressTo 
+ * @param {number} [chainId] - Optional parameter that allows for the user to specify which network to write to.
+ * @returns {Promise<ContractTransaction>}
  *
  */
   public async erc1155SafeTransfer(
@@ -1083,12 +1089,13 @@ export default class NftService extends BaseService {
     );
   }
 
-
   /**
-*  GEts erc1155 approved
+*  Gets erc1155 approved
 * 
 * @memberof NFT
 *
+* @param {string} account 
+* @param {string} operator 
 * @return {string} - Address 
 *
 */
