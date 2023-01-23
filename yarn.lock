@@ -945,7 +945,7 @@
 
 "@charged-particles/protocol-subgraph@https://github.com/Charged-Particles/charged-particles-subgraph":
   version "1.3.21"
-  resolved "https://github.com/Charged-Particles/charged-particles-subgraph#3052a3fc6f0f89552d8308d7ce116893d5e02956"
+  resolved "https://github.com/Charged-Particles/charged-particles-subgraph#b003548bb51cb7c5e09a00bc664bb28bd75d5f8e"
   dependencies:
     "@graphprotocol/graph-ts" "^0.24.1"
 

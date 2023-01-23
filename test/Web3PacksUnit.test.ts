@@ -2,6 +2,7 @@ import 'dotenv/config';
 import Charged from '../src/index';
 import { getWallet } from '../src/utils/testUtilities';
 import { contractMocks } from '../src/utils/testUtilities';
+import { mumbaiAddresses } from '../src/index';
 
 const { writeContractMock, readContractMock } = contractMocks(jest);
 
@@ -58,4 +59,9 @@ describe('chargedParticles contract test', () => {
       addressListToBeReleased
     ]);
   });
+
+  it ('Gets mumbai address from the graph repo', async() => {
+    expect(mumbaiAddresses.web3pack.address).toEqual('0x70a7336371C0f0e064Bf2BA0B5e9682C20B3ebca');
+  });
 });
+
