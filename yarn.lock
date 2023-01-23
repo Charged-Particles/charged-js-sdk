@@ -937,17 +937,15 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@charged-particles/contract-allowlist@^1.0.6":
+"@charged-particles/contract-allowlist@https://github.com/Charged-Particles/contract-allowlist.git":
   version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@charged-particles/contract-allowlist/-/contract-allowlist-1.0.6.tgz#44381b9ea67759c26b3e04ff609f62a26b01bb4f"
-  integrity sha512-wRXrc9Nsq7rEbpVZqEBjVHBnVeFhK834RhLLFiMQj1UoJ4bG/3GWLMk0DmMT7FoIZWhDC0stGySnVjfzyTVsww==
+  resolved "https://github.com/Charged-Particles/contract-allowlist.git#fd52dd5963d4d64b010816cdd5ebc36852b0dcec"
   dependencies:
     typescript "^4.9.4"
 
-"@charged-particles/protocol-subgraph@^1.3.21":
+"@charged-particles/protocol-subgraph@https://github.com/Charged-Particles/charged-particles-subgraph":
   version "1.3.21"
-  resolved "https://registry.yarnpkg.com/@charged-particles/protocol-subgraph/-/protocol-subgraph-1.3.21.tgz#2914ae5c41c9cf43710290ad53c6ff159a156e2a"
-  integrity sha512-htEXeL2cj8jxjI6FHRwCyjUOX4Ccxl3pflJV6nduoGKUk43ZkhiOMLwXiUJ6UvzrjG89Q7immLnr/J62Hg5YwQ==
+  resolved "https://github.com/Charged-Particles/charged-particles-subgraph#3052a3fc6f0f89552d8308d7ce116893d5e02956"
   dependencies:
     "@graphprotocol/graph-ts" "^0.24.1"
 

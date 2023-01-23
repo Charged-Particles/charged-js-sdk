@@ -40,7 +40,6 @@ export const getAbi = (contractName: string) => {
 }
 
 export const getAddress = (network: number, contractName: string) => {
-  if (contractName === 'web3pack') { return '0x70a7336371C0f0e064Bf2BA0B5e9682C20B3ebca'; }
   const addresses = getImportedContractLocations(network);
   const location = addresses[contractName];
   if(isContractLocation(location)) {
