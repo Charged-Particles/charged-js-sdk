@@ -570,6 +570,65 @@ export default class NftService extends BaseService {
   }
 
   /**
+   * Release all specificed erc20s
+   * 
+   * @param receiver 
+   * @param walletManagerId 
+   * @param addressList 
+   * @param chainId 
+   * @returns 
+   */
+  public async multiRelease(
+    receiver: string,
+    walletManagerId: ManagerId,
+    addressList: { erc20TokenAddresses: string[] },
+    chainId?: number,
+  ): Promise<ContractTransaction> {
+    walletManagerCheck(walletManagerId);
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+    await this.bridgeNFTCheck(signerNetwork);
+
+    const parameters = [
+      receiver,
+      this.contractAddress,
+      this.tokenId,
+      addressList,
+    ];
+    return await this.writeContract(
+      'web3pack',
+      'unbundle',
+      signerNetwork,
+      parameters,
+    );
+  };
+
+  /**
+   * 
+   * @param externalContract 
+   * @param chainId 
+   * @returns 
+   */
+  public async setReleaseApproval(
+    externalContract: string,
+    chainId?: number,
+  ): Promise<ContractTransaction> {
+    const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      externalContract,
+    ];
+
+    return await this.writeContract(
+      'chargedState',
+      'setReleaseApproval',
+      signerNetwork,
+      parameters,
+    );
+  }
+
+  /**
   * Deposit an NFT assets into the particle.
   * Must be called by the account providing the asset. The account must approve the Charged Particle contract as operator of asset.
   * 
