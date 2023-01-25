@@ -943,9 +943,9 @@
   dependencies:
     typescript "^4.9.4"
 
-"@charged-particles/protocol-subgraph@https://github.com/Charged-Particles/charged-particles-subgraph":
+"@charged-particles/protocol-subgraph@https://github.com/Charged-Particles/charged-particles-subgraph.git":
   version "1.3.21"
-  resolved "https://github.com/Charged-Particles/charged-particles-subgraph#b003548bb51cb7c5e09a00bc664bb28bd75d5f8e"
+  resolved "https://github.com/Charged-Particles/charged-particles-subgraph.git#b003548bb51cb7c5e09a00bc664bb28bd75d5f8e"
   dependencies:
     "@graphprotocol/graph-ts" "^0.24.1"
 
