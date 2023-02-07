@@ -268,7 +268,32 @@ export default class NftService extends BaseService {
     );
   }
 
-  /***********************************|
+  /**
+   * Gets the release timelock state of the Particle.
+   * 
+   * @memberof NFT
+   *
+   * @param {string} sender             - The address approved for releasing assets from the Particle.
+   * @return {[boolean, boolean, BigNumber, BigNumber]} - [allowFromAll, isApproved, timelock, tempLockExpiry]
+   *
+   */
+  public async getReleaseApproval(
+    externalContract: string,
+  ) {
+
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      externalContract,
+    ];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'isApprovedForRelease',
+      parameters
+    );
+  }
+
+/***********************************|
  |        Write Functions             |
  |__________________________________*/
 
