@@ -268,7 +268,29 @@ export default class NftService extends BaseService {
     );
   }
 
-  /***********************************|
+  /**
+   * Gets the release approval state of the Particle.
+   * 
+   * @memberof NFT
+   *
+   * @param {string} externalContract             - The address approved for releasing assets from the Particle.
+   * @return {[boolean]} - [ ApprovalStatus ]
+   *
+   */
+  public async getReleaseApproval(externalContract: string) {
+    const parameters = [
+      this.contractAddress,
+      this.tokenId,
+      externalContract,
+    ];
+    return await this.fetchAllNetworks(
+      'chargedState',
+      'isApprovedForRelease',
+      parameters
+    );
+  }
+
+/***********************************|
  |        Write Functions             |
  |__________________________________*/
 
