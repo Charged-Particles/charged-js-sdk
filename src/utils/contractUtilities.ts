@@ -3,7 +3,7 @@ import ChargedParticles from '@charged-particles/protocol-subgraph/abis/ChargedP
 import ChargedSettings from '@charged-particles/protocol-subgraph/abis/ChargedSettings.json';
 import ChargedManagers from '@charged-particles/protocol-subgraph/abis/ChargedManagers.json';
 import ChargedState from '@charged-particles/protocol-subgraph/abis/ChargedState.json';
-import ProtonB from '@charged-particles/protocol-subgraph/abis/ProtonB.json';
+import ProtonC from '@charged-particles/protocol-subgraph/abis/ProtonC.json';
 import fungibleERC1155 from '@charged-particles/protocol-subgraph/abis/ERC1155.json';
 import ERC20 from '@charged-particles/protocol-subgraph/abis/ERC20.json';
 import Web3Pack from '../abi/Web3Pack.json';
@@ -32,7 +32,7 @@ export const getAbi = (contractName: string) => {
     case 'chargedSettings': return ChargedSettings;
     case 'chargedManagers': return ChargedManagers;
     case 'fungibleERC1155': return fungibleERC1155;
-    case 'erc721': return ProtonB;
+    case 'erc721': return ProtonC;
     case 'ionx': return ERC20;
     case 'web3pack': return Web3Pack;
     default: throw `${contractName} is not valid in getAbi`;
