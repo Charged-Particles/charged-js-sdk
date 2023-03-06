@@ -1134,4 +1134,34 @@ export default class NftService extends BaseService {
       this.contractAddress,
     );
   }
+
+  /**
+  * Burn.
+  * ERC721 method. 
+  * 
+  * @memberof NFT
+  * 
+  * @param {number} tokenId - Token to burn.
+  * @return {Promise<ContractTransaction>} - Details from the transaction.
+  * 
+  */
+    public async burn(
+      chainId?: number
+    ): Promise<ContractTransaction> {
+      const signerNetwork = await this.getSignerConnectedNetwork(chainId);
+      await this.bridgeNFTCheck(signerNetwork);
+  
+      const parameters = [
+        this.tokenId,
+      ];
+  
+      return await this.writeContract(
+        'erc721',
+        'burn',
+        signerNetwork,
+        parameters,
+        this.contractAddress,
+      );
+    }
+
 }
