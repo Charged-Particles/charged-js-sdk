@@ -644,7 +644,7 @@ export default class NftService extends BaseService {
 
     return await this.writeContract(
       'chargedState',
-      'setReleaseApproval',
+      'setApprovalForAll',
       signerNetwork,
       parameters,
     );
