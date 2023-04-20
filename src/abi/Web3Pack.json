@@ -5,6 +5,16 @@
     "type": "constructor"
   },
   {
+    "inputs": [],
+    "name": "FundingFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NullReceiver",
+    "type": "error"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -242,6 +252,45 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "contractAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "tokenMetadataUri",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "basketManagerId",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "nftTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "bond",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "mintedTokenId",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address payable",
         "name": "receiver",
         "type": "address"
@@ -294,6 +343,28 @@
         "type": "tuple[]"
       },
       {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "erc721TokenAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "basketManagerId",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "tokenMetadataUri",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct IWeb3Packs.ERC721MintOrders[]",
+        "name": "erc721MintOrders",
+        "type": "tuple[]"
+      },
+      {
         "internalType": "uint256",
         "name": "fundingAmount",
         "type": "uint256"
@@ -308,6 +379,40 @@
       }
     ],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC721Received",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -494,6 +599,23 @@
             "internalType": "address[]",
             "name": "erc20TokenAddresses",
             "type": "address[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "tokenAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IWeb3Packs.NFT[]",
+            "name": "nfts",
+            "type": "tuple[]"
           }
         ],
         "internalType": "struct IWeb3Packs.Web3PackOrder",
@@ -534,6 +656,23 @@
             "internalType": "address[]",
             "name": "erc20TokenAddresses",
             "type": "address[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "tokenAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct IWeb3Packs.NFT[]",
+            "name": "nfts",
+            "type": "tuple[]"
           }
         ],
         "internalType": "struct IWeb3Packs.Web3PackOrder",
