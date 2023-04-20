@@ -603,7 +603,7 @@ export default class NftService extends BaseService {
   public async multiRelease(
     receiver: string,
     walletManagerId: ManagerId,
-    addressList: { erc20TokenAddresses: string[] },
+    addressList: any,
     chainId?: number,
   ): Promise<ContractTransaction> {
     walletManagerCheck(walletManagerId);
