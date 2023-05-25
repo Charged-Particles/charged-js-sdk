@@ -938,8 +938,8 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@charged-particles/contract-allowlist@https://github.com/Charged-Particles/contract-allowlist.git":
-  version "1.0.6"
-  resolved "https://github.com/Charged-Particles/contract-allowlist.git#fd52dd5963d4d64b010816cdd5ebc36852b0dcec"
+  version "1.0.7"
+  resolved "https://github.com/Charged-Particles/contract-allowlist.git#2131129b42519701b99593887bbf73fe2bd02873"
   dependencies:
     typescript "^4.9.4"
 
