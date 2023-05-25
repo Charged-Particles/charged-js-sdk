@@ -1,9 +1,9 @@
 {
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
   "include": [
-    "src",
+    "src/**/*",
+    "src/**/*.json",
     "types",
-    "node_modules/@charged-particles/contract-allowlist/src/allowlist.ts"
   ],
   "compilerOptions": {
     "module": "esnext",
@@ -17,6 +17,7 @@
     "rootDir": "./src",
     // stricter type-checking for stronger correctness. Recommended by TS
     "strict": true,
+    "composite": true,
     // linter checks for common issues
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
