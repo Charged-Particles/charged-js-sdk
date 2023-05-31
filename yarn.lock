@@ -937,9 +937,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@charged-particles/contract-allowlist@https://github.com/Charged-Particles/contract-allowlist.git":
-  version "1.0.6"
-  resolved "https://github.com/Charged-Particles/contract-allowlist.git#fd52dd5963d4d64b010816cdd5ebc36852b0dcec"
+"@charged-particles/contract-allowlist@1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@charged-particles/contract-allowlist/-/contract-allowlist-1.0.9.tgz#30bc8e8b879f6594e1465584964070f125722847"
+  integrity sha512-ePA8mMYatY/rjC6fyXMa6o0qgjIUBmGmnLaAZiirTk2bkOahk27XvDm0qUDtiNZdfTbzEm9aVZcl4yybbgR4Ew==
   dependencies:
     typescript "^4.9.4"
 

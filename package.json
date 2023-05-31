@@ -61,7 +61,7 @@
     "web3-providers-http": "^1.7.3"
   },
   "dependencies": {
-    "@charged-particles/contract-allowlist": "https://github.com/Charged-Particles/contract-allowlist.git",
+    "@charged-particles/contract-allowlist": "1.0.9",
     "@charged-particles/protocol-subgraph": "https://github.com/Charged-Particles/charged-particles-subgraph.git",
     "ethers": "^5.6.9",
     "lodash": "^4.17.21",
