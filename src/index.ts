@@ -14,9 +14,6 @@ import genericWalletManagerBAbi from '@charged-particles/protocol-subgraph/abis/
 import genericBasketManagerAbi from '@charged-particles/protocol-subgraph/abis/GenericBasketManager.json';
 import genericBasketManagerBAbi from '@charged-particles/protocol-subgraph/abis/GenericBasketManagerB.json';
 
-// contract-allowlist
-import { allowlist } from '@charged-particles/contract-allowlist';
-
 // networks
 import mainnetAddresses from '@charged-particles/protocol-subgraph/networks/mainnet.json';
 import kovanAddresses from '@charged-particles/protocol-subgraph/networks/kovan.json';
@@ -44,5 +41,4 @@ export {
   polygonAddresses,
   mumbaiAddresses,
   goerliAddresses,
-  allowlist,
 }
