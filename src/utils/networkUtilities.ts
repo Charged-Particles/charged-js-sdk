@@ -72,6 +72,8 @@ export const getChainNameById = (network?: number) => {
     case 5: return 'goerli';
     case 42: return 'kovan';
     case 137: return 'polygon';
+    case 5000: return 'mantle';
+    case 5001: return 'mantleTestnet';
     case 80001: return 'mumbai';
     default: throw `network id: ${network} is not valid in getAddressFromNetwork`;
 	}
