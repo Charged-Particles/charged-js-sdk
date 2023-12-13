@@ -18,6 +18,7 @@ import polygonAddressesImport from '@charged-particles/protocol-subgraph/network
 import mumbaiAddressesImport from '@charged-particles/protocol-subgraph/networks/mumbai.json';
 import goerliAddressImport from '@charged-particles/protocol-subgraph/networks/goerli.json';
 import mantleTestnetAddressImport from '@charged-particles/protocol-subgraph/networks/mantletest.json';
+import mantleAddressImport from '@charged-particles/protocol-subgraph/networks/mantlemainnet.json';
 
 const mainnetAddresses: NetworkContractLocations = mainnetAddressesImport;
 const kovanAddresses: NetworkContractLocations = kovanAddressesImport;
@@ -25,6 +26,7 @@ const polygonAddresses: NetworkContractLocations = polygonAddressesImport;
 const mumbaiAddresses: NetworkContractLocations = mumbaiAddressesImport;
 const goerliAddress: NetworkContractLocations = goerliAddressImport;
 const mantleTestnetAddress: NetworkContractLocations = mantleTestnetAddressImport;
+const mantleAddress: NetworkContractLocations = mantleAddressImport;
 
 // Return correct ABI
 export const getAbi = (contractName: string) => {
@@ -63,6 +65,7 @@ const getImportedContractLocations = (network: number) => {
     case 42: return kovanAddresses;
     case 137: return polygonAddresses;
     case 5001: return mantleTestnetAddress;
+    case 5000: return mantleAddress;
     case 80001: return mumbaiAddresses;
     default: throw `network id: ${network} is not a valid network in getImportedContractLocations`;
   }
