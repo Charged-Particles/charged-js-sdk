@@ -938,8 +938,8 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@charged-particles/protocol-subgraph@https://github.com/Charged-Particles/charged-particles-subgraph.git":
-  version "1.3.21"
-  resolved "https://github.com/Charged-Particles/charged-particles-subgraph.git#c68fd50f434bcd2a59018026352cdfb6626dc489"
+  version "1.3.23"
+  resolved "https://github.com/Charged-Particles/charged-particles-subgraph.git#d08e520be69d628c34139da4d2f23824b267ea5b"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
