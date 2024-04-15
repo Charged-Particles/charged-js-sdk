@@ -118,6 +118,13 @@ export default class BaseService {
 
     const action = 'write';
     const requestedContract = this.getContractInstance(contractName, network, action, contractAddress);
+    if (network === 137
+      || network === 5000
+      || network === 5003
+    ) {
+      const gasLimit = await requestedContract.estimateGas[methodName](...params, transactionOverride);
+      return requestedContract[methodName](...params, { ...transactionOverride, gasLimit });
+    }
     return requestedContract[methodName](...params, transactionOverride);
   }
 
