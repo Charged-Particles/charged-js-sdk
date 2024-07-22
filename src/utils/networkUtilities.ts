@@ -76,6 +76,7 @@ export const getChainNameById = (network?: number) => {
     case 5001: return 'mantleTestnet';
     case 80001: return 'mumbai';
     case 11155111: return 'sepolia';
+    case 34443: return 'mode-mainnet';
     default: throw `network id: ${network} is not valid in getAddressFromNetwork`;
 	}
 }
@@ -89,4 +90,5 @@ export const SUPPORTED_NETWORKS = [
   { chainId: 137, chainName: 'polygon', name: 'Polygon' },
   { chainId: 80001, chainName: 'mumbai', name: 'Polygon (Mumbai)' },
   { chainId: 11155111, chainName: 'sepolia', name: 'Sepolia' },
+  { chainId: 34443, chainName: 'mode-mainnet', name: 'Mode Mainnet' },
 ];
