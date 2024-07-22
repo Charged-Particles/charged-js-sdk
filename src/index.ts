@@ -21,6 +21,7 @@ import polygonAddresses from '@charged-particles/protocol-subgraph/networks/poly
 import mumbaiAddresses from '@charged-particles/protocol-subgraph/networks/mumbai.json';
 import goerliAddresses from '@charged-particles/protocol-subgraph/networks/goerli.json';
 import sepoliaAddresses from '@charged-particles/protocol-subgraph/networks/sepolia.json';
+import modeAddresses from '@charged-particles/protocol-subgraph/networks/mode.json';
 
 export default Charged;
 
@@ -43,4 +44,5 @@ export {
   mumbaiAddresses,
   goerliAddresses,
   sepoliaAddresses,
+  modeAddresses,
 }
